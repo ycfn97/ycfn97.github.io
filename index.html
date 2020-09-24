@@ -74,29 +74,24 @@
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/24/spark%E6%A0%B8%E5%BF%83%E5%87%BD%E6%95%B0%E5%AE%9E%E4%BE%8B-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/">广告点击Top3</a>
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<h2 id="广告点击Top3"><a href="#广告点击Top3" class="headerlink" title="广告点击Top3"></a>广告点击Top3</h2><p>案例需求：统计每个省份广告被点击次数的top3</p>
-<p>!(广告点击top3-1.png)</p>
-<p>最终希望输出效果：</p>
-<img src="E:\hexo\source\_posts\spark核心函数实例-广告点击Top3\广告点击top3-2.jpg" alt="广告点击top3-2" style="zoom:67%;" />
-
-
-
-<p>思考：样本中需要提取出省份，广告，还有统计出每个省份每个广告种类点击的次数。然后聚合出广告出现的次数并做排名截取前三名。</p>
-<p>代码实现1：</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sc.textFile(<span class="string">&quot;input/agent.log&quot;</span>)</span><br><span class="line">  .map(line=&gt;(line.split(<span class="string">&quot; &quot;</span>)(<span class="number">1</span>)+<span class="string">&quot;-&quot;</span>+line.split(<span class="string">&quot; &quot;</span>)(<span class="number">4</span>),<span class="number">1</span>))</span><br><span class="line">  .reduceByKey(_+_)</span><br><span class="line">  .map(a=&gt;(a._1.split(<span class="string">&quot;-&quot;</span>)(<span class="number">0</span>),(a._1.split(<span class="string">&quot;-&quot;</span>)(<span class="number">1</span>),a._2)))</span><br><span class="line">  .groupByKey()</span><br><span class="line">  .mapValues(data=&gt;data.toList.sortWith((a,b)=&gt;(a._2&gt;b._2)).take(<span class="number">3</span>))</span><br><span class="line">  .collect().foreach(println)</span><br></pre></td></tr></table></figure>
-
-<p>代码实现2：</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sc.textFile(<span class="string">&quot;input/agent.log&quot;</span>)</span><br><span class="line">  .map(line=&gt;((line.split(<span class="string">&quot; &quot;</span>)(<span class="number">1</span>),line.split(<span class="string">&quot; &quot;</span>)(<span class="number">4</span>)),<span class="number">1</span>))</span><br><span class="line">  .reduceByKey((a,b)=&gt;(a+b))</span><br><span class="line">  .groupBy(_._1._1)</span><br><span class="line">  .mapValues(a=&gt;a.toList.sortWith(_._2&gt;_._2).take(<span class="number">3</span>))</span><br><span class="line">  .collect().foreach(println)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>分析实现：</p>
-<img src="E:\hexo\source\_posts\spark核心函数实例-广告点击Top3\广告点击top3-3.jpg" alt="广告点击top3-3" style="zoom:67%;" />
-
-
+        <p>案例需求：统计每个省份广告被点击次数的top3</p>
+        
+          <p class="article-more-link">
+            <a href="/2020/09/24/spark%E6%A0%B8%E5%BF%83%E5%87%BD%E6%95%B0%E5%AE%9E%E4%BE%8B-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
@@ -132,13 +127,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="主机配置"   >
-          <a href="#主机配置" class="heading-link"><i class="fas fa-link"></i></a>主机配置</h2>
-      <p>安装node.js  git，打开git终端</p>
-<figure class="highlight plain"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ~&#x2F;.ssh</span><br><span class="line">ssh-keygen -t rsa -C &quot;1872998728@qq.com&quot;</span><br></pre></td></tr></table></div></figure>
-
-<p>上传GitHub</p>
-<p>详细查看博客：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.cnblogs.com/liuxianan/p/build-blog-website-by-hexo-github.html" >https://www.cnblogs.com/liuxianan/p/build-blog-website-by-hexo-github.html</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+        <h2 id="主机配置"><a href="#主机配置" class="headerlink" title="主机配置"></a>主机配置</h2>
         
           <p class="article-more-link">
             <a href="/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/#more">Read More</a>
@@ -229,7 +218,7 @@
       <ul>
         
           <li>
-            <a href="/2020/09/24/spark%E6%A0%B8%E5%BF%83%E5%87%BD%E6%95%B0%E5%AE%9E%E4%BE%8B-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/">(no title)</a>
+            <a href="/2020/09/24/spark%E6%A0%B8%E5%BF%83%E5%87%BD%E6%95%B0%E5%AE%9E%E4%BE%8B-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/">广告点击Top3</a>
           </li>
         
           <li>

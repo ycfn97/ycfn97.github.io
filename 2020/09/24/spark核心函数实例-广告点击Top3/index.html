@@ -7,13 +7,21 @@
   
   <title>ycfn97</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
+  <meta name="description" content="广告点击Top3案例需求：统计每个省份广告被点击次数的top3     最终希望输出效果：     思考：样本中需要提取出省份，广告，还有统计出每个省份每个广告种类点击的次数。然后聚合出广告出现的次数并做排名截取前三名。 代码实现1： 1234567sc.textFile(&quot;input&#x2F;agent.log&quot;)  .map(line&#x3D;&gt;(line.split(&quot;">
+<meta property="og:type" content="article">
 <meta property="og:title" content="ycfn97">
-<meta property="og:url" content="https://ycfn97.xyz/index.html">
+<meta property="og:url" content="https://ycfn97.xyz/2020/09/24/spark%E6%A0%B8%E5%BF%83%E5%87%BD%E6%95%B0%E5%AE%9E%E4%BE%8B-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/index.html">
 <meta property="og:site_name" content="ycfn97">
+<meta property="og:description" content="广告点击Top3案例需求：统计每个省份广告被点击次数的top3     最终希望输出效果：     思考：样本中需要提取出省份，广告，还有统计出每个省份每个广告种类点击的次数。然后聚合出广告出现的次数并做排名截取前三名。 代码实现1： 1234567sc.textFile(&quot;input&#x2F;agent.log&quot;)  .map(line&#x3D;&gt;(line.split(&quot;">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="e:/hexo/source/_posts/广告点击top3-1.png">
+<meta property="og:image" content="e:/hexo/source/_posts/广告点击top3-2.jpg">
+<meta property="og:image" content="e:/hexo/source/_posts/广告点击top3-3.jpg">
+<meta property="article:published_time" content="2020-09-24T09:57:13.451Z">
+<meta property="article:modified_time" content="2020-09-24T15:37:45.473Z">
 <meta property="article:author" content="ycfn97">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="e:/hexo/source/_posts/广告点击top3-1.png">
   
     <link rel="alternate" href="/atom.xml" title="ycfn97" type="application/atom+xml">
   
@@ -62,9 +70,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-spark核心函数实例-广告点击Top3" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-spark核心函数实例-广告点击Top3" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/09/24/spark%E6%A0%B8%E5%BF%83%E5%87%BD%E6%95%B0%E5%AE%9E%E4%BE%8B-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/" class="article-date">
   <time datetime="2020-09-24T09:57:13.451Z" itemprop="datePublished">2020-09-24</time>
@@ -109,99 +115,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-搭建个人博客" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" class="article-date">
-  <time datetime="2020-09-23T10:46:25.402Z" itemprop="datePublished">2020-09-23</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">Hexo搭建个人博客</a>
-    </h1>
+    <a href="/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hexo搭建个人博客</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="主机配置"   >
-          <a href="#主机配置" class="heading-link"><i class="fas fa-link"></i></a>主机配置</h2>
-      <p>安装node.js  git，打开git终端</p>
-<figure class="highlight plain"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ~&#x2F;.ssh</span><br><span class="line">ssh-keygen -t rsa -C &quot;1872998728@qq.com&quot;</span><br></pre></td></tr></table></div></figure>
-
-<p>上传GitHub</p>
-<p>详细查看博客：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.cnblogs.com/liuxianan/p/build-blog-website-by-hexo-github.html" >https://www.cnblogs.com/liuxianan/p/build-blog-website-by-hexo-github.html</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-        
-          <p class="article-more-link">
-            <a href="/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://ycfn97.xyz/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" data-id="ckffogky700013cgaemsj49hj" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
   
 </article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/09/23/hello-world/" class="article-date">
-  <time datetime="2020-09-23T01:30:10.787Z" itemprop="datePublished">2020-09-23</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/09/23/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://hexo.io/" >Hexo</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>! This is your very first post. Check <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://hexo.io/docs/" >documentation</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> for more info. If you get any problems when using Hexo, you can find the answer in <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html" >troubleshooting</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> or you can ask me on <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues" >GitHub</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>.</p>
-        
-          <p class="article-more-link">
-            <a href="/2020/09/23/hello-world/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://ycfn97.xyz/2020/09/23/hello-world/" data-id="ckffogkxy00003cgadwteexuv" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
 
 </section>
         

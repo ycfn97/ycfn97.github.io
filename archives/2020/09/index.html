@@ -224,6 +224,9 @@
 
 <!-- totop end -->
 
+
+<!--
+
 <!-- 多说公共js代码 start -->
 <script type="text/javascript">
 var duoshuoQuery = {short_name:"your_shortname"};
@@ -237,6 +240,28 @@ var duoshuoQuery = {short_name:"your_shortname"};
   })();
   </script>
 <!-- 多说公共js代码 end -->
+
+-->
+
+
+
+
+<!--载入js，在</body>之前插入即可-->
+    <!--Leancloud 操作库:-->
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <!--Valine 的核心代码库-->
+    <script src="/js/Valine.min.js"></script>
+    <script>
+        new Valine({
+            av: AV, 
+            el: '.comment',
+            app_id: 'ybyFTNXr5dkNt6FJvnChNvzH-gzGzoHsz',
+            app_key: 'QBdhhOEgw2lDsDrAKD8khsGr',
+            placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
+        });
+    </script>
+
+
 
 
 <!-- 百度分享 start -->

@@ -1,0 +1,394 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>一次意外断电导致mysql数据库损坏的数据恢复过程 | The last tear in the Atlantic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="​     ​    mysql在企业开发中不仅存放着大量用户数据表，还存放着其他服务的元数据，这些数据一但无法访问，不仅影响其他业务的进行，同时用户也无法查询自己的数据信息，众所周知，数据是无价的，弄丢了数据的后果极其严重。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一次意外断电导致mysql数据库损坏的数据恢复过程">
+<meta property="og:url" content="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:site_name" content="The last tear in the Atlantic">
+<meta property="og:description" content="​     ​    mysql在企业开发中不仅存放着大量用户数据表，还存放着其他服务的元数据，这些数据一但无法访问，不仅影响其他业务的进行，同时用户也无法查询自己的数据信息，众所周知，数据是无价的，弄丢了数据的后果极其严重。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/1.jpg">
+<meta property="og:image" content="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/2.jpg">
+<meta property="og:image" content="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/4.jpg">
+<meta property="og:image" content="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/3.jpg">
+<meta property="article:published_time" content="2020-11-15T15:36:33.982Z">
+<meta property="article:modified_time" content="2020-11-15T16:13:05.445Z">
+<meta property="article:author" content="ycfn97">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/1.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="The last tear in the Atlantic" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?029e85d94060b2a4054a349dc92bef7f";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+ 
+
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+<body>
+<div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">The last tear in the Atlantic</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//www.baidu.com/baidu" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="word" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="submit" value="" class="search-form-submit">
+          <input name=tn type=hidden value="bds">
+          <input name=cl type=hidden value="3">
+          <input name=ct type=hidden value="2097152">
+          <input type="hidden" name="si" value="ycfn97.xyz">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+    <div class="outer">
+      <section id="main"><article id="post-一次意外断电导致mysql数据库损坏的数据恢复过程" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/" class="article-date">
+  <time datetime="2020-11-15T15:36:33.982Z" itemprop="datePublished">2020-11-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      一次意外断电导致mysql数据库损坏的数据恢复过程
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>​    <img src="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/1.jpg"></p>
+<p>​    mysql在企业开发中不仅存放着大量用户数据表，还存放着其他服务的元数据，这些数据一但无法访问，不仅影响其他业务的进行，同时用户也无法查询自己的数据信息，众所周知，数据是无价的，弄丢了数据的后果极其严重。</p>
+<a id="more"></a>
+
+<p>​    昨天就遇到了一次意外断电mysql索引损坏导致mysqld服务无法正常启动的麻烦，断电后重启hadoop集群，开启hiveservice2和matestore元数据服务时发现无法启动，打开hive.log发现是mysql连接失败：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure</span><br><span class="line">......</span><br><span class="line">Caused by: java.net.ConnectException: 拒绝连接 (Connection refused)</span><br></pre></td></tr></table></figure>
+
+<p>随即检查了一下mysql服务，发现mysql服务被意外关闭了，于是又重新启动mysql服务:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart mysqld;</span><br></pre></td></tr></table></figure>
+
+<p>但是服务并没有顺利启动成功，而是卡住不动了，尝试了几次都是一样卡住，我有点不淡定了，平时mysql服务断开重新开启一下就可以了，于是进入<code>/etc/my.cnf</code>中找到mysql的错误日志并监控日志输出：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail -f /var/log/mysql.log</span><br></pre></td></tr></table></figure>
+
+<p>在另外一个控制台又启动一次服务，发现了从来没有遇到过得报错：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">2020-11-15T09:08:52.532504Z 0 [ERROR] [MY-012712] [InnoDB] Dir slot does not point to right rec 99</span><br><span class="line"> len 16384; hex 64c7c9230000023b0000023affffffff00000000292dd74545bf00000000000000000000024400231a58808c000000001a2d00020089008a0000000000000000000000000000000004700000000000000000000000000000000000000000010002001a696e66696d756d0007000b000073757072656d756d000010003000000018338b000000100f1d81000000c601100000000000006f78dfafd5300000000000000000908580e7000018003000000018338c000000100f1d81000000c6011f0000000000005ad8dfafd530a0f0ba889e75d23f90cc9ff8000020003000000018338f000000100f1e820000013801100000000000005ad9dfafd53162475ed6e629e83f90dbc387040028</span><br><span class="line"> ......</span><br><span class="line">000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000064c7c923292dd745; asc d  #   ;   :        )- EE            D # X       -                       p                         infimum      supremum    0    3                    ox   0                0    3                    Z    0     u ?        0    3           8        Z    1bG^  ) ?      ( 0    3                    oz   2         B l  0 0    3                    Z    2         E    8 0    3           Y        Z    32 c &#123;  ? Q s  @ 0    3      !             \D   4 F     @ |    H 0    3      !             Z    4          PY  P 0    3      $             Z    8  v  ( ? *U   X 0    3      %             \I   9   m4e @ ?Pm  ` 0    3      %             Z    9         C    h 0    3      &amp;             Z    :         Sc,  p 0    3      &#x27;    ~        dC   ;   $yi ?   b  x 0    3   </span><br><span class="line">.....</span><br><span class="line">Most likely, you have hit a bug, but this error can also be caused by malfunctioning hardware.</span><br><span class="line">Thread pointer: 0x7fb3bc3d4280</span><br><span class="line">Attempting backtrace. You can use the following information to find out</span><br><span class="line">where mysqld died. If you see no messages after this, something went</span><br><span class="line">terribly wrong...</span><br><span class="line"></span><br><span class="line">2020-11-15T09:08:52.623420Z 0 [ERROR] [MY-011937] [InnoDB] [FATAL] Apparent corruption of an index page [page id: space=580, page number=571] to be written to data file. We intentionally crash the server to prevent corrupt data from ending up in data files.</span><br><span class="line"></span><br><span class="line">2020-11-15T09:08:54.724470Z 0 [ERROR] [MY-011906] [InnoDB] Database page corruption on disk or a failed file read of page [page id: space=580, page number=571]. You may have to recover from a backup.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>翻译过来意思是：</p>
+<p>​    最可能的情况是，您遇到了一个bug，但这个错误也可能是由硬件故障引起的。</p>
+<p>​    mysqld去世的地方。如果在此之后您没有看到任何消息，那么一定有问题，非常错误的……</p>
+<p>​    在磁盘上的数据库页损坏或失败的文件读取页[页id:空间=580，页号=571]。您可能需要从备份中进行恢复。</p>
+<p>要写入数据文件的索引页[页id:空格=580，页号=571]明显损坏。我们故意使服务器崩溃，以防止损坏的数据出现在数据文件中。</p>
+<p>​    百度了一阵之后，我意识到是数据库内部有表损坏导致mysql服务无法正常打开了，由于数据库中有上千张表，不可能知道到底是哪里出了问题。这就意味着我要将mysql中所有用户数据表和其他服务的元数据表全部导出到sql文件做备份，然后重新初始化mysql，在把表一个个建回来并重新导入。一想这工作量顿时头皮发麻，但是数据没法访问后果更严重。。。所以硬着头皮来了：</p>
+<p>​    使用强制InnoDB恢复:</p>
+<p>​    编辑<code>/etc/my.cnf</code>文件加入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">innodb_force_recovery &#x3D; 6</span><br></pre></td></tr></table></figure>
+
+<p>​    <em>innodb_force_recovery影响整个InnoDB存储引擎的恢复状况。默认为0，表示当需要恢复时执行所有的恢复操作（即校验数据页/purge undo/insert buffer merge/rolling back&amp;forward），当不能进行有效的恢复操作时，mysql有可能无法启动，并记录错误日志；innodb_force_recovery可以设置为1-6,大的数字包含前面所有数字的影响。当设置参数值大于0后，可以对表进行select,create,drop操作,但insert,update或者delete这类操作是不允许的。</em></p>
+<ul>
+<li><p>1(SRV_FORCE_IGNORE_CORRUPT):忽略检查到的corrupt页。</p>
+</li>
+<li><p>2(SRV_FORCE_NO_BACKGROUND):阻止主线程的运行，如主线程需要执行full purge操作，会导致crash。</p>
+</li>
+<li><p>3(SRV_FORCE_NO_TRX_UNDO):不执行事务回滚操作。</p>
+</li>
+<li><p>4(SRV_FORCE_NO_IBUF_MERGE):不执行插入缓冲的合并操作。</p>
+</li>
+<li><p>5(SRV_FORCE_NO_UNDO_LOG_SCAN):不查看重做日志，InnoDB存储引擎会将未提交的事务视为已提交。</p>
+</li>
+<li><p>6(SRV_FORCE_NO_LOG_REDO):不执行前滚的操作。</p>
+<p>​    </p>
+<p>​    然后重启节点，发现mysql服务能启动了，但是无法执行插入更新和删除操作，但终于可以导出宝贵的数据做备份了，我使用了Navicat把mysql中所有数据进行了导出：</p>
+<p><img src="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/2.jpg"></p>
+<p>​    整个过程用了很久，但数据总算是保存下来了，接下来进入<code>/var/lib/mysql</code>备份整个目录，然后删除目录中所有内容<code>rm -rf  ./*</code>将mysql重新初始化。最后进入<code>/etc/my.cnf</code>将innodb重新置为0:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">innodb_force_recovery = 0</span><br></pre></td></tr></table></figure>
+
+<p>成功启动mysql服务：</p>
+<p><img src="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/4.jpg"></p>
+<p>这时候数据库已经重新初始化，需要重新获取初始密码：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep &#x27;temporary password&#x27; /var/log/mysqld.log</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<p>  ​    然后进行设置mysql用户的操作，导入之前的数据，重新启动hadoop集群，成功启动hiveservice2和matestore服务。并进入datagrip查了一下，数据完美恢复！还好是测试环境，谢天谢地。</p>
+<p>  <img src="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/3.jpg"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/" data-id="cki73lwls0006g8gaazhrfppo" class="article-share-link" data-share="baidu" data-title="一次意外断电导致mysql数据库损坏的数据恢复过程">Share</a>
+      
+
+  
+  <a href="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/#valine_thread" class="article-comment-link">Comments</a>
+
+
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/11/10/clickhouse%E5%8D%95%E6%9C%BA%E5%8F%8A%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">clickhouse单机及集群快速部署</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="valine_thread">
+      <div class="comment"></div>
+    </div>
+  </section>
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">5</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/">一次意外断电导致mysql数据库损坏的数据恢复过程</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/10/clickhouse%E5%8D%95%E6%9C%BA%E5%8F%8A%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/">clickhouse单机及集群快速部署</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/28/spark-core-top10%E7%83%AD%E9%97%A8%E5%93%81%E7%B1%BB/">spark core-top10热门品类</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/">spark RDD原理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/24/spark-core-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/">spark核心函数实例-广告点击Top3</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Links</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="https://github.com/ycfn97" target="_blank">github</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 ycfn97  &nbsp WeChat: ycfnsq97<br> 
+<!--      Powered by <a href="//hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>     -->
+
+
+<br>
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">本站访客数<span id="busuanzi_value_site_uv"></span>人</span>
+
+
+
+    </div>
+  </div>
+</footer>
+
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="totop"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+
+
+
+<!--载入js，在</body>之前插入即可-->
+    <!--Leancloud 操作库:-->
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <!--Valine 的核心代码库-->
+    <script src="/js/Valine.min.js"></script>
+    <script>
+        new Valine({
+            av: AV, 
+            el: '.comment',
+            app_id: 'ybyFTNXr5dkNt6FJvnChNvzH-gzGzoHsz',
+            app_key: 'QBdhhOEgw2lDsDrAKD8khsGr',
+            placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
+        });
+    </script>
+
+
+
+
+<!-- 百度分享 start -->
+
+<div id="article-share-box" class="article-share-box">
+  <div id="bdshare" class="bdsharebuttonbox article-share-links">
+    <a class="article-share-weibo" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a class="article-share-weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a class="article-share-qq" data-cmd="sqq" title="分享到QQ"></a>
+    <a class="article-share-renren" data-cmd="renren" title="分享到人人网"></a>
+    <a class="article-share-more" data-cmd="more" title="更多"></a>
+  </div>
+</div>
+<script>
+  function SetShareData(cmd, config) {
+    if (shareDataTitle && shareDataUrl) {
+      config.bdText = shareDataTitle;
+      config.bdUrl = shareDataUrl;
+    }
+    return config;
+  }
+  window._bd_share_config={
+    "common":{onBeforeClick: SetShareData},
+    "share":{"bdCustomStyle":"/css/bdshare.css"}
+  };
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+  bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+</div>
+</body>
+</html>

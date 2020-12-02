@@ -1,0 +1,609 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>The last tear in the Atlantic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="The last tear in the Atlantic">
+<meta property="og:url" content="https://ycfn97.xyz/index.html">
+<meta property="og:site_name" content="The last tear in the Atlantic">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="ycfn97">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternative" href="/atom.xml" title="The last tear in the Atlantic" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?029e85d94060b2a4054a349dc92bef7f";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+ 
+
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+<body>
+<div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">The last tear in the Atlantic</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//www.baidu.com/baidu" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="word" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="submit" value="" class="search-form-submit">
+          <input name=tn type=hidden value="bds">
+          <input name=cl type=hidden value="3">
+          <input name=ct type=hidden value="2097152">
+          <input type="hidden" name="si" value="ycfn97.xyz">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+    <div class="outer">
+      <section id="main">
+  
+    <article id="post-一次意外断电导致mysql数据库损坏的数据恢复过程" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/" class="article-date">
+  <time datetime="2020-11-15T15:36:33.982Z" itemprop="datePublished">2020-11-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/">一次意外断电导致mysql数据库损坏的数据恢复过程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>​    <img src="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/1.jpg"></p>
+<p>​    mysql在企业开发中不仅存放着大量用户数据表，还存放着其他服务的元数据，这些数据一但无法访问，不仅影响其他业务的进行，同时用户也无法查询自己的数据信息，众所周知，数据是无价的，弄丢了数据的后果极其严重。</p>
+        
+          <p class="article-more-link">
+            <a href="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/" data-id="cki73lwls0006g8gaazhrfppo" class="article-share-link" data-share="baidu" data-title="一次意外断电导致mysql数据库损坏的数据恢复过程">Share</a>
+      
+
+  
+  <a href="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/#valine_thread" class="article-comment-link">Comments</a>
+
+
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-clickhouse单机及集群部署" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/10/clickhouse%E5%8D%95%E6%9C%BA%E5%8F%8A%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" class="article-date">
+  <time datetime="2020-11-09T16:39:25.362Z" itemprop="datePublished">2020-11-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/10/clickhouse%E5%8D%95%E6%9C%BA%E5%8F%8A%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/">clickhouse单机及集群快速部署</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/2020/11/10/clickhouse%E5%8D%95%E6%9C%BA%E5%8F%8A%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/clickhouse.png"></p>
+<p>​    clickhouse列式存储DB由战斗民族俄罗斯程序员开发，由于其超高的查询性能，近来备受关注。</p>
+        
+          <p class="article-more-link">
+            <a href="/2020/11/10/clickhouse%E5%8D%95%E6%9C%BA%E5%8F%8A%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://ycfn97.xyz/2020/11/10/clickhouse%E5%8D%95%E6%9C%BA%E5%8F%8A%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" data-id="cki73lwlr0004g8ga79j5fgg9" class="article-share-link" data-share="baidu" data-title="clickhouse单机及集群快速部署">Share</a>
+      
+
+  
+  <a href="https://ycfn97.xyz/2020/11/10/clickhouse%E5%8D%95%E6%9C%BA%E5%8F%8A%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/#valine_thread" class="article-comment-link">Comments</a>
+
+
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-spark-core-top10热门品类" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/28/spark-core-top10%E7%83%AD%E9%97%A8%E5%93%81%E7%B1%BB/" class="article-date">
+  <time datetime="2020-09-27T16:37:37.522Z" itemprop="datePublished">2020-09-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/28/spark-core-top10%E7%83%AD%E9%97%A8%E5%93%81%E7%B1%BB/">spark core-top10热门品类</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>需求说明：品类是指产品的分类，大型电商网站品类分多级，咱们的项目中品类只有一级，不同的公司可能对热门的定义不一样。我们按照每个品类的点击、下单、支付的量来统计热门品类。</p>
+<p>鞋            点击数 下单数  支付数</p>
+<p>衣服        点击数 下单数  支付数</p>
+<p>电脑        点击数 下单数  支付数</p>
+<p>本项目需求优化为：先按照点击数排名，靠前的就排名高；如果点击数相同，再比较下单数；下单数再相同，就比较支付数。</p>
+        
+          <p class="article-more-link">
+            <a href="/2020/09/28/spark-core-top10%E7%83%AD%E9%97%A8%E5%93%81%E7%B1%BB/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://ycfn97.xyz/2020/09/28/spark-core-top10%E7%83%AD%E9%97%A8%E5%93%81%E7%B1%BB/" data-id="cki73lwlq0002g8gags857sk7" class="article-share-link" data-share="baidu" data-title="spark core-top10热门品类">Share</a>
+      
+
+  
+  <a href="https://ycfn97.xyz/2020/09/28/spark-core-top10%E7%83%AD%E9%97%A8%E5%93%81%E7%B1%BB/#valine_thread" class="article-comment-link">Comments</a>
+
+
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-spark RDD原理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/" class="article-date">
+  <time datetime="2020-09-26T12:50:40.763Z" itemprop="datePublished">2020-09-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/">spark RDD原理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/2.png"></p>
+        
+          <p class="article-more-link">
+            <a href="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://ycfn97.xyz/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/" data-id="cki73lwlo0001g8gafcwp606l" class="article-share-link" data-share="baidu" data-title="spark RDD原理">Share</a>
+      
+
+  
+  <a href="https://ycfn97.xyz/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/#valine_thread" class="article-comment-link">Comments</a>
+
+
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-spark-core-广告点击Top3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/24/spark-core-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/" class="article-date">
+  <time datetime="2020-09-24T09:57:13.451Z" itemprop="datePublished">2020-09-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/24/spark-core-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/">spark核心函数实例-广告点击Top3</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>案例需求：统计每个省份广告被点击次数的top3</p>
+        
+          <p class="article-more-link">
+            <a href="/2020/09/24/spark-core-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://ycfn97.xyz/2020/09/24/spark-core-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/" data-id="cki73lwlr0003g8ga3p5xb4q2" class="article-share-link" data-share="baidu" data-title="spark核心函数实例-广告点击Top3">Share</a>
+      
+
+  
+  <a href="https://ycfn97.xyz/2020/09/24/spark-core-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/#valine_thread" class="article-comment-link">Comments</a>
+
+
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-搭建个人博客" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" class="article-date">
+  <time datetime="2020-09-23T10:46:25.402Z" itemprop="datePublished">2020-09-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">Hexo搭建个人博客</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="主机配置"><a href="#主机配置" class="headerlink" title="主机配置"></a>主机配置</h2>
+        
+          <p class="article-more-link">
+            <a href="/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://ycfn97.xyz/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" data-id="cki73lwls0005g8gaa4928n7w" class="article-share-link" data-share="baidu" data-title="Hexo搭建个人博客">Share</a>
+      
+
+  
+  <a href="https://ycfn97.xyz/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/#valine_thread" class="article-comment-link">Comments</a>
+
+
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/23/hello-world/" class="article-date">
+  <time datetime="2020-09-23T01:30:10.787Z" itemprop="datePublished">2020-09-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/23/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+        
+          <p class="article-more-link">
+            <a href="/2020/09/23/hello-world/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://ycfn97.xyz/2020/09/23/hello-world/" data-id="cki73lwlj0000g8ga35r53a1o" class="article-share-link" data-share="baidu" data-title="Hello World">Share</a>
+      
+
+  
+  <a href="https://ycfn97.xyz/2020/09/23/hello-world/#valine_thread" class="article-comment-link">Comments</a>
+
+
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">5</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/">一次意外断电导致mysql数据库损坏的数据恢复过程</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/10/clickhouse%E5%8D%95%E6%9C%BA%E5%8F%8A%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/">clickhouse单机及集群快速部署</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/28/spark-core-top10%E7%83%AD%E9%97%A8%E5%93%81%E7%B1%BB/">spark core-top10热门品类</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/">spark RDD原理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/24/spark-core-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/">spark核心函数实例-广告点击Top3</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Links</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="https://github.com/ycfn97" target="_blank">github</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 ycfn97  &nbsp WeChat: ycfnsq97<br> 
+<!--      Powered by <a href="//hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>     -->
+
+
+<br>
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">本站访客数<span id="busuanzi_value_site_uv"></span>人</span>
+
+
+
+    </div>
+  </div>
+</footer>
+
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="totop"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+
+
+
+<!--载入js，在</body>之前插入即可-->
+    <!--Leancloud 操作库:-->
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <!--Valine 的核心代码库-->
+    <script src="/js/Valine.min.js"></script>
+    <script>
+        new Valine({
+            av: AV, 
+            el: '.comment',
+            app_id: 'ybyFTNXr5dkNt6FJvnChNvzH-gzGzoHsz',
+            app_key: 'QBdhhOEgw2lDsDrAKD8khsGr',
+            placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
+        });
+    </script>
+
+
+
+
+<!-- 百度分享 start -->
+
+<div id="article-share-box" class="article-share-box">
+  <div id="bdshare" class="bdsharebuttonbox article-share-links">
+    <a class="article-share-weibo" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a class="article-share-weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a class="article-share-qq" data-cmd="sqq" title="分享到QQ"></a>
+    <a class="article-share-renren" data-cmd="renren" title="分享到人人网"></a>
+    <a class="article-share-more" data-cmd="more" title="更多"></a>
+  </div>
+</div>
+<script>
+  function SetShareData(cmd, config) {
+    if (shareDataTitle && shareDataUrl) {
+      config.bdText = shareDataTitle;
+      config.bdUrl = shareDataUrl;
+    }
+    return config;
+  }
+  window._bd_share_config={
+    "common":{onBeforeClick: SetShareData},
+    "share":{"bdCustomStyle":"/css/bdshare.css"}
+  };
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+  bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+</div>
+</body>
+</html>

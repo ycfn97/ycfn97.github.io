@@ -9,19 +9,19 @@
   <meta name="description" content="​     ​    mysql在企业开发中不仅存放着大量用户数据表，还存放着其他服务的元数据，这些数据一但无法访问，不仅影响其他业务的进行，同时用户也无法查询自己的数据信息，众所周知，数据是无价的，弄丢了数据的后果极其严重。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一次意外断电导致mysql数据库损坏的数据恢复过程">
-<meta property="og:url" content="https://ycfn97.xyz/opt/apache-tomcat-9.0.40/webapps/hexo/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:url" content="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/index.html">
 <meta property="og:site_name" content="The last tear in the Atlantic">
 <meta property="og:description" content="​     ​    mysql在企业开发中不仅存放着大量用户数据表，还存放着其他服务的元数据，这些数据一但无法访问，不仅影响其他业务的进行，同时用户也无法查询自己的数据信息，众所周知，数据是无价的，弄丢了数据的后果极其严重。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://ycfn97.xyz/opt/apache-tomcat-9.0.40/webapps/hexo/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/1.jpg">
-<meta property="og:image" content="https://ycfn97.xyz/opt/apache-tomcat-9.0.40/webapps/hexo/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/2.jpg">
-<meta property="og:image" content="https://ycfn97.xyz/opt/apache-tomcat-9.0.40/webapps/hexo/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/4.jpg">
-<meta property="og:image" content="https://ycfn97.xyz/opt/apache-tomcat-9.0.40/webapps/hexo/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/3.jpg">
+<meta property="og:image" content="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/1.jpg">
+<meta property="og:image" content="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/2.jpg">
+<meta property="og:image" content="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/4.jpg">
+<meta property="og:image" content="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/3.jpg">
 <meta property="article:published_time" content="2020-11-15T15:36:33.982Z">
 <meta property="article:modified_time" content="2020-11-15T16:13:05.445Z">
 <meta property="article:author" content="ycfn97">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://ycfn97.xyz/opt/apache-tomcat-9.0.40/webapps/hexo/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/1.jpg">
+<meta name="twitter:image" content="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/1.jpg">
   
     <link rel="alternative" href="/atom.xml" title="The last tear in the Atlantic" type="application/atom+xml">
   
@@ -82,7 +82,7 @@ var _hmt = _hmt || [];
           <input name=tn type=hidden value="bds">
           <input name=cl type=hidden value="3">
           <input name=ct type=hidden value="2097152">
-          <input type="hidden" name="si" value="ycfn97.xyz/opt/apache-tomcat-9.0.40/webapps/hexo">
+          <input type="hidden" name="si" value="ycfn97.xyz">
         </form>
       </div>
     </div>
@@ -111,7 +111,7 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>​    <img src="/opt/apache-tomcat-9.0.40/webapps/hexo/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/1.jpg"></p>
+        <p>​    <img src="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/1.jpg"></p>
 <p>​    mysql在企业开发中不仅存放着大量用户数据表，还存放着其他服务的元数据，这些数据一但无法访问，不仅影响其他业务的进行，同时用户也无法查询自己的数据信息，众所周知，数据是无价的，弄丢了数据的后果极其严重。</p>
 <a id="more"></a>
 
@@ -152,12 +152,12 @@ var _hmt = _hmt || [];
 <li><p>6(SRV_FORCE_NO_LOG_REDO):不执行前滚的操作。</p>
 <p>​    </p>
 <p>​    然后重启节点，发现mysql服务能启动了，但是无法执行插入更新和删除操作，但终于可以导出宝贵的数据做备份了，我使用了Navicat把mysql中所有数据进行了导出：</p>
-<p><img src="/opt/apache-tomcat-9.0.40/webapps/hexo/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/2.jpg"></p>
+<p><img src="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/2.jpg"></p>
 <p>​    整个过程用了很久，但数据总算是保存下来了，接下来进入<code>/var/lib/mysql</code>备份整个目录，然后删除目录中所有内容<code>rm -rf  ./*</code>将mysql重新初始化。最后进入<code>/etc/my.cnf</code>将innodb重新置为0:</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">innodb_force_recovery = 0</span><br></pre></td></tr></table></figure>
 
 <p>成功启动mysql服务：</p>
-<p><img src="/opt/apache-tomcat-9.0.40/webapps/hexo/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/4.jpg"></p>
+<p><img src="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/4.jpg"></p>
 <p>这时候数据库已经重新初始化，需要重新获取初始密码：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep &#x27;temporary password&#x27; /var/log/mysqld.log</span><br></pre></td></tr></table></figure>
 
@@ -166,17 +166,17 @@ var _hmt = _hmt || [];
 </li>
 </ul>
 <p>  ​    然后进行设置mysql用户的操作，导入之前的数据，重新启动hadoop集群，成功启动hiveservice2和matestore服务。并进入datagrip查了一下，数据完美恢复！还好是测试环境，谢天谢地。</p>
-<p>  <img src="/opt/apache-tomcat-9.0.40/webapps/hexo/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/3.jpg"></p>
+<p>  <img src="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/3.jpg"></p>
 
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://ycfn97.xyz/opt/apache-tomcat-9.0.40/webapps/hexo/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/" data-id="cki8j5rs10005jcgaa938g0wa" class="article-share-link" data-share="baidu" data-title="一次意外断电导致mysql数据库损坏的数据恢复过程">Share</a>
+        <a data-url="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/" data-id="cki8mawu80006joga7zkv6j25" class="article-share-link" data-share="baidu" data-title="一次意外断电导致mysql数据库损坏的数据恢复过程">Share</a>
       
 
   
-  <a href="https://ycfn97.xyz/opt/apache-tomcat-9.0.40/webapps/hexo/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/#valine_thread" class="article-comment-link">Comments</a>
+  <a href="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/#valine_thread" class="article-comment-link">Comments</a>
 
 
       

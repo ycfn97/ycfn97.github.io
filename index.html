@@ -82,6 +82,54 @@ var _hmt = _hmt || [];
     <div class="outer">
       <section id="main">
   
+    <article id="post-clickhouse作为实时和离线计算引擎从kafka消费数据（1）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/04/clickhouse%E4%BD%9C%E4%B8%BA%E5%AE%9E%E6%97%B6%E5%92%8C%E7%A6%BB%E7%BA%BF%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E%E4%BB%8Ekafka%E6%B6%88%E8%B4%B9%E6%95%B0%E6%8D%AE%EF%BC%881%EF%BC%89/" class="article-date">
+  <time datetime="2020-12-04T04:12:20.986Z" itemprop="datePublished">2020-12-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/12/04/clickhouse%E4%BD%9C%E4%B8%BA%E5%AE%9E%E6%97%B6%E5%92%8C%E7%A6%BB%E7%BA%BF%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E%E4%BB%8Ekafka%E6%B6%88%E8%B4%B9%E6%95%B0%E6%8D%AE%EF%BC%881%EF%BC%89/">clickhouse作为实时和离线计算引擎从kafka消费数据（1）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="https://clickhouse.tech/images/index/intro.svg" alt="ClickHouse is capable of generating analytical data reports in real time, with sub-second latencies">    </p>
+<p>​    由于clickhouse超高的查询性能，和使用sql开发的低成本，我们不禁想到让clickhouse作为计算引擎和存储介质直接分析存储在其中的海量数据，并配合其MergeTree表引擎特有的TTL功能做实时数据分析。</p>
+        
+          <p class="article-more-link">
+            <a href="/2020/12/04/clickhouse%E4%BD%9C%E4%B8%BA%E5%AE%9E%E6%97%B6%E5%92%8C%E7%A6%BB%E7%BA%BF%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E%E4%BB%8Ekafka%E6%B6%88%E8%B4%B9%E6%95%B0%E6%8D%AE%EF%BC%881%EF%BC%89/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://ycfn97.xyz/2020/12/04/clickhouse%E4%BD%9C%E4%B8%BA%E5%AE%9E%E6%97%B6%E5%92%8C%E7%A6%BB%E7%BA%BF%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E%E4%BB%8Ekafka%E6%B6%88%E8%B4%B9%E6%95%B0%E6%8D%AE%EF%BC%881%EF%BC%89/" data-id="cki9r6yon0000p4gacgzzdpma" class="article-share-link" data-share="baidu" data-title="clickhouse作为实时和离线计算引擎从kafka消费数据（1）">Share</a>
+      
+
+  
+  <a href="https://ycfn97.xyz/2020/12/04/clickhouse%E4%BD%9C%E4%B8%BA%E5%AE%9E%E6%97%B6%E5%92%8C%E7%A6%BB%E7%BA%BF%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E%E4%BB%8Ekafka%E6%B6%88%E8%B4%B9%E6%95%B0%E6%8D%AE%EF%BC%881%EF%BC%89/#valine_thread" class="article-comment-link">Comments</a>
+
+
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-一次意外断电导致mysql数据库损坏的数据恢复过程" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/" class="article-date">
@@ -115,7 +163,7 @@ var _hmt = _hmt || [];
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/" data-id="cki8ntiws0006l4gabc3g2sc4" class="article-share-link" data-share="baidu" data-title="一次意外断电导致mysql数据库损坏的数据恢复过程">Share</a>
+        <a data-url="https://ycfn97.xyz/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/" data-id="cki9r6yoz0006p4gabtr68d24" class="article-share-link" data-share="baidu" data-title="一次意外断电导致mysql数据库损坏的数据恢复过程">Share</a>
       
 
   
@@ -163,7 +211,7 @@ var _hmt = _hmt || [];
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://ycfn97.xyz/2020/11/10/clickhouse%E5%8D%95%E6%9C%BA%E5%8F%8A%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" data-id="cki8ntiwh0000l4ga7f6v6cig" class="article-share-link" data-share="baidu" data-title="clickhouse单机及集群快速部署">Share</a>
+        <a data-url="https://ycfn97.xyz/2020/11/10/clickhouse%E5%8D%95%E6%9C%BA%E5%8F%8A%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" data-id="cki9r6yos0001p4gag9s04m4a" class="article-share-link" data-share="baidu" data-title="clickhouse单机及集群快速部署">Share</a>
       
 
   
@@ -214,7 +262,7 @@ var _hmt = _hmt || [];
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://ycfn97.xyz/2020/09/28/spark-core-top10%E7%83%AD%E9%97%A8%E5%93%81%E7%B1%BB/" data-id="cki8ntiwp0003l4ga2zdy5sek" class="article-share-link" data-share="baidu" data-title="spark core-top10热门品类">Share</a>
+        <a data-url="https://ycfn97.xyz/2020/09/28/spark-core-top10%E7%83%AD%E9%97%A8%E5%93%81%E7%B1%BB/" data-id="cki9r6yow0004p4ga3y80cru0" class="article-share-link" data-share="baidu" data-title="spark core-top10热门品类">Share</a>
       
 
   
@@ -261,7 +309,7 @@ var _hmt = _hmt || [];
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://ycfn97.xyz/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/" data-id="cki8ntiwo0002l4ga3yyp0jse" class="article-share-link" data-share="baidu" data-title="spark RDD原理">Share</a>
+        <a data-url="https://ycfn97.xyz/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/" data-id="cki9r6yov0003p4gae2w4488d" class="article-share-link" data-share="baidu" data-title="spark RDD原理">Share</a>
       
 
   
@@ -308,7 +356,7 @@ var _hmt = _hmt || [];
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://ycfn97.xyz/2020/09/24/spark-core-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/" data-id="cki8ntiwq0004l4gafckhegpc" class="article-share-link" data-share="baidu" data-title="spark核心函数实例-广告点击Top3">Share</a>
+        <a data-url="https://ycfn97.xyz/2020/09/24/spark-core-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/" data-id="cki9r6yp00007p4gabfge4x0f" class="article-share-link" data-share="baidu" data-title="spark核心函数实例-广告点击Top3">Share</a>
       
 
   
@@ -355,7 +403,7 @@ var _hmt = _hmt || [];
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://ycfn97.xyz/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" data-id="cki8ntiwr0005l4ga2gw68bew" class="article-share-link" data-share="baidu" data-title="Hexo搭建个人博客">Share</a>
+        <a data-url="https://ycfn97.xyz/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" data-id="cki9r6yow0005p4gaba3a3ozr" class="article-share-link" data-share="baidu" data-title="Hexo搭建个人博客">Share</a>
       
 
   
@@ -402,7 +450,7 @@ var _hmt = _hmt || [];
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://ycfn97.xyz/2020/09/23/hello-world/" data-id="cki8ntiwm0001l4ga1zf29c8s" class="article-share-link" data-share="baidu" data-title="Hello World">Share</a>
+        <a data-url="https://ycfn97.xyz/2020/09/23/hello-world/" data-id="cki9r6you0002p4gadz7bfr3t" class="article-share-link" data-share="baidu" data-title="Hello World">Share</a>
       
 
   
@@ -432,7 +480,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">5</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">5</span></li></ul>
     </div>
   </div>
 
@@ -442,6 +490,10 @@ var _hmt = _hmt || [];
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/12/04/clickhouse%E4%BD%9C%E4%B8%BA%E5%AE%9E%E6%97%B6%E5%92%8C%E7%A6%BB%E7%BA%BF%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E%E4%BB%8Ekafka%E6%B6%88%E8%B4%B9%E6%95%B0%E6%8D%AE%EF%BC%881%EF%BC%89/">clickhouse作为实时和离线计算引擎从kafka消费数据（1）</a>
+          </li>
         
           <li>
             <a href="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/">一次意外断电导致mysql数据库损坏的数据恢复过程</a>
@@ -457,10 +509,6 @@ var _hmt = _hmt || [];
         
           <li>
             <a href="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/">spark RDD原理</a>
-          </li>
-        
-          <li>
-            <a href="/2020/09/24/spark-core-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/">spark核心函数实例-广告点击Top3</a>
           </li>
         
       </ul>

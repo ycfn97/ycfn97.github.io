@@ -1,0 +1,401 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>flink yarn模式下的 HA 和 故障重启 | The last tear in the Atlantic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="​">
+<meta property="og:type" content="article">
+<meta property="og:title" content="flink yarn模式下的 HA 和 故障重启">
+<meta property="og:url" content="https://ycfn97.xyz/2020/12/07/flink-yarn%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-HA-%E5%92%8C-%E6%95%85%E9%9A%9C%E9%87%8D%E5%90%AF/index.html">
+<meta property="og:site_name" content="The last tear in the Atlantic">
+<meta property="og:description" content="​">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://flink.apache.org/img/flink-header-logo.svg">
+<meta property="og:image" content="https://ci.apache.org/projects/flink/flink-docs-release-1.11/fig/jobmanager_ha_overview.png">
+<meta property="og:image" content="https://ycfn97.xyz/2020/12/07/flink-yarn%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-HA-%E5%92%8C-%E6%95%85%E9%9A%9C%E9%87%8D%E5%90%AF/be.jpg">
+<meta property="og:image" content="https://ycfn97.xyz/2020/12/07/flink-yarn%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-HA-%E5%92%8C-%E6%95%85%E9%9A%9C%E9%87%8D%E5%90%AF/ha.jpg">
+<meta property="og:image" content="https://ycfn97.xyz/2020/12/07/flink-yarn%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-HA-%E5%92%8C-%E6%95%85%E9%9A%9C%E9%87%8D%E5%90%AF/404.jpg">
+<meta property="og:image" content="https://ycfn97.xyz/2020/12/07/flink-yarn%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-HA-%E5%92%8C-%E6%95%85%E9%9A%9C%E9%87%8D%E5%90%AF/la.jpg">
+<meta property="og:image" content="https://ycfn97.xyz/2020/12/07/flink-yarn%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-HA-%E5%92%8C-%E6%95%85%E9%9A%9C%E9%87%8D%E5%90%AF/ha02.jpg">
+<meta property="article:published_time" content="2020-12-06T18:06:32.046Z">
+<meta property="article:modified_time" content="2020-12-06T18:41:16.484Z">
+<meta property="article:author" content="ycfn97">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://flink.apache.org/img/flink-header-logo.svg">
+  
+    <link rel="alternative" href="/atom.xml" title="The last tear in the Atlantic" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?029e85d94060b2a4054a349dc92bef7f";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+ 
+
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+<body>
+<div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">The last tear in the Atlantic</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//www.baidu.com/baidu" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="word" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="submit" value="" class="search-form-submit">
+          <input name=tn type=hidden value="bds">
+          <input name=cl type=hidden value="3">
+          <input name=ct type=hidden value="2097152">
+          <input type="hidden" name="si" value="ycfn97.xyz">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+    <div class="outer">
+      <section id="main"><article id="post-flink-yarn模式下的-HA-和-故障重启" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/07/flink-yarn%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-HA-%E5%92%8C-%E6%95%85%E9%9A%9C%E9%87%8D%E5%90%AF/" class="article-date">
+  <time datetime="2020-12-06T18:06:32.046Z" itemprop="datePublished">2020-12-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      flink yarn模式下的 HA 和 故障重启
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="https://flink.apache.org/img/flink-header-logo.svg" alt="Apache Flink"></p>
+<p>​    </p>
+<a id="more"></a>
+
+<h1 id="HA"><a href="#HA" class="headerlink" title="HA"></a>HA</h1><p>​        JobManager协调每个Flink部署。它负责调度和资源管理。默认情况下，每个Flink集群只有一个JobManager实例。这会创建一个单点故障(SPOF):如果JobManager崩溃，就不能提交新的程序，运行中的程序也会失败。使用JobManager高可用性，您可以从JobManager故障中恢复，从而消除SPOF。您可以为独立集群和纱线集群配置高可用性。</p>
+<p><img src="https://ci.apache.org/projects/flink/flink-docs-release-1.11/fig/jobmanager_ha_overview.png" alt="img"></p>
+<p>​    </p>
+<p>​    由于生产环境下通常使用yarn模式，所以这里介绍yarn模式下的高可用配置，并测试杀死jobmanager进程后重启的过程。通常高可用需要配置zookeeper参数，所以这里分别对<code>yarn-site.xml</code>和<code>flink-conf.yaml</code>进行配置：</p>
+<p>yarn-site.xml增加jobmanageer失败后最大的重试次数</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.am.max-attempts<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>10<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">description</span>&gt;</span></span><br><span class="line">    The maximum number of application master execution attempts.</span><br><span class="line">  <span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>flink-conf.yaml中设置zookeeper参数：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">high-availability:</span> <span class="string">zookeeper</span></span><br><span class="line"><span class="attr">high-availability.zookeeper.quorum:</span> <span class="string">hadoop01:2181,hadoop02:2181,hadoop03:2181</span></span><br><span class="line"><span class="attr">high-availability.storageDir:</span> <span class="string">hdfs:///flink/ha</span></span><br><span class="line"><span class="attr">high-availability.zookeeper.path.root:</span> <span class="string">/flink</span></span><br><span class="line"><span class="attr">yarn.application-attempts:</span> <span class="number">10</span></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>注意<code>yarn.resourcemanager.am.max-attempts</code>应用程序重新启动的上限。因此，Flink中设置的应用程序尝试次数不能超过启动YARN的YARN群集设置。(yarn.resourcemanager.am.max-attemps)。</p>
+<p>yarn.application-attempts  &lt;=  yarn.resourcemanager.am.max-attempts</p>
+</blockquote>
+<p>配置成功并分发至各节点，然后分别启动zookeeper，yarn，并开启session cluster：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/yarn-session.sh -n 2 -s 2 -jm 1024 -tm 1024 -nm test -d</span><br></pre></td></tr></table></figure>
+
+<p>​    查看控制台：</p>
+<p><img src="/2020/12/07/flink-yarn%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-HA-%E5%92%8C-%E6%95%85%E9%9A%9C%E9%87%8D%E5%90%AF/be.jpg"></p>
+<p>​    查看job manager信息，可以看到zookeeper中注册了flink节点信息：</p>
+<p><img src="/2020/12/07/flink-yarn%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-HA-%E5%92%8C-%E6%95%85%E9%9A%9C%E9%87%8D%E5%90%AF/ha.jpg"></p>
+<p>在控制台杀死<code>YarnSessionClusterEntrypoint</code>进程，flink UI界面无法访问</p>
+<p><img src="/2020/12/07/flink-yarn%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-HA-%E5%92%8C-%E6%95%85%E9%9A%9C%E9%87%8D%E5%90%AF/404.jpg"></p>
+<p>查看控制台发现在hadoop03又出现一个<code>YarnSessionClusterEntrypoint</code>进程：</p>
+<p><img src="/2020/12/07/flink-yarn%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-HA-%E5%92%8C-%E6%95%85%E9%9A%9C%E9%87%8D%E5%90%AF/la.jpg"></p>
+<p>通过yarn application发现又出现一个application，打开：</p>
+<p><img src="/2020/12/07/flink-yarn%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-HA-%E5%92%8C-%E6%95%85%E9%9A%9C%E9%87%8D%E5%90%AF/ha02.jpg"></p>
+<h1 id="故障重启"><a href="#故障重启" class="headerlink" title="故障重启"></a>故障重启</h1><p>flink在消费kafka源源不断产生的消息时，难免会遇到程序挂掉的情况，这时候如果无人值守，那么kafka生产的消息会一直积压无法消费，所以需要开启故障重启来自动恢复任务。</p>
+<p>flink重启策略有四种：下面是在<code>flink-conf.yaml</code>配置和代码中进行配置：</p>
+<h4 id="固定延迟重启策略"><a href="#固定延迟重启策略" class="headerlink" title="固定延迟重启策略"></a>固定延迟重启策略</h4><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># fixed-delay:固定延迟策略</span></span><br><span class="line"><span class="attr">restart-strategy:</span> <span class="string">fixed-delay</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 尝试5次，默认Integer.MAX_VALUE</span></span><br><span class="line"><span class="attr">restart-strategy.fixed-delay.attempts:</span> <span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置延迟时间10s，默认为 akka.ask.timeout时间</span></span><br><span class="line"><span class="attr">restart-strategy.fixed-delay.delay:</span> <span class="string">10s</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 5表示最大重试次数为5次，10s为延迟时间</span></span><br><span class="line">env.setRestartStrategy(RestartStrategies.fixedDelayRestart(<span class="number">5</span>,Time.of(<span class="number">10</span>, TimeUnit.SECONDS)));</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="故障率重启策略"><a href="#故障率重启策略" class="headerlink" title="故障率重启策略"></a>故障率重启策略</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置重启策略为failure-rate</span></span><br><span class="line"><span class="attr">restart-strategy:</span> <span class="string">failure-rate</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 失败作业之前的给定时间间隔内的最大重启次数，默认1</span></span><br><span class="line"><span class="attr">restart-strategy.failure-rate.max-failures-per-interval:</span> <span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 测量故障率的时间间隔。默认1min</span></span><br><span class="line"><span class="attr">restart-strategy.failure-rate.failure-rate-interval:</span> <span class="string">5min</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 两次连续重启尝试之间的延迟，默认akka.ask.timeout时间</span></span><br><span class="line"><span class="attr">restart-strategy.failure-rate.delay:</span> <span class="string">10s</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3为最大失败次数；5min为测量的故障时间；10s为2次间的延迟时间</span></span><br><span class="line">env.setRestartStrategy(RestartStrategies.failureRateRestart(<span class="number">3</span>,Time.of(<span class="number">5</span>, TimeUnit.MINUTES),Time.of(<span class="number">10</span>, TimeUnit.SECONDS)));</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="后备重启策略"><a href="#后备重启策略" class="headerlink" title="后备重启策略"></a>后备重启策略</h4><p>​    使用群集定义的重新启动策略。这对于启用检查点的流式传输程序很有帮助。默认情况下，如果没有定义其他重启策略，则选择固定延迟重启策略。</p>
+<h4 id="无重启策略"><a href="#无重启策略" class="headerlink" title="无重启策略"></a>无重启策略</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">restart-strategy:</span> <span class="string">none</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();</span><br><span class="line">env.setRestartStrategy(RestartStrategies.noRestart());</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://ycfn97.xyz/2020/12/07/flink-yarn%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-HA-%E5%92%8C-%E6%95%85%E9%9A%9C%E9%87%8D%E5%90%AF/" data-id="ckidgvlca0000voga3vmeh8ww" class="article-share-link" data-share="baidu" data-title="flink yarn模式下的 HA 和 故障重启">Share</a>
+      
+
+  
+  <a href="https://ycfn97.xyz/2020/12/07/flink-yarn%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-HA-%E5%92%8C-%E6%95%85%E9%9A%9C%E9%87%8D%E5%90%AF/#valine_thread" class="article-comment-link">Comments</a>
+
+
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/12/04/clickhouse%E4%BD%9C%E4%B8%BA%E5%AE%9E%E6%97%B6%E5%92%8C%E7%A6%BB%E7%BA%BF%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E%E4%BB%8Ekafka%E6%B6%88%E8%B4%B9%E6%95%B0%E6%8D%AE/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">clickhouse作为实时和离线计算引擎从kafka消费数据</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="valine_thread">
+      <div class="comment"></div>
+    </div>
+  </section>
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">5</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/12/07/flink-yarn%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-HA-%E5%92%8C-%E6%95%85%E9%9A%9C%E9%87%8D%E5%90%AF/">flink yarn模式下的 HA 和 故障重启</a>
+          </li>
+        
+          <li>
+            <a href="/2020/12/04/clickhouse%E4%BD%9C%E4%B8%BA%E5%AE%9E%E6%97%B6%E5%92%8C%E7%A6%BB%E7%BA%BF%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E%E4%BB%8Ekafka%E6%B6%88%E8%B4%B9%E6%95%B0%E6%8D%AE/">clickhouse作为实时和离线计算引擎从kafka消费数据</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/">一次意外断电导致mysql数据库损坏的数据恢复过程</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/10/clickhouse%E5%8D%95%E6%9C%BA%E5%8F%8A%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/">clickhouse单机及集群快速部署</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/28/spark-core-top10%E7%83%AD%E9%97%A8%E5%93%81%E7%B1%BB/">spark core-top10热门品类</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Links</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="https://github.com/ycfn97" target="_blank">github</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 ycfn97  &nbsp WeChat: ycfnsq97<br> 
+<!--      Powered by <a href="//hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>     -->
+
+
+<br>
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">本站访客数<span id="busuanzi_value_site_uv"></span>人</span>
+
+
+
+    </div>
+  </div>
+</footer>
+
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="totop"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+
+
+
+<!--载入js，在</body>之前插入即可-->
+    <!--Leancloud 操作库:-->
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <!--Valine 的核心代码库-->
+    <script src="/js/Valine.min.js"></script>
+    <script>
+        new Valine({
+            av: AV, 
+            el: '.comment',
+            app_id: 'ybyFTNXr5dkNt6FJvnChNvzH-gzGzoHsz',
+            app_key: 'QBdhhOEgw2lDsDrAKD8khsGr',
+            placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
+        });
+    </script>
+
+
+
+
+<!-- 百度分享 start -->
+
+<div id="article-share-box" class="article-share-box">
+  <div id="bdshare" class="bdsharebuttonbox article-share-links">
+    <a class="article-share-weibo" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a class="article-share-weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a class="article-share-qq" data-cmd="sqq" title="分享到QQ"></a>
+    <a class="article-share-renren" data-cmd="renren" title="分享到人人网"></a>
+    <a class="article-share-more" data-cmd="more" title="更多"></a>
+  </div>
+</div>
+<script>
+  function SetShareData(cmd, config) {
+    if (shareDataTitle && shareDataUrl) {
+      config.bdText = shareDataTitle;
+      config.bdUrl = shareDataUrl;
+    }
+    return config;
+  }
+  window._bd_share_config={
+    "common":{onBeforeClick: SetShareData},
+    "share":{"bdCustomStyle":"/css/bdshare.css"}
+  };
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+  bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+</div>
+</body>
+</html>

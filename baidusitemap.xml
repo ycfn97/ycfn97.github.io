@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://ycfn97.xyz/2020/12/07/flink-yarn%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-HA-%E5%92%8C-%E6%95%85%E9%9A%9C%E9%87%8D%E5%90%AF/</loc>
+    <lastmod>2020-12-06</lastmod>
+  </url>
+  <url>
     <loc>https://ycfn97.xyz/2020/12/04/clickhouse%E4%BD%9C%E4%B8%BA%E5%AE%9E%E6%97%B6%E5%92%8C%E7%A6%BB%E7%BA%BF%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E%E4%BB%8Ekafka%E6%B6%88%E8%B4%B9%E6%95%B0%E6%8D%AE/</loc>
     <lastmod>2020-12-04</lastmod>
   </url>

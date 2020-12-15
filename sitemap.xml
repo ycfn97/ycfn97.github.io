@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://ycfn97.xyz/2020/12/15/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dws%E5%B1%82%E5%8F%8C%E6%B5%81join/</loc>
+    
+    <lastmod>2020-12-15</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://ycfn97.xyz/2020/12/14/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dwd%E5%B1%82%E7%BB%B4%E8%A1%A8%E5%85%B3%E8%81%94/</loc>
     
     <lastmod>2020-12-13</lastmod>
@@ -81,7 +88,7 @@
 
   <url>
     <loc>https://ycfn97.xyz/</loc>
-    <lastmod>2020-12-13</lastmod>
+    <lastmod>2020-12-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

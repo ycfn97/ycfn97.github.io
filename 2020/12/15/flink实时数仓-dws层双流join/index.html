@@ -1,0 +1,352 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>flink实时数仓-dws层双流join | The last tear in the Atlantic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="article">
+<meta property="og:title" content="flink实时数仓-dws层双流join">
+<meta property="og:url" content="https://ycfn97.xyz/2020/12/15/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dws%E5%B1%82%E5%8F%8C%E6%B5%81join/index.html">
+<meta property="og:site_name" content="The last tear in the Atlantic">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ycfn97.xyz/2020/12/15/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dws%E5%B1%82%E5%8F%8C%E6%B5%81join/0.jpg">
+<meta property="og:image" content="https://ycfn97.xyz/2020/12/15/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dws%E5%B1%82%E5%8F%8C%E6%B5%81join/1.jpg">
+<meta property="og:image" content="https://ycfn97.xyz/2020/12/15/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dws%E5%B1%82%E5%8F%8C%E6%B5%81join/2.jpg">
+<meta property="og:image" content="https://ycfn97.xyz/2020/12/15/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dws%E5%B1%82%E5%8F%8C%E6%B5%81join/3.jpg">
+<meta property="article:published_time" content="2020-12-15T13:29:28.151Z">
+<meta property="article:modified_time" content="2020-12-15T13:42:48.379Z">
+<meta property="article:author" content="ycfn97">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ycfn97.xyz/2020/12/15/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dws%E5%B1%82%E5%8F%8C%E6%B5%81join/0.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="The last tear in the Atlantic" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?029e85d94060b2a4054a349dc92bef7f";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+ 
+
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+<body>
+<div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">The last tear in the Atlantic</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//www.baidu.com/baidu" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="word" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="submit" value="" class="search-form-submit">
+          <input name=tn type=hidden value="bds">
+          <input name=cl type=hidden value="3">
+          <input name=ct type=hidden value="2097152">
+          <input type="hidden" name="si" value="ycfn97.xyz">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+    <div class="outer">
+      <section id="main"><article id="post-flink实时数仓-dws层双流join" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/15/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dws%E5%B1%82%E5%8F%8C%E6%B5%81join/" class="article-date">
+  <time datetime="2020-12-15T13:29:28.151Z" itemprop="datePublished">2020-12-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      flink实时数仓-dws层双流join
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/2020/12/15/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dws%E5%B1%82%E5%8F%8C%E6%B5%81join/0.jpg"></p>
+<a id="more"></a>
+
+<p>​        在ods进行维度表和事实表关联形成dwd层宽表后，分别可以得到orderinfo和orderdetail两张宽表，这时可以将订单信息和订单详情表从kafka消费并使用flink intervalJoin和ProcessJoinFunction再次进行合流并去重形成订单总表，这样就可以将聚合好的数据写入OLAP例如clickhouse中，方便后续其他实时需求的实现SQL化，同时也可以将合流后的数据再次写入kafka形成dws层宽表方便数据的再次加工，最后实现ads层实时需求。</p>
+<p>整体架构：</p>
+<p><img src="/2020/12/15/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dws%E5%B1%82%E5%8F%8C%E6%B5%81join/1.jpg"></p>
+<p>程序流图：</p>
+<p><img src="/2020/12/15/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dws%E5%B1%82%E5%8F%8C%E6%B5%81join/2.jpg"></p>
+<p>代码实现  java版：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> dws;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> bean.OrderDetail;</span><br><span class="line"><span class="keyword">import</span> bean.OrderDetailWide;</span><br><span class="line"><span class="keyword">import</span> bean.OrderInfo01;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSON;</span><br><span class="line"><span class="keyword">import</span> lombok.SneakyThrows;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.functions.FilterFunction;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.functions.MapFunction;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.functions.RichMapFunction;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.configuration.ConfigConstants;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.configuration.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.configuration.RestOptions;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.TimeCharacteristic;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.datastream.DataStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.datastream.DataStreamSource;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.functions.co.ProcessJoinFunction;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExtractor;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.windowing.time.Time;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.util.serialization.SimpleStringSchema;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.util.Collector;</span><br><span class="line"><span class="keyword">import</span> java.text.SimpleDateFormat;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Copyright(c) 2020-2021 sparrow All Rights Reserved</span></span><br><span class="line"><span class="comment"> * Project: gmall2020-parent</span></span><br><span class="line"><span class="comment"> * Package: dws</span></span><br><span class="line"><span class="comment"> * ClassName: OrderDetailWideApp</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> 18729 created on date: 2020/12/14 16:29</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@version</span> 1.0</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> JDK 1.8</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OrderDetailWideApp</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String kafkaBrokers = <span class="string">&quot;hadoop01:9092&quot;</span>;</span><br><span class="line">        String zkBrokers = <span class="string">&quot;hadoop01:2181,hadoop02:2181,hadoop03:2181&quot;</span>;</span><br><span class="line">        String topic = <span class="string">&quot;DWD_ORDER_INFO&quot;</span>;</span><br><span class="line">        String groupId = <span class="string">&quot;dws_order_info_group&quot;</span>;</span><br><span class="line"></span><br><span class="line">        String topic01=<span class="string">&quot;DWD_ORDER_DETAIL&quot;</span>;</span><br><span class="line">        String groupId01=<span class="string">&quot;dws_order_detail_group&quot;</span>;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;===============》 flink任务开始  ==============》&quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Configuration conf = <span class="keyword">new</span> Configuration();</span><br><span class="line">        conf.setBoolean(ConfigConstants.LOCAL_START_WEBSERVER, <span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">//自定义端口</span></span><br><span class="line">        conf.setInteger(RestOptions.PORT, <span class="number">4550</span>);</span><br><span class="line">        <span class="comment">//本地env</span></span><br><span class="line">        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf);</span><br><span class="line">        env.setParallelism(<span class="number">4</span>);</span><br><span class="line">        <span class="comment">//生产env</span></span><br><span class="line">        <span class="comment">//val env = StreamExecutionEnvironment.getExecutionEnvironment</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();</span></span><br><span class="line">        <span class="comment">//设置kafka连接参数</span></span><br><span class="line">        Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">        properties.setProperty(<span class="string">&quot;bootstrap.servers&quot;</span>, kafkaBrokers);</span><br><span class="line">        properties.setProperty(<span class="string">&quot;zookeeper.connect&quot;</span>, zkBrokers);</span><br><span class="line">        properties.setProperty(<span class="string">&quot;group.id&quot;</span>, groupId);</span><br><span class="line"></span><br><span class="line">        Properties properties01 = <span class="keyword">new</span> Properties();</span><br><span class="line">        properties01.setProperty(<span class="string">&quot;bootstrap.servers&quot;</span>, kafkaBrokers);</span><br><span class="line">        properties01.setProperty(<span class="string">&quot;zookeeper.connect&quot;</span>, zkBrokers);</span><br><span class="line">        properties01.setProperty(<span class="string">&quot;group.id&quot;</span>, groupId01);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//设置时间类型</span></span><br><span class="line">        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);</span><br><span class="line">        <span class="comment">//设置检查点时间间隔</span></span><br><span class="line"><span class="comment">//        env.enableCheckpointing(5000);</span></span><br><span class="line"><span class="comment">//        env.setStateBackend( new MemoryStateBackend());</span></span><br><span class="line">        <span class="comment">//创建kafak消费者，获取kafak中的数据</span></span><br><span class="line">        FlinkKafkaConsumer&lt;String&gt; kafkaConsumer = <span class="keyword">new</span> FlinkKafkaConsumer&lt;&gt;(topic, <span class="keyword">new</span> SimpleStringSchema(), properties);</span><br><span class="line">        DataStreamSource&lt;String&gt; kafkaData = env.addSource(kafkaConsumer);</span><br><span class="line">        DataStream&lt;String&gt; orderInfo = kafkaData.map(<span class="keyword">new</span> MapFunction&lt;String, String&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> String <span class="title">map</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line"><span class="comment">//                System.out.println(&quot;&gt;&gt;&gt;&gt;&gt;&gt;接收topic报文:&quot;+s+&quot;&lt;&lt;&lt;&lt;&lt;&quot;);</span></span><br><span class="line">                <span class="keyword">return</span> s;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        FlinkKafkaConsumer&lt;String&gt; kafkaConsumer01 = <span class="keyword">new</span> FlinkKafkaConsumer&lt;&gt;(topic01, <span class="keyword">new</span> SimpleStringSchema(), properties01);</span><br><span class="line">        DataStreamSource&lt;String&gt; kafkaData01 = env.addSource(kafkaConsumer01);</span><br><span class="line">        SingleOutputStreamOperator&lt;String&gt; orderDetail = kafkaData01.map(<span class="keyword">new</span> RichMapFunction&lt;String, String&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> String <span class="title">map</span><span class="params">(String value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"><span class="comment">//                System.out.println(&quot;&gt;&gt;&gt;&gt;&gt;&gt;接收topic报文:&quot; + value + &quot;&lt;&lt;&lt;&lt;&lt;&quot;);</span></span><br><span class="line">                <span class="keyword">return</span> value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//        双流join</span></span><br><span class="line">        SingleOutputStreamOperator&lt;OrderInfo01&gt; orderInfo01 = orderInfo.map(<span class="keyword">new</span> RichMapFunction&lt;String, OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> OrderInfo01 <span class="title">map</span><span class="params">(String value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                OrderInfo01 orderInfo = (OrderInfo01) JSON.parseObject(value, Class.forName(<span class="string">&quot;bean.OrderInfo01&quot;</span>));</span><br><span class="line">                <span class="keyword">return</span> orderInfo;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).assignTimestampsAndWatermarks(<span class="keyword">new</span> AscendingTimestampExtractor&lt;OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@SneakyThrows</span></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">extractAscendingTimestamp</span><span class="params">(OrderInfo01 element)</span> </span>&#123;</span><br><span class="line">                SimpleDateFormat simpleDateFormat = <span class="keyword">new</span> SimpleDateFormat(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>);</span><br><span class="line">                Date date = simpleDateFormat.parse(element.getCreate_time());</span><br><span class="line">                <span class="keyword">long</span> time = date.getTime();</span><br><span class="line">                <span class="keyword">return</span> time * <span class="number">1000L</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).filter(<span class="keyword">new</span> FilterFunction&lt;OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">filter</span><span class="params">(OrderInfo01 value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> value.getOrder_status().equals(<span class="string">&quot;1004&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        SingleOutputStreamOperator&lt;OrderDetail&gt; orderDetail01 = (SingleOutputStreamOperator&lt;OrderDetail&gt;) orderDetail.map(<span class="keyword">new</span> RichMapFunction&lt;String, OrderDetail&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> OrderDetail <span class="title">map</span><span class="params">(String value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                OrderDetail orderDetail = (OrderDetail) JSON.parseObject(value, Class.forName(<span class="string">&quot;bean.OrderDetail&quot;</span>));</span><br><span class="line">                <span class="keyword">return</span> orderDetail;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).assignTimestampsAndWatermarks(<span class="keyword">new</span> AscendingTimestampExtractor&lt;OrderDetail&gt;() &#123;</span><br><span class="line">            <span class="meta">@SneakyThrows</span></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">extractAscendingTimestamp</span><span class="params">(OrderDetail element)</span> </span>&#123;</span><br><span class="line">                SimpleDateFormat simpleDateFormat = <span class="keyword">new</span> SimpleDateFormat(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>);</span><br><span class="line">                Date date = simpleDateFormat.parse(element.getCreate_time());</span><br><span class="line">                <span class="keyword">long</span> time = date.getTime();</span><br><span class="line">                <span class="keyword">return</span> time * <span class="number">1000L</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        orderInfo01</span><br><span class="line">                .keyBy(OrderInfo01::getId)</span><br><span class="line">                .intervalJoin(orderDetail01.keyBy(OrderDetail::getOrder_id))</span><br><span class="line">                .between(Time.minutes(-<span class="number">5</span>), Time.minutes(<span class="number">5</span>))</span><br><span class="line">                .process(<span class="keyword">new</span> TimeJoinFunction())</span><br><span class="line">                .print();</span><br><span class="line"></span><br><span class="line">        </span><br><span class="line"><span class="comment">//        订单金额分摊 略</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//        写入clickhouse 略</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//        .print();</span></span><br><span class="line"></span><br><span class="line">        env.execute();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TimeJoinFunction</span> <span class="keyword">extends</span> <span class="title">ProcessJoinFunction</span>&lt;<span class="title">OrderInfo01</span>,<span class="title">OrderDetail</span>,<span class="title">OrderDetailWide</span>&gt; </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">processElement</span><span class="params">(OrderInfo01 left, OrderDetail right, Context ctx, Collector&lt;OrderDetailWide&gt; out)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">            out.collect(<span class="keyword">new</span> OrderDetailWide(left,right));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>webUI反压监控正常：</p>
+<p><img src="/2020/12/15/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dws%E5%B1%82%E5%8F%8C%E6%B5%81join/3.jpg"></p>
+<p>dws层写入clickhouse</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://ycfn97.xyz/2020/12/15/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dws%E5%B1%82%E5%8F%8C%E6%B5%81join/" data-id="ckiq1dctq0000iwga23cb4tzu" class="article-share-link" data-share="baidu" data-title="flink实时数仓-dws层双流join">Share</a>
+      
+
+  
+  <a href="https://ycfn97.xyz/2020/12/15/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dws%E5%B1%82%E5%8F%8C%E6%B5%81join/#valine_thread" class="article-comment-link">Comments</a>
+
+
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/12/14/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dwd%E5%B1%82%E7%BB%B4%E8%A1%A8%E5%85%B3%E8%81%94/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">flink实时数仓-dwd层维表关联</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="valine_thread">
+      <div class="comment"></div>
+    </div>
+  </section>
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">5</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/12/15/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dws%E5%B1%82%E5%8F%8C%E6%B5%81join/">flink实时数仓-dws层双流join</a>
+          </li>
+        
+          <li>
+            <a href="/2020/12/14/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dwd%E5%B1%82%E7%BB%B4%E8%A1%A8%E5%85%B3%E8%81%94/">flink实时数仓-dwd层维表关联</a>
+          </li>
+        
+          <li>
+            <a href="/2020/12/08/%E6%97%A5%E6%B4%BB%E9%9C%80%E6%B1%82(kafka%E7%B2%BE%E5%87%86%E4%B8%80%E6%AC%A1%E6%80%A7%E6%B6%88%E8%B4%B9)-%E5%88%86%E5%88%AB%E7%94%A8sparkstreaming%E5%92%8Cflink%E5%AE%9E%E7%8E%B0/">日活需求(kafka精准一次性消费) 分别用sparkstreaming和flink实现</a>
+          </li>
+        
+          <li>
+            <a href="/2020/12/07/flink-yarn%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84-HA-%E5%92%8C-%E6%95%85%E9%9A%9C%E9%87%8D%E5%90%AF/">flink yarn模式下的 HA 和 故障重启</a>
+          </li>
+        
+          <li>
+            <a href="/2020/12/04/clickhouse%E4%BD%9C%E4%B8%BA%E5%AE%9E%E6%97%B6%E5%92%8C%E7%A6%BB%E7%BA%BF%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E%E4%BB%8Ekafka%E6%B6%88%E8%B4%B9%E6%95%B0%E6%8D%AE/">clickhouse作为实时和离线计算引擎从kafka消费数据</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Links</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="https://github.com/ycfn97" target="_blank">github</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 ycfn97  &nbsp WeChat: ycfnsq97<br> 
+<!--      Powered by <a href="//hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>     -->
+
+
+<br>
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">本站访客数<span id="busuanzi_value_site_uv"></span>人</span>
+
+
+
+    </div>
+  </div>
+</footer>
+
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="totop"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+
+
+
+<!--载入js，在</body>之前插入即可-->
+    <!--Leancloud 操作库:-->
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <!--Valine 的核心代码库-->
+    <script src="/js/Valine.min.js"></script>
+    <script>
+        new Valine({
+            av: AV, 
+            el: '.comment',
+            app_id: 'ybyFTNXr5dkNt6FJvnChNvzH-gzGzoHsz',
+            app_key: 'QBdhhOEgw2lDsDrAKD8khsGr',
+            placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
+        });
+    </script>
+
+
+
+
+<!-- 百度分享 start -->
+
+<div id="article-share-box" class="article-share-box">
+  <div id="bdshare" class="bdsharebuttonbox article-share-links">
+    <a class="article-share-weibo" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a class="article-share-weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a class="article-share-qq" data-cmd="sqq" title="分享到QQ"></a>
+    <a class="article-share-renren" data-cmd="renren" title="分享到人人网"></a>
+    <a class="article-share-more" data-cmd="more" title="更多"></a>
+  </div>
+</div>
+<script>
+  function SetShareData(cmd, config) {
+    if (shareDataTitle && shareDataUrl) {
+      config.bdText = shareDataTitle;
+      config.bdUrl = shareDataUrl;
+    }
+    return config;
+  }
+  window._bd_share_config={
+    "common":{onBeforeClick: SetShareData},
+    "share":{"bdCustomStyle":"/css/bdshare.css"}
+  };
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+  bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+</div>
+</body>
+</html>

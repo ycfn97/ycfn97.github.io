@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    Archives |  the Atlantic
+    flink checkpoint机制及非barrier对齐 |  the Atlantic
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -42,120 +42,223 @@
       
     <main class="content on">
       <section class="outer">
-  
-  
-  <article class="articles">
+  <article
+  id="post-flink checkpoint机制及非barrier对齐"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
     
-    
-    <h1 class="page-type-title">Archives</h1>
-    
-    
-  
-  
-  
-  
-  
-  
-  <div class="archives-wrap">
-    <div class="archive-year-wrap">
-      <a href="/archives/2020" class="archive-year">2020</a>
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  flink checkpoint机制及非barrier对齐
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/" class="article-date">
+  <time datetime="2021-02-15T20:17:14.729Z" itemprop="datePublished">2021-02-16</time>
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">964</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">3 min</span>
+        </span>
+    </span>
+</div>
+ 
     </div>
-    <div class="archives">
       
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/" class="archive-article-date">
-  <time datetime="2020-09-26T12:50:40.763Z" itemprop="datePublished">09/26</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/"
-    >spark RDD原理</a> 
-</h2>
- 
 
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/09/24/spark-core-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/" class="archive-article-date">
-  <time datetime="2020-09-24T09:57:13.451Z" itemprop="datePublished">09/24</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/09/24/spark-core-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/"
-    >spark核心函数实例-广告点击Top3</a> 
-</h2>
- 
 
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" class="archive-article-date">
-  <time datetime="2020-09-23T10:46:25.402Z" itemprop="datePublished">09/23</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/"
-    >Hexo搭建个人博客</a> 
-</h2>
- 
 
-    </header>
-    
-    
-  </div>
-</article>
-      
   
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/09/23/hello-world/" class="archive-article-date">
-  <time datetime="2020-09-23T01:30:10.787Z" itemprop="datePublished">09/23</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
        
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/09/23/hello-world/"
-    >Hello World</a> 
-</h2>
- 
+  <p><img src="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/0.jpg"></p>
+<p>注：本文部分内容为转载总结</p>
+<a id="more"></a>
 
-    </header>
-    
-    
-  </div>
-</article>
+<p>在flink的世界观里，一切事物都可以视为数据流中的一个个珠子，在算子间不断的流动着，之前的watermark就可以看做数据流中的一个数据珠子，同样checkpoint也不例外。</p>
+<p>在多个并行度的数据流经算子内联的barrier(检查点分界线)时，会将自己的位置保存进状态后端(state backend)，生产中一般将状态保存进hdfs，rocksdb中，如果数据源是kafka，那么稳定存储的就是kafka的offset，如下图所示，checkpoint流经keyby算子后保存了当前的位置，后面经过map算子时，保存了checkpoint流过算子时的数据状态，同样作为稳定存储进状态后端，当任务出现异常时，就可以从状态后端中将数据流还原到未出错前的样子：</p>
+<p><img src="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/1.jpg"></p>
+<p>但是，屏障对齐是阻塞式的，在作业出现反压时可能会成为不定时炸弹。我们知道，检查点屏障是从Source端产生并源源不断地向下游流动的。如果作业出现反压（哪怕整个DAG中的一条链路反压），数据流动的速度减慢，屏障到达下游算子的延迟就会变大，进而影响到检查点完成的延时（变大甚至超时失败）。如果反压长久不能得到解决，快照数据与实际数据之间的差距就越来越明显，一旦作业failover，势必丢失较多的处理进度。另一方面，作业恢复后需要重新处理的数据又会积压，加重反压，造成恶性循环。</p>
+<p>为了规避风险，Flink 1.11引入了非对齐检查点（unaligned checkpoint）的feature。</p>
+<p>非对齐检查点取消了屏障对齐操作：</p>
+<ol>
+<li>当算子的所有输入流中的第一个屏障到达算子的输入缓冲区时，立即将这个屏障发往下游（输出缓冲区）。</li>
+<li>由于第一个屏障没有被阻塞，它的步调会比较快，超过一部分缓冲区中的数据。算子会标记两部分数据：一是屏障首先到达的那条流中被超过的数据，二是其他流中位于当前检查点屏障之前的所有数据（当然也包括进入了输入缓冲区的数据），如下图中标黄的部分所示。</li>
+<li>将上述两部分数据连同算子的状态一起做异步快照。</li>
+</ol>
+<p><img src="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/2.png"></p>
+<p>不同检查点的数据都混在一起，非对齐检查点还是能保证exactly once。当任务从非对齐检查点恢复时，除了对齐检查点也会涉及到的Source端重放和算子的计算状态恢复之外，未对齐的流数据也会被恢复到各个链路，三者合并起来就是能够保证exactly once的完整现场了。</p>
+<p><img src="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/3.png"></p>
+<p>非对齐检查点主要缺点有二：</p>
+<ul>
+<li><p>需要额外保存数据流的现场，总的状态大小可能会有比较明显的膨胀（文档中说可能会达到a couple of GB per task），磁盘压力大。当集群本身就具有I/O bound的特点时，该缺点的影响更明显。</p>
+</li>
+<li><p>从状态恢复时也需要额外恢复数据流的现场，作业重新拉起的耗时可能会很长。特别地，如果第一次恢复失败，有可能触发death spiral（死亡螺旋）使得作业永远无法恢复。</p>
+</li>
+</ul>
+<p>官方当前推荐仅将它应用于那些容易产生反压且I/O压力较小（比如原始状态不太大）的作业中。随着后续版本的打磨，非对齐检查点肯定会更加好用。</p>
+ 
+      <!-- reward -->
       
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
       
     </div>
-  </div>
-  
-  
-
-  
-  <nav class="page-nav">
     
-    <a class="extend prev" rel="prev" href="/archives/">上一页</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ycfn97.xyz/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2021/02/15/flink%20watermark%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">flink watermark传递机制</div>
+      </a>
+    
   </nav>
-  
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "",
+    app_key: "",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+     
+</article>
+
 </section>
       <footer class="footer">
   <div class="outer">
@@ -317,6 +420,23 @@
 <script src="/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">

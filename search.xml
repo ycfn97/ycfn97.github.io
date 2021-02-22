@@ -588,4 +588,68 @@
         <category>flink</category>
       </categories>
   </entry>
+  <entry>
+    <title>elasticsearch原理及常见面试点</title>
+    <url>/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/</url>
+    <content><![CDATA[<p><img src="https://images.contentstack.io/v3/assets/bltefdd0b53724fa2ce/blt280217a63b82a734/5bbdaacf63ed239936a7dd56/elastic-logo.svg" alt="Elastic logo"></p>
+<a id="more"></a>
+
+<h4 id="elasticsearch是基于Lucene-倒排索引结构的一款OLAP数据分析引擎，特点是快速，并且支持模糊查询。"><a href="#elasticsearch是基于Lucene-倒排索引结构的一款OLAP数据分析引擎，特点是快速，并且支持模糊查询。" class="headerlink" title="elasticsearch是基于Lucene 倒排索引结构的一款OLAP数据分析引擎，特点是快速，并且支持模糊查询。"></a>elasticsearch是基于Lucene 倒排索引结构的一款OLAP数据分析引擎，特点是快速，并且支持模糊查询。</h4><p>模糊查询基于倒排索引：</p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/15.jpg"></p>
+<p>倒排索引原理：</p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/16.jpg"></p>
+<h4 id="图解-ElasticSearch-原理"><a href="#图解-ElasticSearch-原理" class="headerlink" title="图解 ElasticSearch 原理"></a>图解 ElasticSearch 原理</h4><p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/0.jpg"></p>
+<ul>
+<li>集群cluster中包含很多nodes</li>
+<li>一个或多个node中的shard组成index索引=lucene index</li>
+<li>lucene index由许多的segments组成</li>
+<li>segment内部结构由多个部分组成，最最重要的 <strong>Inverted Index</strong></li>
+</ul>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/1.png"></p>
+<p>Inverted Index 主要包括两部分：</p>
+<ul>
+<li>一个有序的数据字典 Dictionary（包括单词 Term 和它出现的频率）</li>
+<li>与单词 Term 对应的 Postings（即存在这个单词的文件）</li>
+</ul>
+<p>当我们搜索的时候，首先将搜索的内容分解，然后在字典里找到对应 Term，从而查找到与搜索相关的文件内容。</p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/2.jpg"></p>
+<p>在 Shard 中搜索</p>
+<p>ElasticSearch 从 Shard 中搜索的过程与 Lucene Segment 中搜索的过程类似。</p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/1.jpg"></p>
+<p>需要注意的是：1 次搜索查找 2 个 Shard＝2 次分别搜索 Shard</p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/3.jpg"></p>
+<p>Shard 不会进行更进一步的拆分，但是 Shard 可能会被转移到不同节点上。</p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/4.jpg"></p>
+<p>如果当集群节点压力增长到一定的程度，我们可能会考虑增加新的节点，这就会要求我们对所有数据进行重新索</p>
+<p>引，这是我们不太希望看到的。所以我们需要在规划的时候就考虑清楚，如何去平衡足够多的节点与不足节点之间</p>
+<p>的关系。</p>
+<hr>
+<p><strong>一个真实的请求</strong></p>
+<p>请求分发：这个请求可能被分发到集群里的任意一个节点，如下图：<br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/5.jpg"><br>上帝节点：</p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/6.png"><br>这时这个节点就成为当前请求的协调者（Coordinator），它决定：<br>根据索引信息，判断请求会被路由到哪个核心节点。<br>以及哪个副本是可用的。<br>等等。</p>
+<p>路由：<br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/7.png"><br>在真实搜索之前ElasticSearch 会将 Query 转换成 Lucene Query，如下图：<br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/8.jpg"><br>然后在所有的 Segment 中执行计算，如下图：<br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/9.jpg"><br>对于 Filter 条件本身也会有缓存，如下图：<br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/10.jpg"><br>但 Queries 不会被缓存，所以如果相同的 Query 重复执行，应用程序自己需要做缓存。<br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/17.jpg"><br>所以Filters 可以在任何时候使用。Query 只有在需要 Score 的时候才使用。</p>
+<p>搜索结束之后，结果会沿着下行的路径向上逐层返回，如下图：</p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/18.jpg"></p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/11.jpg"><br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/12.jpg"><br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/13.jpg"><br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/14.jpg"></p>
+<h3 id="常见面试问题："><a href="#常见面试问题：" class="headerlink" title="常见面试问题："></a>常见面试问题：</h3><p>kafka-flink-es过程中，flink自定义sink可以使用基于哪两种方式发送？</p>
+<p>1、http方式</p>
+<p>2、jdbc方式</p>
+<hr>
+<p>字段全值匹配检索如果在关系型数据库Mysql中查询多字段匹配数据（字段检索）一般会执行下面的SQL语句：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> atguigu <span class="keyword">where</span> <span class="keyword">name</span> = <span class="string">&#x27;haha&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>但在Elasticsearch中需要采用特殊的方式：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">GET atguigu/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;query&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;bool&quot;</span>: &#123;</span><br><span class="line">      <span class="attr">&quot;filter&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;term&quot;</span>: &#123;</span><br><span class="line">          <span class="attr">&quot;about&quot;</span>: <span class="string">&quot;I love to go rock climbing&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>字段分词匹配检索</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">GET atguigu/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;query&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;match&quot;</span>: &#123;</span><br><span class="line">      <span class="attr">&quot;about&quot;</span>: <span class="string">&quot;I&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>字段模糊匹配检索如果在关系型数据库Mysql中模糊查询多字段数据一般会执行下面的SQL语句：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> <span class="keyword">name</span> <span class="keyword">like</span> <span class="string">&#x27;%haha%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>但在Elasticsearch中需要采用特殊的方式，查询出所有文档字段值分词后包含haha的文档：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">GET  test/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;query&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;fuzzy&quot;</span>: &#123;</span><br><span class="line">      <span class="attr">&quot;aa&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;value&quot;</span>: <span class="string">&quot;我是程序&quot;</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+  </entry>
 </search>

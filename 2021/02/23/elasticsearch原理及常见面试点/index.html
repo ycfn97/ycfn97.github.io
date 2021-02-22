@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    hdfs故障恢复及原理 |  the Atlantic
+    elasticsearch原理及常见面试点 |  the Atlantic
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -43,7 +43,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-hdfs故障恢复及原理"
+  id="post-elasticsearch原理及常见面试点"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -54,26 +54,22 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  hdfs故障恢复及原理
+  elasticsearch原理及常见面试点
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2021/02/21/hdfs%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D%E5%8F%8A%E5%8E%9F%E7%90%86/" class="article-date">
-  <time datetime="2021-02-21T09:25:05.913Z" itemprop="datePublished">2021-02-21</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hadoop/">hadoop</a>
-  </div>
-  
+      <a href="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/" class="article-date">
+  <time datetime="2021-02-22T17:00:44.320Z" itemprop="datePublished">2021-02-23</time>
+</a>   
 <div class="word_count">
     <span class="post-time">
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">672</span>
+            <span class="post-count">864</span>
         </span>
     </span>
 
@@ -82,7 +78,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">2 min</span>
+            <span class="post-count">3 min</span>
         </span>
     </span>
 </div>
@@ -97,41 +93,65 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <p><img src="http://hadoop.apache.org/docs/r1.0.4/cn/images/hadoop-logo.jpg" alt="Hadoop"></p>
+  <p><img src="https://images.contentstack.io/v3/assets/bltefdd0b53724fa2ce/blt280217a63b82a734/5bbdaacf63ed239936a7dd56/elastic-logo.svg" alt="Elastic logo"></p>
 <a id="more"></a>
 
-<h3 id="2NN工作机制"><a href="#2NN工作机制" class="headerlink" title="2NN工作机制"></a>2NN工作机制</h3><p>Fsimage：hdfs文件系统元数据的一个永久性检查点。</p>
-<p>Edits：记录客户端更新元数据信息的每一步操作（可通过Edits运算出元数据）。</p>
-<p><img src="/2021/02/21/hdfs%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D%E5%8F%8A%E5%8E%9F%E7%90%86/1.jpg"></p>
-<ol>
-<li>NameNode启动，滚动Edits并生成一个空的edits.inprogress，并加载Edits和Fsimage到内存中，持有最新的元数据信息。</li>
-<li>Client开始对NameNode发送元数据的增删改的请求，这些请求的操作首先会被记录到edits.inprogress中（查询操作不会被记录，因为查询操作不会更改元数据信息），如果此时NameNode挂掉，重启后会从Edits中读取元数据的信息并在内存中执行元数据的增删改的操作。</li>
-<li>SecondaryNameNode询问NameNode是否需要CheckPoint（触发CheckPoint需要满足两个条件中的任意一个，定时时间到和Edits中数据写满了）。</li>
-<li>SecondaryNameNode执行CheckPoint，NameNode滚动Edits并生成一个新的edits.inprogress并将以后所有新的操作都写入edits.inprogress</li>
-<li>其他未合并的Edits和Fsimage会拷贝到SecondaryNameNode的本地，然后将拷贝的Edits和Fsimage加载到内存中进行合并，生成fsimage.chkpoint</li>
-<li>然后将fsimage.chkpoint拷贝给NameNode，重命名为Fsimage后替换掉原来的Fsimage。</li>
-<li>NameNode在启动时就只需要加载新的edits.inprogress和新Fsimage即可，因为合并过的Edits中的元数据信息已经被记录在Fsimage中。</li>
-</ol>
-<h3 id="CheckPoint时间设置"><a href="#CheckPoint时间设置" class="headerlink" title="CheckPoint时间设置"></a>CheckPoint时间设置</h3><ul>
-<li><p>通常情况下，SecondaryNameNode每隔一小时执行一次 [hdfs-default.xml] 。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.checkpoint.period<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>3600s<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>一分钟检查一次操作次数，当操作次数达到1百万时，SecondaryNameNode执行一次。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.checkpoint.txns<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>1000000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">description</span>&gt;</span>操作动作次数<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.checkpoint.check.period<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>60s<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">description</span>&gt;</span> 1分钟检查一次操作次数<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span> &gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ul>
-<h3 id="NameNode故障处理"><a href="#NameNode故障处理" class="headerlink" title="NameNode故障处理"></a>NameNode故障处理</h3><p>NameNode故障后，可以采用如下两种方法恢复数据。</p>
+<h4 id="elasticsearch是基于Lucene-倒排索引结构的一款OLAP数据分析引擎，特点是快速，并且支持模糊查询。"><a href="#elasticsearch是基于Lucene-倒排索引结构的一款OLAP数据分析引擎，特点是快速，并且支持模糊查询。" class="headerlink" title="elasticsearch是基于Lucene 倒排索引结构的一款OLAP数据分析引擎，特点是快速，并且支持模糊查询。"></a>elasticsearch是基于Lucene 倒排索引结构的一款OLAP数据分析引擎，特点是快速，并且支持模糊查询。</h4><p>模糊查询基于倒排索引：</p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/15.jpg"></p>
+<p>倒排索引原理：</p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/16.jpg"></p>
+<h4 id="图解-ElasticSearch-原理"><a href="#图解-ElasticSearch-原理" class="headerlink" title="图解 ElasticSearch 原理"></a>图解 ElasticSearch 原理</h4><p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/0.jpg"></p>
 <ul>
-<li>将SecondaryNameNode中数据拷贝到NameNode存储数据的目录</li>
-<li>使用-importCheckpoint选项启动NameNode守护进程，从而将SecondaryNameNode中数据拷贝到NameNode目录中。</li>
+<li>集群cluster中包含很多nodes</li>
+<li>一个或多个node中的shard组成index索引=lucene index</li>
+<li>lucene index由许多的segments组成</li>
+<li>segment内部结构由多个部分组成，最最重要的 <strong>Inverted Index</strong></li>
 </ul>
-<h3 id="Hadoop宕机"><a href="#Hadoop宕机" class="headerlink" title="Hadoop宕机"></a>Hadoop宕机</h3><ul>
-<li>如果MR造成系统宕机。此时要控制Yarn同时运行的任务数，和每个任务申请的最大内存。调整参数：yarn.scheduler.maximum-allocation-mb（单个任务可申请的最多物理内存量，默认是8192MB）</li>
-<li>如果写入文件过快造成NameNode宕机。那么调高Kafka的存储大小，控制从Kafka到HDFS的写入速度。例如，可以调整Flume每批次拉取数据量的大小参数batchsize。</li>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/1.png"></p>
+<p>Inverted Index 主要包括两部分：</p>
+<ul>
+<li>一个有序的数据字典 Dictionary（包括单词 Term 和它出现的频率）</li>
+<li>与单词 Term 对应的 Postings（即存在这个单词的文件）</li>
 </ul>
+<p>当我们搜索的时候，首先将搜索的内容分解，然后在字典里找到对应 Term，从而查找到与搜索相关的文件内容。</p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/2.jpg"></p>
+<p>在 Shard 中搜索</p>
+<p>ElasticSearch 从 Shard 中搜索的过程与 Lucene Segment 中搜索的过程类似。</p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/1.jpg"></p>
+<p>需要注意的是：1 次搜索查找 2 个 Shard＝2 次分别搜索 Shard</p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/3.jpg"></p>
+<p>Shard 不会进行更进一步的拆分，但是 Shard 可能会被转移到不同节点上。</p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/4.jpg"></p>
+<p>如果当集群节点压力增长到一定的程度，我们可能会考虑增加新的节点，这就会要求我们对所有数据进行重新索</p>
+<p>引，这是我们不太希望看到的。所以我们需要在规划的时候就考虑清楚，如何去平衡足够多的节点与不足节点之间</p>
+<p>的关系。</p>
+<hr>
+<p><strong>一个真实的请求</strong></p>
+<p>请求分发：这个请求可能被分发到集群里的任意一个节点，如下图：<br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/5.jpg"><br>上帝节点：</p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/6.png"><br>这时这个节点就成为当前请求的协调者（Coordinator），它决定：<br>根据索引信息，判断请求会被路由到哪个核心节点。<br>以及哪个副本是可用的。<br>等等。</p>
+<p>路由：<br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/7.png"><br>在真实搜索之前ElasticSearch 会将 Query 转换成 Lucene Query，如下图：<br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/8.jpg"><br>然后在所有的 Segment 中执行计算，如下图：<br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/9.jpg"><br>对于 Filter 条件本身也会有缓存，如下图：<br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/10.jpg"><br>但 Queries 不会被缓存，所以如果相同的 Query 重复执行，应用程序自己需要做缓存。<br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/17.jpg"><br>所以Filters 可以在任何时候使用。Query 只有在需要 Score 的时候才使用。</p>
+<p>搜索结束之后，结果会沿着下行的路径向上逐层返回，如下图：</p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/18.jpg"></p>
+<p><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/11.jpg"><br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/12.jpg"><br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/13.jpg"><br><img src="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/14.jpg"></p>
+<h3 id="常见面试问题："><a href="#常见面试问题：" class="headerlink" title="常见面试问题："></a>常见面试问题：</h3><p>kafka-flink-es过程中，flink自定义sink可以使用基于哪两种方式发送？</p>
+<p>1、http方式</p>
+<p>2、jdbc方式</p>
+<hr>
+<p>字段全值匹配检索如果在关系型数据库Mysql中查询多字段匹配数据（字段检索）一般会执行下面的SQL语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> atguigu <span class="keyword">where</span> <span class="keyword">name</span> = <span class="string">&#x27;haha&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>但在Elasticsearch中需要采用特殊的方式：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">GET atguigu/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;query&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;bool&quot;</span>: &#123;</span><br><span class="line">      <span class="attr">&quot;filter&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;term&quot;</span>: &#123;</span><br><span class="line">          <span class="attr">&quot;about&quot;</span>: <span class="string">&quot;I love to go rock climbing&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>字段分词匹配检索</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET atguigu/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;query&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;match&quot;</span>: &#123;</span><br><span class="line">      <span class="attr">&quot;about&quot;</span>: <span class="string">&quot;I&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>字段模糊匹配检索如果在关系型数据库Mysql中模糊查询多字段数据一般会执行下面的SQL语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> <span class="keyword">name</span> <span class="keyword">like</span> <span class="string">&#x27;%haha%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>但在Elasticsearch中需要采用特殊的方式，查询出所有文档字段值分词后包含haha的文档：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">GET  test/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;query&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;fuzzy&quot;</span>: &#123;</span><br><span class="line">      <span class="attr">&quot;aa&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;value&quot;</span>: <span class="string">&quot;我是程序&quot;</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
  
       <!-- reward -->
       
@@ -202,7 +222,7 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ycfn97.xyz/2021/02/21/hdfs%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D%E5%8F%8A%E5%8E%9F%E7%90%86/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ycfn97.xyz/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -213,19 +233,10 @@
    
   <nav class="article-nav">
     
-      <a href="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            elasticsearch原理及常见面试点
-          
-        </div>
-      </a>
     
-    
-      <a href="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/" class="article-nav-link">
+      <a href="/2021/02/21/hdfs%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D%E5%8F%8A%E5%8E%9F%E7%90%86/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">flink checkpoint机制及非barrier对齐</div>
+        <div class="article-nav-title">hdfs故障恢复及原理</div>
       </a>
     
   </nav>

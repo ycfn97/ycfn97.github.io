@@ -699,4 +699,39 @@
 <p><img src="/2021/03/20/mysql%E7%82%B8%E8%A3%82%E5%87%BD%E6%95%B0%E5%AE%9E%E4%BE%8B/3.jpg"></p>
 ]]></content>
   </entry>
+  <entry>
+    <title>dolphinscheduler任务调度指南</title>
+    <url>/2021/04/08/dolphinscheduler%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<p><img src="https://dolphinscheduler.apache.org/img/hlogo_white.svg" alt="img"></p>
+<a id="more"></a>
+
+<p>GitHub地址：<a href="https://github.com/apache/incubator-dolphinscheduler">https://github.com/apache/incubator-dolphinscheduler</a></p>
+<p>dolphinscheduler的集群环境配置有几个要点：</p>
+<p>1、元数据库配置及初始化</p>
+<p>2、运行环境的配置</p>
+<p>3、集群安装参数、上传文件路径及告警配置</p>
+<p>其中环境的配置直接影响后面的任务调度。以阿里云E-Mapreduce为例，集群的环境变量及常见类路径部署在/etc/profile.d/*.sh中，如果在任务运行过程中出现命令丢失和jar包缺失，可以去$PATH中去找环境变量。</p>
+<p><img src="/2021/04/08/dolphinscheduler%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E6%8C%87%E5%8D%97/0.jpg"></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">export HADOOP_HOME=/usr/lib/hadoop-current</span><br><span class="line">export HADOOP_CONF_DIR=/etc/ecm/hadoop-conf</span><br><span class="line">export SPARK_HOME=/usr/lib/spark-current</span><br><span class="line">export HADOOP_CLASSPATH=/usr/lib/hadoop-current/lib/*:/usr/lib/tez-current/*:/usr/lib/tez-current/lib/*:/etc/ecm/tez-conf:/opt/apps/extra-jars/*:/usr/lib/spark-current/yarn/spark-2.4.5-yarn-shuffle.jar</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="built_in">export</span> SPARK_HOME2=/opt/soft/spark2</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="built_in">export</span> PYTHON_HOME=/opt/soft/python</span></span><br><span class="line">export JAVA_HOME=/usr/lib/jvm/java-1.8.0</span><br><span class="line">export HIVE_HOME=/usr/lib/hive-current</span><br><span class="line">export FLINK_HOME=/usr/lib/flink-current</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="built_in">export</span> DATAX_HOME=/opt/soft/datax/bin/datax.py</span></span><br><span class="line">export SQOOP_HOME=/usr/lib/sqoop-current</span><br><span class="line"></span><br><span class="line">export HIVE_CONF_DIR=/etc/ecm/hive-conf</span><br><span class="line">export HCAT_HOME=/usr/lib/hive-current/hcatalog</span><br><span class="line"></span><br><span class="line">export PATH=$SQOOP_HOME/bin:$HADOOP_HOME/bin:$HCAT_HOME/bin:$SPARK_HOME/bin:$JAVA_HOME/bin:$HIVE_HOME/bin:$PATH:$FLINK_HOME/bin:$DATAX_HOME:$PATH</span><br></pre></td></tr></table></figure>
+
+<p>如果这3点中有一点没有做好，将会影响dolphinscheduler的正常工作和任务调度。</p>
+<p>在部署好集群后，会在master和worker上共启动5种不同的进程：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">MasterServer         ----- master服务    </span><br><span class="line">WorkerServer         ----- worker服务    </span><br><span class="line">LoggerServer         ----- logger服务    </span><br><span class="line">ApiApplicationServer ----- api服务    </span><br><span class="line">AlertServer          ----- alert服务</span><br></pre></td></tr></table></figure>
+
+<p>进入web后首先要进行一些初始化工作，例如租户，用户的创建，数据源的配置等，然后我们可以进行任务调度：</p>
+<p><img src="/2021/04/08/dolphinscheduler%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E6%8C%87%E5%8D%97/1.jpg"></p>
+<p>工作台有几种常用的任务例如flink，spark、sql、shell脚本都可以通过托拉拽的方式确定任务调度流程。</p>
+<p>在完成任务流程设计后，可以通过定时调度，失败邮箱报警和企业微信报警来题型开发者任务过程出现的问题并及时解决。</p>
+<p>在进行任务调度过程中，可能会出现一些程序本身设计问题而导致的bug，</p>
+<p>出现任务调度异常，或者任务链卡死，首先去logs下跟踪master和worker的日志，一般出错都会在日志中找出原因，常见的bug如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">[ERROR] <span class="number">2021</span>-<span class="number">04</span>-<span class="number">08</span> <span class="number">14</span>:<span class="number">58</span>:<span class="number">51.045</span> org.apache.dolphinscheduler.server.master.processor.queue.TaskResponseService:[<span class="number">169</span>] - worker response master error</span><br><span class="line">org.springframework.dao.DataIntegrityViolationException: </span><br><span class="line">### Error updating database.  Cause: com.mysql.jdbc.MysqlDataTruncation: Data truncation: Data too long for column &#x27;app_link&#x27; at row 1</span><br><span class="line">### The error may exist in org/apache/dolphinscheduler/dao/mapper/TaskInstanceMapper.java (best guess)</span><br><span class="line">### The error may involve org.apache.dolphinscheduler.dao.mapper.TaskInstanceMapper.updateById-Inline</span><br><span class="line">### The error occurred while setting parameters</span><br><span class="line">### SQL: UPDATE t_ds_task_instance  SET flag=?, task_json=?, pid=?, app_link=?, task_type=?, task_instance_priority=?, log_path=?, host=?, start_time=?, worker_group=?, state=?, process_instance_id=?, process_definition_id=?, executor_id=?, alert_flag=?, execute_path=?, max_retry_times=?, retry_times=?, submit_time=?, name=?, retry_interval=?, end_time=?  WHERE id=?</span><br><span class="line">### Cause: com.mysql.jdbc.MysqlDataTruncation: Data truncation: Data too long for column &#x27;app_link&#x27; at row 1</span><br><span class="line">; Data truncation: Data too <span class="keyword">long</span> <span class="keyword">for</span> column <span class="string">&#x27;app_link&#x27;</span> at row <span class="number">1</span>; nested exception is com.mysql.jdbc.MysqlDataTruncation: Data truncation: Data too <span class="keyword">long</span> <span class="keyword">for</span> column <span class="string">&#x27;app_link&#x27;</span> at row <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>这种问题的原因在于dolphinscheduler元数据设计时的局限性，应该将t_ds_task_instance表中的app_link字段修改成text类型，即可解决问题。</p>
+<p>dolphinscheduler是一个apache正在孵化中的开源项目，社区建设还不是很成熟，开源社区有GitHub，slack，微信公众号交流群：</p>
+<p><a href="https://app.slack.com/client/T01L3LB96V7/C01L3LB9YMP/thread/C01L3LB9YMP-1617861424.034300">https://app.slack.com/client/T01L3LB96V7/C01L3LB9YMP/thread/C01L3LB9YMP-1617861424.034300</a></p>
+<p><a href="https://github.com/apache/incubator-dolphinscheduler/issues">https://github.com/apache/incubator-dolphinscheduler/issues</a></p>
+<p>微信公众号：dolphin-scheduler</p>
+<p>也可以通过我（微信：ycfnsq97）邀请大家加入apache dolphinscheduler社区微信交流群。</p>
+]]></content>
+  </entry>
 </search>

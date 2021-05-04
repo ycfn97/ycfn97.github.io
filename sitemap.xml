@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://ycfn97.xyz/2021/05/04/flink-sql%20cdc%E5%88%9D%E6%8E%A2/</loc>
+    
+    <lastmod>2021-05-04</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://ycfn97.xyz/2021/04/08/dolphinscheduler%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E6%8C%87%E5%8D%97/</loc>
     
     <lastmod>2021-04-08</lastmod>
@@ -144,7 +151,7 @@
 
   <url>
     <loc>https://ycfn97.xyz/</loc>
-    <lastmod>2021-04-09</lastmod>
+    <lastmod>2021-05-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -154,42 +161,42 @@
   
   <url>
     <loc>https://ycfn97.xyz/categories/OLAP/</loc>
-    <lastmod>2021-04-09</lastmod>
+    <lastmod>2021-05-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://ycfn97.xyz/categories/flink/</loc>
-    <lastmod>2021-04-09</lastmod>
+    <lastmod>2021-05-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://ycfn97.xyz/categories/%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93/</loc>
-    <lastmod>2021-04-09</lastmod>
+    <lastmod>2021-05-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://ycfn97.xyz/categories/hadoop/</loc>
-    <lastmod>2021-04-09</lastmod>
+    <lastmod>2021-05-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://ycfn97.xyz/categories/spark/</loc>
-    <lastmod>2021-04-09</lastmod>
+    <lastmod>2021-05-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://ycfn97.xyz/categories/OLTP/</loc>
-    <lastmod>2021-04-09</lastmod>
+    <lastmod>2021-05-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>

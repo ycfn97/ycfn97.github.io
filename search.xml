@@ -778,4 +778,94 @@
         <category>flink</category>
       </categories>
   </entry>
+  <entry>
+    <title>sqoop在实际生产中的使用经验总结</title>
+    <url>/2021/05/26/sqoop%E5%9C%A8%E5%AE%9E%E9%99%85%E7%94%9F%E4%BA%A7%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<p><img src="http://sqoop.apache.org/images/sqoop-logo.png" alt="Sqoop"></p>
+<a id="more"></a>
+
+<h4 id="sqoop原理："><a href="#sqoop原理：" class="headerlink" title="sqoop原理："></a>sqoop原理：</h4><p><img src="/2021/05/26/sqoop%E5%9C%A8%E5%AE%9E%E9%99%85%E7%94%9F%E4%BA%A7%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/1.jpg"></p>
+<p>详细介绍：</p>
+<p><a href="http://sqoop.apache.org/">http://sqoop.apache.org/</a></p>
+<h2 id="1、数据安全"><a href="#1、数据安全" class="headerlink" title="1、数据安全"></a>1、数据安全</h2><blockquote>
+<p>获取帮助：hadoop credential</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop credential create mysql.digger.prod.r.alias [-value password] -provider jceks://hdfs/mysql/password/mysql.digger.prod.r.jceks</span><br></pre></td></tr></table></figure>
+
+<p><a href="http://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_importing_data_into_hive">http://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_importing_data_into_hive</a></p>
+<blockquote>
+<p><strong>Protecting password from preying eyes.</strong> Hadoop 2.6.0 provides an API to separate password storage from applications. This API is called the credential provided API and there is a new <code>credential</code> command line tool to manage passwords and their aliases. The passwords are stored with their aliases in a keystore that is password protected. The keystore password can be the provided to a password prompt on the command line, via an environment variable or defaulted to a software defined constant. Please check the Hadoop documentation on the usage of this facility.</p>
+<p>Once the password is stored using the Credential Provider facility and the Hadoop configuration has been suitably updated, all applications can optionally use the alias in place of the actual password and at runtime resolve the alias for the password to use.</p>
+<p>Since the keystore or similar technology used for storing the credential provider is shared across components, passwords for various applications, various database and other passwords can be securely stored in them and only the alias needs to be exposed in configuration files, protecting the password from being visible.</p>
+<p>Sqoop has been enhanced to allow usage of this funcionality if it is available in the underlying Hadoop version being used. One new option has been introduced to provide the alias on the command line instead of the actual password (–password-alias). The argument value this option is the alias on the storage associated with the actual password. Example usage is as sqoop脚本：</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">-Dhadoop.security.credential.provider.path=jceks://hdfs/mysql/password/mysql.digger.prod.r.jceks \</span><br><span class="line">--password-alias mysql.digger.prod.r.alias \</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="2、数据核对"><a href="#2、数据核对" class="headerlink" title="2、数据核对"></a>2、数据核对</h2><p><strong><em>presto</em></strong>：跨数据源join</p>
+<p>java代码自动生成核对sql：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">presto_for_iglobalwin</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">        ArrayList&lt;String&gt; array = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">        InputStream in = Test01.class.getClassLoader().getResourceAsStream(<span class="string">&quot;druid1.properties&quot;</span>);</span><br><span class="line">        properties.load(in);</span><br><span class="line">        in.close();</span><br><span class="line">        DataSource dataSource = DruidDataSourceFactory.createDataSource(properties);</span><br><span class="line">        Connection connection = dataSource.getConnection();</span><br><span class="line">        System.out.println(connection);</span><br><span class="line">        String sql = <span class="string">&quot;show tables&quot;</span>;</span><br><span class="line">        PreparedStatement preparedStatement = connection.prepareStatement(sql);</span><br><span class="line">        ResultSet resultSet = preparedStatement.executeQuery();</span><br><span class="line">        <span class="keyword">while</span> (resultSet.next()) &#123;</span><br><span class="line">            array.add(resultSet.getString(<span class="string">&quot;Tables_in_skytree_test&quot;</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        connection.close();</span><br><span class="line"></span><br><span class="line">        String s3=<span class="string">&quot;hive.skytree.&quot;</span>;</span><br><span class="line">        String s4=<span class="string">&quot;connector2.skytree_test.&quot;</span>;</span><br><span class="line"></span><br><span class="line">        Iterator&lt;String&gt; iterator = array.iterator();</span><br><span class="line">        <span class="keyword">while</span> (iterator.hasNext())&#123;</span><br><span class="line">            String next = iterator.next();</span><br><span class="line">            System.out.println(<span class="string">&quot;select &quot;</span>+<span class="string">&quot;&#x27;&quot;</span>+next+<span class="string">&quot;&#x27;&quot;</span>+<span class="string">&quot;,t1.c1,t2.c1,if(t1.c1=t2.c1,1,0),(t1.c1-t2.c1)/(t2.c1+0.0001) from (select count(*) as c1 from ( select  * from &quot;</span>+s3+<span class="string">&quot;ods_&quot;</span>+next+<span class="string">&quot; union select *,&#x27;2021-05-07&#x27; from &quot;</span>+s4+next+<span class="string">&quot; )t0) t1, (select count(*) as c1 from &quot;</span>+s4+next+<span class="string">&quot;)t2 union all&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="数据不一致："><a href="#数据不一致：" class="headerlink" title="数据不一致："></a>数据不一致：</h3><h4 id="1、tinyint（1）自动转化为-bit类型"><a href="#1、tinyint（1）自动转化为-bit类型" class="headerlink" title="1、tinyint（1）自动转化为 bit类型"></a>1、tinyint（1）自动转化为 bit类型</h4><p>解决方案：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">jdbc:mysql://rm-xxx.mysql.rds.aliyuncs.com:3306/digger?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;tinyInt1isBit=false</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://sqoop.apache.org/docs/1.4.6/SqoopUserGuide.html#_mysql_import_of_tinyint_1_from_mysql_behaves_strangely">https://sqoop.apache.org/docs/1.4.6/SqoopUserGuide.html#_mysql_import_of_tinyint_1_from_mysql_behaves_strangely</a></p>
+<blockquote>
+<p>官网原文：<br>27.2.5. MySQL: Import of TINYINT(1) from MySQL behaves strangely<br>Problem: Sqoop is treating TINYINT(1) columns as booleans, which is for example causing issues with HIVE import. This is because by default the MySQL JDBC connector maps the TINYINT(1) to java.sql.Types.BIT, which Sqoop by default maps to Boolean.</p>
+<p>Solution: A more clean solution is to force MySQL JDBC Connector to stop converting TINYINT(1) to java.sql.Types.BIT by adding tinyInt1isBit=false into your JDBC path (to create something like jdbc:mysql://localhost/test?tinyInt1isBit=false). Another solution would be to explicitly override the column mapping for the datatype TINYINT(1) column. For example, if the column name is foo, then pass the following option to Sqoop during import: –map-column-hive foo=tinyint. In the case of non-Hive imports to HDFS, use –map-column-java foo=integer.</p>
+</blockquote>
+<h4 id="2、字段中出现回车，换行"><a href="#2、字段中出现回车，换行" class="headerlink" title="2、字段中出现回车，换行"></a>2、字段中出现回车，换行</h4><p>导致同步到hive后数据行数不对，且内容错乱。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">--hive-drop-import-delims \</span><br></pre></td></tr></table></figure>
+
+<p><a href="http://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_importing_data_into_hive">http://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_importing_data_into_hive</a></p>
+<table>
+<thead>
+<tr>
+<th align="center">Argument</th>
+<th align="center">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>--hive-partition-value &lt;v&gt;</code></td>
+<td align="center">String-value that serves as partition key for this imported into hive in this job.</td>
+</tr>
+<tr>
+<td align="center"><code>--map-column-hive &lt;map&gt;</code></td>
+<td align="center">Override default mapping from SQL type to Hive type for configured columns. If specify commas in this argument, use URL encoded keys and values, for example, use DECIMAL(1%2C%201) instead of DECIMAL(1, 1).</td>
+</tr>
+</tbody></table>
+<h4 id="3、null一致性问题"><a href="#3、null一致性问题" class="headerlink" title="3、null一致性问题"></a>3、null一致性问题</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sqoop import  ... --null-string <span class="string">&#x27;\\N&#x27;</span> --null-non-string <span class="string">&#x27;\\N&#x27;</span></span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Sqoop will by default import NULL values as string <code>null</code>. Hive is however using string <code>\N</code> to denote <code>NULL</code> values and therefore predicates dealing with <code>NULL</code> (like <code>IS NULL</code>) will not work correctly. You should append parameters <code>--null-string</code> and <code>--null-non-string</code> in case of import job or <code>--input-null-string</code> and <code>--input-null-non-string</code> in case of an export job if you wish to properly preserve <code>NULL</code> values. Because sqoop is using those parameters in generated code, you need to properly escape value <code>\N</code> to <code>\\N</code>:</p>
+</blockquote>
+<h2 id="3、数据压缩"><a href="#3、数据压缩" class="headerlink" title="3、数据压缩"></a>3、数据压缩</h2><p>–compression-codec Snappy \</p>
+<p><a href="http://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_importing_data_into_hive">http://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_importing_data_into_hive</a></p>
+<blockquote>
+<p>7.2.11. File Formats</p>
+<p>By default, data is not compressed. You can compress your data by using the deflate (gzip) algorithm with the <code>-z</code> or <code>--compress</code> argument, or specify any Hadoop compression codec using the <code>--compression-codec</code> argument. This applies to SequenceFile, text, and Avro files.</p>
+</blockquote>
+<h2 id="4、同步策略"><a href="#4、同步策略" class="headerlink" title="4、同步策略"></a>4、同步策略</h2><p>sql语句实现：全量，增量，新增及变化，特殊，与后面hive中周期型快照事实表/全量同步维表，事务性事实表/拉链表/累计型快照事实表、特殊表相对应。</p>
+<h5 id="新增及变化："><a href="#新增及变化：" class="headerlink" title="新增及变化："></a>新增及变化：</h5><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,</span><br><span class="line">       final_total_amount,</span><br><span class="line">       order_status,</span><br><span class="line">       user_id,</span><br><span class="line">       out_trade_no,</span><br><span class="line">       create_time,</span><br><span class="line">       operate_time,</span><br><span class="line">       province_id,</span><br><span class="line">       benefit_reduce_amount,</span><br><span class="line">       original_total_amount,</span><br><span class="line">       feight_fee</span><br><span class="line"><span class="keyword">from</span> order_info</span><br><span class="line"><span class="keyword">where</span> (<span class="keyword">date_format</span>(create_time, <span class="string">&#x27;%Y-%m-%d&#x27;</span>) = <span class="string">&#x27;$do_date&#x27;</span></span><br><span class="line">    <span class="keyword">or</span> <span class="keyword">date_format</span>(operate_time, <span class="string">&#x27;%Y-%m-%d&#x27;</span>) = <span class="string">&#x27;$do_date&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h5 id="增量："><a href="#增量：" class="headerlink" title="增量："></a>增量：</h5><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> business_ads_report <span class="keyword">where</span> <span class="built_in">date</span>=$do_date</span><br></pre></td></tr></table></figure>
+
+<h5 id="全量："><a href="#全量：" class="headerlink" title="全量："></a>全量：</h5><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> web_site_analytics_report_daily <span class="keyword">where</span> <span class="number">1</span>=<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="特殊："><a href="#特殊：" class="headerlink" title="特殊："></a>特殊：</h5><p>同步sql和全量一样，shell/python同步函数只在第一次调用</p>
+<h2 id="样例shell函数："><a href="#样例shell函数：" class="headerlink" title="样例shell函数："></a>样例shell函数：</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">import_data()&#123;</span><br><span class="line">sqoop import \</span><br><span class="line">-Dmapreduce.job.queuename=spark \</span><br><span class="line">-Dhadoop.security.credential.provider.path=jceks://hdfs/mysql/password/mysql.digger.prod.r.jceks \</span><br><span class="line">--connect &quot;jdbc:mysql://rm-xxx.mysql.rds.aliyuncs.com:3306/digger?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;tinyInt1isBit=false&quot; \</span><br><span class="line">--username hadoop_read \</span><br><span class="line">--password-alias mysql.digger.prod.r.alias \</span><br><span class="line">--target-dir /sqoop/db/digger/$1/$do_date \</span><br><span class="line">--delete-target-dir \</span><br><span class="line">--query &quot;$2 and  \$CONDITIONS&quot; \</span><br><span class="line">--num-mappers 1 \</span><br><span class="line">--fields-terminated-by &#x27;\t&#x27; \</span><br><span class="line">--compress \</span><br><span class="line">--compression-codec Snappy \</span><br><span class="line">--hive-drop-import-delims \</span><br><span class="line">--null-string &#x27;\\N&#x27; \</span><br><span class="line">--null-non-string &#x27;\\N&#x27;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2021/05/26/sqoop%E5%9C%A8%E5%AE%9E%E9%99%85%E7%94%9F%E4%BA%A7%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/2.jpg"></p>
+]]></content>
+      <categories>
+        <category>sqoop</category>
+      </categories>
+  </entry>
 </search>

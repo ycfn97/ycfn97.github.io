@@ -50,163 +50,8 @@ var _hmt = _hmt || [];
         style="position: fixed; left: 0px; top: 0px; z-index: 99999; pointer-events: none;"></canvas>
       
     <main class="content on">
-      
-<section class="cover">
-    
-      
-      <a class="forkMe" href="https://github.com/ycfn97"
-        target="_blank"><img width="149" height="149" src="/images/forkme.png"
-          class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
-    
-  <div class="cover-frame">
-    <div class="bg-box">
-      <img src="/images/cover8.jpg" alt="image frame" />
-    </div>
-    <div class="cover-inner text-center text-white">
-      <h1><a href="/">the Atlantic</a></h1>
-      <div id="subtitle-box">
-        
-        <span id="subtitle"></span>
-        
-      </div>
-      <div>
-        
-      </div>
-    </div>
-  </div>
-  <div class="cover-learn-more">
-    <a href="javascript:void(0)" class="anchor"><i class="ri-arrow-down-line"></i></a>
-  </div>
-</section>
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js"></script>
-
-
-<!-- Subtitle -->
-
-  <script>
-    try {
-      var typed = new Typed("#subtitle", {
-        strings: ['面朝大海，春暖花开', '愿你一生努力，一生被爱', '想要的都拥有，得不到的都释怀'],
-        startDelay: 0,
-        typeSpeed: 200,
-        loop: true,
-        backSpeed: 100,
-        showCursor: true
-      });
-    } catch (err) {
-      console.log(err)
-    }
-  </script>
-  
-<div id="main">
-  <section class="outer">
-  
-  
-  
-
-<div class="notice" style="margin-top:50px">
-    <i class="ri-heart-fill"></i>
-    <div class="notice-content" id="broad"></div>
-</div>
-<script type="text/javascript">
-    fetch('https://v1.hitokoto.cn')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById("broad").innerHTML = data.hitokoto;
-        })
-        .catch(console.error)
-</script>
-
-<style>
-    .notice {
-        padding: 20px;
-        border: 1px dashed #e6e6e6;
-        color: #969696;
-        position: relative;
-        display: inline-block;
-        width: 100%;
-        background: #fbfbfb50;
-        border-radius: 10px;
-    }
-
-    .notice i {
-        float: left;
-        color: #999;
-        font-size: 16px;
-        padding-right: 10px;
-        vertical-align: middle;
-        margin-top: -2px;
-    }
-
-    .notice-content {
-        display: initial;
-        vertical-align: middle;
-    }
-</style>
-  
-  <article class="articles">
-    
-    
-    
-    
-    <article
-  id="post-flink读取mq数据实时流式写入hive并合并hdfs分区小文件"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2021/07/08/flink%E8%AF%BB%E5%8F%96mq%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E6%B5%81%E5%BC%8F%E5%86%99%E5%85%A5hive%E5%B9%B6%E5%90%88%E5%B9%B6hdfs%E5%88%86%E5%8C%BA%E5%B0%8F%E6%96%87%E4%BB%B6/"
-    >flink读取mq数据实时流式写入hive并合并hdfs分区小文件</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2021/07/08/flink%E8%AF%BB%E5%8F%96mq%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E6%B5%81%E5%BC%8F%E5%86%99%E5%85%A5hive%E5%B9%B6%E5%90%88%E5%B9%B6hdfs%E5%88%86%E5%8C%BA%E5%B0%8F%E6%96%87%E4%BB%B6/" class="article-date">
-  <time datetime="2021-07-08T10:01:51.208Z" itemprop="datePublished">2021-07-08</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/flink/">flink</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p><img src="/2021/07/08/flink%E8%AF%BB%E5%8F%96mq%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E6%B5%81%E5%BC%8F%E5%86%99%E5%85%A5hive%E5%B9%B6%E5%90%88%E5%B9%B6hdfs%E5%88%86%E5%8C%BA%E5%B0%8F%E6%96%87%E4%BB%B6/00.jpg"></p> 
-      <a class="article-more-link" href="/2021/07/08/flink%E8%AF%BB%E5%8F%96mq%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E6%B5%81%E5%BC%8F%E5%86%99%E5%85%A5hive%E5%B9%B6%E5%90%88%E5%B9%B6hdfs%E5%88%86%E5%8C%BA%E5%B0%8F%E6%96%87%E4%BB%B6/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
-    <article
+      <section class="outer">
+  <article
   id="post-spark-sql常用运行时调优"
   class="article article-type-post"
   itemscope
@@ -218,9 +63,34 @@ var _hmt = _hmt || [];
     <div class="article-meta">
       <a href="/2021/05/30/spark-sql%E5%B8%B8%E7%94%A8%E8%BF%90%E8%A1%8C%E6%97%B6%E8%B0%83%E4%BC%98/" class="article-date">
   <time datetime="2021-05-29T18:54:56.016Z" itemprop="datePublished">2021-05-30</time>
-</a>    
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">4.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">27 min</span>
+        </span>
+    </span>
+</div>
+ 
     </div>
       
+    <div class="tocbot"></div>
+
+
+
+
+  
     <div class="article-entry" itemprop="articleBody">
        
   <hr>
@@ -240,446 +110,155 @@ var _hmt = _hmt || [];
  
       <!-- reward -->
       
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
-    <article
-  id="post-sqoop在实际生产中的使用经验总结"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2021/05/26/sqoop%E5%9C%A8%E5%AE%9E%E9%99%85%E7%94%9F%E4%BA%A7%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/"
-    >sqoop在实际生产中的使用经验总结</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2021/05/26/sqoop%E5%9C%A8%E5%AE%9E%E9%99%85%E7%94%9F%E4%BA%A7%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/" class="article-date">
-  <time datetime="2021-05-26T11:35:05.433Z" itemprop="datePublished">2021-05-26</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/sqoop/">sqoop</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p><img src="http://sqoop.apache.org/images/sqoop-logo.png" alt="Sqoop"></p> 
-      <a class="article-more-link" href="/2021/05/26/sqoop%E5%9C%A8%E5%AE%9E%E9%99%85%E7%94%9F%E4%BA%A7%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
       
     </div>
     
 
     <!-- copyright -->
     
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
-    <article
-  id="post-flink-sql cdc初探"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-     
-    <div class="article-meta">
-      <a href="/2021/05/04/flink-sql%20cdc%E5%88%9D%E6%8E%A2/" class="article-date">
-  <time datetime="2021-05-04T03:01:52.287Z" itemprop="datePublished">2021-05-04</time>
-</a>    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
     </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <hr>
-<h2 id="flink-sql-cdc初探"><a href="#flink-sql-cdc初探" class="headerlink" title="flink-sql cdc初探"></a>flink-sql cdc初探</h2><p><img src="/2021/05/04/flink-sql%20cdc%E5%88%9D%E6%8E%A2/0.jpg"></p> 
-      <a class="article-more-link" href="/2021/05/04/flink-sql%20cdc%E5%88%9D%E6%8E%A2/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
     
     <footer class="article-footer">
        
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
-    <article
-  id="post-dolphinscheduler任务调度指南"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2021/04/08/dolphinscheduler%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E6%8C%87%E5%8D%97/"
-    >dolphinscheduler任务调度指南</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2021/04/08/dolphinscheduler%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E6%8C%87%E5%8D%97/" class="article-date">
-  <time datetime="2021-04-08T12:02:25.346Z" itemprop="datePublished">2021-04-08</time>
-</a>    
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p><img src="https://dolphinscheduler.apache.org/img/hlogo_white.svg" alt="img"></p> 
-      <a class="article-more-link" href="/2021/04/08/dolphinscheduler%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E6%8C%87%E5%8D%97/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
-    <article
-  id="post-mysql炸裂函数实例"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2021/03/20/mysql%E7%82%B8%E8%A3%82%E5%87%BD%E6%95%B0%E5%AE%9E%E4%BE%8B/"
-    >mysql炸裂函数实例</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2021/03/20/mysql%E7%82%B8%E8%A3%82%E5%87%BD%E6%95%B0%E5%AE%9E%E4%BE%8B/" class="article-date">
-  <time datetime="2021-03-19T17:15:14.786Z" itemprop="datePublished">2021-03-20</time>
-</a>    
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p><img src="/2021/03/20/mysql%E7%82%B8%E8%A3%82%E5%87%BD%E6%95%B0%E5%AE%9E%E4%BE%8B/1.jpg"></p> 
-      <a class="article-more-link" href="/2021/03/20/mysql%E7%82%B8%E8%A3%82%E5%87%BD%E6%95%B0%E5%AE%9E%E4%BE%8B/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
-    <article
-  id="post-elasticsearch原理及常见面试点"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/"
-    >elasticsearch原理及常见面试点</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/" class="article-date">
-  <time datetime="2021-02-22T17:00:44.320Z" itemprop="datePublished">2021-02-23</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/OLAP/">OLAP</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p><img src="https://images.contentstack.io/v3/assets/bltefdd0b53724fa2ce/blt280217a63b82a734/5bbdaacf63ed239936a7dd56/elastic-logo.svg" alt="Elastic logo"></p> 
-      <a class="article-more-link" href="/2021/02/23/elasticsearch%E5%8E%9F%E7%90%86%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E7%82%B9/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
-    <article
-  id="post-hdfs故障恢复及原理"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2021/02/21/hdfs%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D%E5%8F%8A%E5%8E%9F%E7%90%86/"
-    >hdfs故障恢复及原理</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2021/02/21/hdfs%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D%E5%8F%8A%E5%8E%9F%E7%90%86/" class="article-date">
-  <time datetime="2021-02-21T09:25:05.913Z" itemprop="datePublished">2021-02-21</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hadoop/">hadoop</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p><img src="http://hadoop.apache.org/docs/r1.0.4/cn/images/hadoop-logo.jpg" alt="Hadoop"></p> 
-      <a class="article-more-link" href="/2021/02/21/hdfs%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D%E5%8F%8A%E5%8E%9F%E7%90%86/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
-    <article
-  id="post-flink checkpoint机制及非barrier对齐"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/"
-    >flink checkpoint机制及非barrier对齐</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/" class="article-date">
-  <time datetime="2021-02-15T20:17:14.729Z" itemprop="datePublished">2021-02-16</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/flink/">flink</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p><img src="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/0.jpg"></p>
-<p>注：本文部分内容为转载总结</p> 
-      <a class="article-more-link" href="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
-    <article
-  id="post-flink watermark传递机制"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2021/02/15/flink%20watermark%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/"
-    >flink watermark传递机制</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2021/02/15/flink%20watermark%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/" class="article-date">
-  <time datetime="2021-02-14T19:42:16.219Z" itemprop="datePublished">2021-02-15</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/flink/">flink</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p><img src="https://ci.apache.org/projects/flink/flink-docs-release-1.12/fig/parallel_kafka_watermarks.svg" alt="Generating Watermarks with awareness for Kafka-partitions"></p> 
-      <a class="article-more-link" href="/2021/02/15/flink%20watermark%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-    
- 
-    
-</article>
-
-    
-  </article>
-  
-
-  
-  <nav class="page-nav">
-    
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
-  </nav>
-  
-</section>
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
 </div>
 
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ycfn97.xyz/2021/05/30/spark-sql%E5%B8%B8%E7%94%A8%E8%BF%90%E8%A1%8C%E6%97%B6%E8%B0%83%E4%BC%98/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2021/07/08/flink%E8%AF%BB%E5%8F%96mq%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E6%B5%81%E5%BC%8F%E5%86%99%E5%85%A5hive%E5%B9%B6%E5%90%88%E5%B9%B6hdfs%E5%88%86%E5%8C%BA%E5%B0%8F%E6%96%87%E4%BB%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            flink读取mq数据实时流式写入hive并合并hdfs分区小文件
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/05/26/sqoop%E5%9C%A8%E5%AE%9E%E9%99%85%E7%94%9F%E4%BA%A7%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">sqoop在实际生产中的使用经验总结</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "",
+    app_key: "",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+     
+</article>
+
+</section>
       <footer class="footer">
   <div class="outer">
     <ul>
@@ -840,6 +419,23 @@ var _hmt = _hmt || [];
 <script src="/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">

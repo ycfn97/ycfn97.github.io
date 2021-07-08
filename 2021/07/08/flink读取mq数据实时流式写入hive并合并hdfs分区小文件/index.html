@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+
+
+<html lang="zh_CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    flink读取mq数据实时流式写入hive并合并hdfs分区小文件 |  the Atlantic
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+        <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?029e85d94060b2a4054a349dc92bef7f";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+      <canvas width="1777" height="841"
+        style="position: fixed; left: 0px; top: 0px; z-index: 99999; pointer-events: none;"></canvas>
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-flink读取mq数据实时流式写入hive并合并hdfs分区小文件"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  flink读取mq数据实时流式写入hive并合并hdfs分区小文件
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/07/08/flink%E8%AF%BB%E5%8F%96mq%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E6%B5%81%E5%BC%8F%E5%86%99%E5%85%A5hive%E5%B9%B6%E5%90%88%E5%B9%B6hdfs%E5%88%86%E5%8C%BA%E5%B0%8F%E6%96%87%E4%BB%B6/" class="article-date">
+  <time datetime="2021-07-08T10:01:51.208Z" itemprop="datePublished">2021-07-08</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/flink/">flink</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">1.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">9 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><img src="/2021/07/08/flink%E8%AF%BB%E5%8F%96mq%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E6%B5%81%E5%BC%8F%E5%86%99%E5%85%A5hive%E5%B9%B6%E5%90%88%E5%B9%B6hdfs%E5%88%86%E5%8C%BA%E5%B0%8F%E6%96%87%E4%BB%B6/00.jpg"></p>
+<a id="more"></a>
+
+<p>source以及sink连接参考flink官网不在赘述。</p>
+<p>数据从mq读入flink然后定义hive sink流式写入，最后也在hdfs查到了写入的分区文件，但是到hive却查不到数据，观察源码：<code>org.apache.flink.table.filesystem.stream.PartitionTimeCommitTrigger </code>中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">committablePartitions</span><span class="params">(<span class="keyword">long</span> checkpointId)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!watermarks.containsKey(checkpointId)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(</span><br><span class="line">                String.format(</span><br><span class="line">                        <span class="string">&quot;Checkpoint(%d) has not been snapshot. The watermark information is: %s.&quot;</span>,</span><br><span class="line">                        checkpointId, watermarks));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">long</span> watermark = watermarks.get(checkpointId);</span><br><span class="line">    watermarks.headMap(checkpointId, <span class="keyword">true</span>).clear();</span><br><span class="line"></span><br><span class="line">    List&lt;String&gt; needCommit = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    Iterator&lt;String&gt; iter = pendingPartitions.iterator();</span><br><span class="line">    <span class="keyword">while</span> (iter.hasNext()) &#123;</span><br><span class="line">        String partition = iter.next();</span><br><span class="line">        LocalDateTime partTime =</span><br><span class="line">                extractor.extract(partitionKeys, extractPartitionValues(<span class="keyword">new</span> Path(partition)));</span><br><span class="line">        <span class="keyword">if</span> (watermark &gt; toMills(partTime) + commitDelay) &#123;</span><br><span class="line">            needCommit.add(partition);</span><br><span class="line">            iter.remove();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> needCommit;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>if (watermark &gt; toMills(partTime) + commitDelay)</code>这里点进toMills方法，发现并没有进行时区处理，所以我们重写这个类，在extract方法抽取分区的时候减去8小时，并在创建hive表时使用自定义分区提交抽取，这样才能提交分区。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> LocalDateTime <span class="title">extract</span><span class="params">(List&lt;String&gt; partitionKeys, List&lt;String&gt; partitionValues)</span> </span>&#123;</span><br><span class="line">    String timestampString;</span><br><span class="line">    <span class="keyword">if</span> (pattern == <span class="keyword">null</span>) &#123;</span><br><span class="line">        timestampString = partitionValues.get(<span class="number">0</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        timestampString = pattern;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; partitionKeys.size(); i++) &#123;</span><br><span class="line">            timestampString =</span><br><span class="line">                    timestampString.replaceAll(</span><br><span class="line">                            <span class="string">&quot;\\$&quot;</span> + partitionKeys.get(i), partitionValues.get(i));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> toLocalDateTime(timestampString);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> LocalDateTime <span class="title">toLocalDateTime</span><span class="params">(String timestampString)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> LocalDateTime.parse(timestampString, TIMESTAMP_FORMATTER);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (DateTimeParseException e) &#123;</span><br><span class="line">        <span class="keyword">return</span> LocalDateTime.of(</span><br><span class="line">                LocalDate.parse(timestampString, DATE_FORMATTER), LocalTime.MIDNIGHT);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">toMills</span><span class="params">(LocalDateTime dateTime)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> TimestampData.fromLocalDateTime(dateTime).getMillisecond();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">toMills</span><span class="params">(String timestampString)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> toMills(toLocalDateTime(timestampString));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重写类的extract方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Licensed to the Apache Software Foundation (ASF) under one</span></span><br><span class="line"><span class="comment"> * or more contributor license agreements.  See the NOTICE file</span></span><br><span class="line"><span class="comment"> * distributed with this work for additional information</span></span><br><span class="line"><span class="comment"> * regarding copyright ownership.  The ASF licenses this file</span></span><br><span class="line"><span class="comment"> * to you under the Apache License, Version 2.0 (the</span></span><br><span class="line"><span class="comment"> * &quot;License&quot;); you may not use this file except in compliance</span></span><br><span class="line"><span class="comment"> * with the License.  You may obtain a copy of the License at</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *     http://www.apache.org/licenses/LICENSE-2.0</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Unless required by applicable law or agreed to in writing, software</span></span><br><span class="line"><span class="comment"> * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></span><br><span class="line"><span class="comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></span><br><span class="line"><span class="comment"> * See the License for the specific language governing permissions and</span></span><br><span class="line"><span class="comment"> * limitations under the License.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> org.apache.flink.table.filesystem;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.flink.table.data.TimestampData;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.annotation.Nullable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.LocalDate;</span><br><span class="line"><span class="keyword">import</span> java.time.LocalDateTime;</span><br><span class="line"><span class="keyword">import</span> java.time.LocalTime;</span><br><span class="line"><span class="keyword">import</span> java.time.format.DateTimeFormatter;</span><br><span class="line"><span class="keyword">import</span> java.time.format.DateTimeFormatterBuilder;</span><br><span class="line"><span class="keyword">import</span> java.time.format.DateTimeParseException;</span><br><span class="line"><span class="keyword">import</span> java.time.format.ResolverStyle;</span><br><span class="line"><span class="keyword">import</span> java.time.format.SignStyle;</span><br><span class="line"><span class="keyword">import</span> java.time.temporal.ChronoField;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> java.time.temporal.ChronoField.DAY_OF_MONTH;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> java.time.temporal.ChronoField.HOUR_OF_DAY;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> java.time.temporal.ChronoField.MINUTE_OF_HOUR;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> java.time.temporal.ChronoField.MONTH_OF_YEAR;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> java.time.temporal.ChronoField.SECOND_OF_MINUTE;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> java.time.temporal.ChronoField.YEAR;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Default &#123;<span class="doctag">@link</span> PartitionTimeExtractor&#125;. See &#123;<span class="doctag">@link</span></span></span><br><span class="line"><span class="comment"> * FileSystemOptions#PARTITION_TIME_EXTRACTOR_TIMESTAMP_PATTERN&#125;.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DefaultPartTimeExtractor</span> <span class="keyword">implements</span> <span class="title">PartitionTimeExtractor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> DateTimeFormatter TIMESTAMP_FORMATTER =</span><br><span class="line">            <span class="keyword">new</span> DateTimeFormatterBuilder()</span><br><span class="line">                    .appendValue(YEAR, <span class="number">1</span>, <span class="number">10</span>, SignStyle.NORMAL)</span><br><span class="line">                    .appendLiteral(<span class="string">&#x27;-&#x27;</span>)</span><br><span class="line">                    .appendValue(MONTH_OF_YEAR, <span class="number">1</span>, <span class="number">2</span>, SignStyle.NORMAL)</span><br><span class="line">                    .appendLiteral(<span class="string">&#x27;-&#x27;</span>)</span><br><span class="line">                    .appendValue(DAY_OF_MONTH, <span class="number">1</span>, <span class="number">2</span>, SignStyle.NORMAL)</span><br><span class="line">                    .optionalStart()</span><br><span class="line">                    .appendLiteral(<span class="string">&quot; &quot;</span>)</span><br><span class="line">                    .appendValue(HOUR_OF_DAY, <span class="number">1</span>, <span class="number">2</span>, SignStyle.NORMAL)</span><br><span class="line">                    .appendLiteral(<span class="string">&#x27;:&#x27;</span>)</span><br><span class="line">                    .appendValue(MINUTE_OF_HOUR, <span class="number">1</span>, <span class="number">2</span>, SignStyle.NORMAL)</span><br><span class="line">                    .appendLiteral(<span class="string">&#x27;:&#x27;</span>)</span><br><span class="line">                    .appendValue(SECOND_OF_MINUTE, <span class="number">1</span>, <span class="number">2</span>, SignStyle.NORMAL)</span><br><span class="line">                    .optionalStart()</span><br><span class="line">                    .appendFraction(ChronoField.NANO_OF_SECOND, <span class="number">1</span>, <span class="number">9</span>, <span class="keyword">true</span>)</span><br><span class="line">                    .optionalEnd()</span><br><span class="line">                    .optionalEnd()</span><br><span class="line">                    .toFormatter()</span><br><span class="line">                    .withResolverStyle(ResolverStyle.LENIENT);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> DateTimeFormatter DATE_FORMATTER =</span><br><span class="line">            <span class="keyword">new</span> DateTimeFormatterBuilder()</span><br><span class="line">                    .appendValue(YEAR, <span class="number">1</span>, <span class="number">10</span>, SignStyle.NORMAL)</span><br><span class="line">                    .appendLiteral(<span class="string">&#x27;-&#x27;</span>)</span><br><span class="line">                    .appendValue(MONTH_OF_YEAR, <span class="number">1</span>, <span class="number">2</span>, SignStyle.NORMAL)</span><br><span class="line">                    .appendLiteral(<span class="string">&#x27;-&#x27;</span>)</span><br><span class="line">                    .appendValue(DAY_OF_MONTH, <span class="number">1</span>, <span class="number">2</span>, SignStyle.NORMAL)</span><br><span class="line">                    .toFormatter()</span><br><span class="line">                    .withResolverStyle(ResolverStyle.LENIENT);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Nullable</span> <span class="keyword">private</span> <span class="keyword">final</span> String pattern;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DefaultPartTimeExtractor</span><span class="params">(<span class="meta">@Nullable</span> String pattern)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.pattern = pattern;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> LocalDateTime <span class="title">extract</span><span class="params">(List&lt;String&gt; partitionKeys, List&lt;String&gt; partitionValues)</span> </span>&#123;</span><br><span class="line">        String timestampString;</span><br><span class="line">        <span class="keyword">if</span> (pattern == <span class="keyword">null</span>) &#123;</span><br><span class="line">            timestampString = partitionValues.get(<span class="number">0</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            timestampString = pattern;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; partitionKeys.size(); i++) &#123;</span><br><span class="line">                timestampString =</span><br><span class="line">                        timestampString.replaceAll(</span><br><span class="line">                                <span class="string">&quot;\\$&quot;</span> + partitionKeys.get(i), partitionValues.get(i));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> toLocalDateTime(timestampString).plusHours(-<span class="number">8</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> LocalDateTime <span class="title">toLocalDateTime</span><span class="params">(String timestampString)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> LocalDateTime.parse(timestampString, TIMESTAMP_FORMATTER);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (DateTimeParseException e) &#123;</span><br><span class="line">            <span class="keyword">return</span> LocalDateTime.of(</span><br><span class="line">                    LocalDate.parse(timestampString, DATE_FORMATTER), LocalTime.MIDNIGHT);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">toMills</span><span class="params">(LocalDateTime dateTime)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> TimestampData.fromLocalDateTime(dateTime).getMillisecond();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">toMills</span><span class="params">(String timestampString)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> toMills(toLocalDateTime(timestampString));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>我们查看官网也可以发现时区的问题：</p>
+<p><img src="/2021/07/08/flink%E8%AF%BB%E5%8F%96mq%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E6%B5%81%E5%BC%8F%E5%86%99%E5%85%A5hive%E5%B9%B6%E5%90%88%E5%B9%B6hdfs%E5%88%86%E5%8C%BA%E5%B0%8F%E6%96%87%E4%BB%B6/0.jpg"></p>
+<p>创建三级/二级/一级分区hive表:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">external</span> <span class="keyword">TABLE</span> <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">exists</span> awsLog</span><br><span class="line">(</span><br><span class="line">    actionsExecuted        <span class="keyword">STRING</span>,</span><br><span class="line">    chosenCertArn          <span class="keyword">STRING</span>,</span><br><span class="line">    classification         <span class="keyword">STRING</span>,</span><br><span class="line">    classificationReasonf  <span class="keyword">STRING</span>,</span><br><span class="line">    clientPort             <span class="keyword">STRING</span>,</span><br><span class="line">    domainName             <span class="keyword">STRING</span>,</span><br><span class="line">    elb                    <span class="keyword">STRING</span>,</span><br><span class="line">    elbStatusCode          <span class="keyword">STRING</span>,</span><br><span class="line">    errorReason            <span class="keyword">STRING</span>,</span><br><span class="line">    matchedRulePriority    <span class="keyword">STRING</span>,</span><br><span class="line">    receivedBytes          <span class="keyword">STRING</span>,</span><br><span class="line">    redirectUrl            <span class="keyword">STRING</span>,</span><br><span class="line">    request                <span class="keyword">STRING</span>,</span><br><span class="line">    requestCreationTime    <span class="keyword">STRING</span>,</span><br><span class="line">    requestProcessingTime  <span class="keyword">STRING</span>,</span><br><span class="line">    responseProcessingTime <span class="keyword">STRING</span>,</span><br><span class="line">    sentBytes              <span class="keyword">STRING</span>,</span><br><span class="line">    sslCipher              <span class="keyword">STRING</span>,</span><br><span class="line">    sslProtocol            <span class="keyword">STRING</span>,</span><br><span class="line">    targetGroupArn         <span class="keyword">STRING</span>,</span><br><span class="line">    targetPort             <span class="keyword">STRING</span>,</span><br><span class="line">    targetPortList         <span class="keyword">STRING</span>,</span><br><span class="line">    targetProcessingTime   <span class="keyword">STRING</span>,</span><br><span class="line">    targetStatusCode       <span class="keyword">STRING</span>,</span><br><span class="line">    targetStatusCodeList   <span class="keyword">STRING</span>,</span><br><span class="line">    <span class="string">`time`</span>                 <span class="keyword">STRING</span>,</span><br><span class="line">    traceId                <span class="keyword">STRING</span>,</span><br><span class="line">    <span class="keyword">type</span>                   <span class="keyword">STRING</span>,</span><br><span class="line">    userAgent              <span class="keyword">STRING</span></span><br><span class="line">) partitioned <span class="keyword">by</span> (dt <span class="keyword">string</span>,hr <span class="keyword">string</span>,mm <span class="keyword">string</span>)</span><br><span class="line">    <span class="keyword">stored</span> <span class="keyword">as</span> PARQUET</span><br><span class="line">    location <span class="string">&#x27;/sunqi/awsLog/&#x27;</span></span><br><span class="line">    TBLPROPERTIES (</span><br><span class="line">        <span class="string">&#x27;partition.time-extractor.kind&#x27;</span> = <span class="string">&#x27;custom&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;partition.time-extractor.timestamp-pattern&#x27;</span> = <span class="string">&#x27;$dt $hr:$mm:00&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;partition.time-extractor.class&#x27;</span> = <span class="string">&#x27;com.topsky.aws.userlogin.functions.MyPartTimeExtractor&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;sink.partition-commit.policy.kind&#x27;</span> = <span class="string">&#x27;metastore,success-file,custom&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;sink.partition-commit.policy.class&#x27;</span> = <span class="string">&#x27;com.topsky.aws.userlogin.functions.ParquetFileMergingCommitPolicy&#x27;</span></span><br><span class="line">        );</span><br></pre></td></tr></table></figure>
+
+<p>hive查到数据后，问题又来了，数据量很大时，发现hive每个分区出现了大量的小文件：</p>
+<p><img src="/2021/07/08/flink%E8%AF%BB%E5%8F%96mq%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E6%B5%81%E5%BC%8F%E5%86%99%E5%85%A5hive%E5%B9%B6%E5%90%88%E5%B9%B6hdfs%E5%88%86%E5%8C%BA%E5%B0%8F%E6%96%87%E4%BB%B6/1.jpg"></p>
+<p>所以这里需要自定义分区一个分区提交策略，将textfile手动合并为parquet列式存储文件，这里参考网上一位大佬的demo：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> me.lmagics.flinkexp.hiveintegration.util;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> org.apache.flink.hive.shaded.parquet.example.data.Group;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.hive.shaded.parquet.hadoop.ParquetFileReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.hive.shaded.parquet.hadoop.ParquetFileWriter.Mode;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.hive.shaded.parquet.hadoop.ParquetReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.hive.shaded.parquet.hadoop.ParquetWriter;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.hive.shaded.parquet.hadoop.example.ExampleParquetWriter;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.hive.shaded.parquet.hadoop.example.GroupReadSupport;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.hive.shaded.parquet.hadoop.metadata.CompressionCodecName;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.hive.shaded.parquet.hadoop.metadata.ParquetMetadata;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.hive.shaded.parquet.hadoop.util.HadoopInputFile;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.hive.shaded.parquet.schema.MessageType;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.table.filesystem.PartitionCommitPolicy;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.fs.FileSystem;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.fs.LocatedFileStatus;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.fs.Path;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.fs.RemoteIterator;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ParquetFileMergingCommitPolicy</span> <span class="keyword">implements</span> <span class="title">PartitionCommitPolicy</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(ParquetFileMergingCommitPolicy.class);</span><br><span class="line"> </span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">commit</span><span class="params">(Context context)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    Configuration conf = <span class="keyword">new</span> Configuration();</span><br><span class="line">    FileSystem fs = FileSystem.get(conf);</span><br><span class="line">    String partitionPath = context.partitionPath().getPath();</span><br><span class="line"> </span><br><span class="line">    List&lt;Path&gt; files = listAllFiles(fs, <span class="keyword">new</span> Path(partitionPath), <span class="string">&quot;part-&quot;</span>);</span><br><span class="line">    LOGGER.info(<span class="string">&quot;&#123;&#125; files in path &#123;&#125;&quot;</span>, files.size(), partitionPath);</span><br><span class="line"> </span><br><span class="line">    MessageType schema = getParquetSchema(files, conf);</span><br><span class="line">    <span class="keyword">if</span> (schema == <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    LOGGER.info(<span class="string">&quot;Fetched parquet schema: &#123;&#125;&quot;</span>, schema.toString());</span><br><span class="line"> </span><br><span class="line">    Path result = merge(partitionPath, schema, files, fs);</span><br><span class="line">    LOGGER.info(<span class="string">&quot;Files merged into &#123;&#125;&quot;</span>, result.toString());</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="function"><span class="keyword">private</span> List&lt;Path&gt; <span class="title">listAllFiles</span><span class="params">(FileSystem fs, Path dir, String prefix)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    List&lt;Path&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> </span><br><span class="line">    RemoteIterator&lt;LocatedFileStatus&gt; dirIterator = fs.listFiles(dir, <span class="keyword">false</span>);</span><br><span class="line">    <span class="keyword">while</span> (dirIterator.hasNext()) &#123;</span><br><span class="line">      LocatedFileStatus fileStatus = dirIterator.next();</span><br><span class="line">      Path filePath = fileStatus.getPath();</span><br><span class="line">      <span class="keyword">if</span> (fileStatus.isFile() &amp;&amp; filePath.getName().startsWith(prefix)) &#123;</span><br><span class="line">        result.add(filePath);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="function"><span class="keyword">private</span> MessageType <span class="title">getParquetSchema</span><span class="params">(List&lt;Path&gt; files, Configuration conf)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (files.size() == <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    HadoopInputFile inputFile = HadoopInputFile.fromPath(files.get(<span class="number">0</span>), conf);</span><br><span class="line">    ParquetFileReader reader = ParquetFileReader.open(inputFile);</span><br><span class="line">    ParquetMetadata metadata = reader.getFooter();</span><br><span class="line">    MessageType schema = metadata.getFileMetaData().getSchema();</span><br><span class="line"> </span><br><span class="line">    reader.close();</span><br><span class="line">    <span class="keyword">return</span> schema;</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="function"><span class="keyword">private</span> Path <span class="title">merge</span><span class="params">(String partitionPath, MessageType schema, List&lt;Path&gt; files, FileSystem fs)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    Path mergeDest = <span class="keyword">new</span> Path(partitionPath + <span class="string">&quot;/result-&quot;</span> + System.currentTimeMillis() + <span class="string">&quot;.parquet&quot;</span>);</span><br><span class="line">    ParquetWriter&lt;Group&gt; writer = ExampleParquetWriter.builder(mergeDest)</span><br><span class="line">      .withType(schema)</span><br><span class="line">      .withConf(fs.getConf())</span><br><span class="line">      .withWriteMode(Mode.CREATE)</span><br><span class="line">      .withCompressionCodec(CompressionCodecName.SNAPPY)</span><br><span class="line">      .build();</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span> (Path file : files) &#123;</span><br><span class="line">      ParquetReader&lt;Group&gt; reader = ParquetReader.builder(<span class="keyword">new</span> GroupReadSupport(), file)</span><br><span class="line">        .withConf(fs.getConf())</span><br><span class="line">        .build();</span><br><span class="line">      Group data;</span><br><span class="line">      <span class="keyword">while</span>((data = reader.read()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">        writer.write(data);</span><br><span class="line">      &#125;</span><br><span class="line">      reader.close();</span><br><span class="line">    &#125;</span><br><span class="line">    writer.close();</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span> (Path file : files) &#123;</span><br><span class="line">      fs.delete(file, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> mergeDest;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再次写入，问题得到解决：</p>
+<p><img src="/2021/07/08/flink%E8%AF%BB%E5%8F%96mq%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E6%B5%81%E5%BC%8F%E5%86%99%E5%85%A5hive%E5%B9%B6%E5%90%88%E5%B9%B6hdfs%E5%88%86%E5%8C%BA%E5%B0%8F%E6%96%87%E4%BB%B6/2.jpg"></p>
+<p>分区提交策略说明：</p>
+<p><img src="/2021/07/08/flink%E8%AF%BB%E5%8F%96mq%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E6%B5%81%E5%BC%8F%E5%86%99%E5%85%A5hive%E5%B9%B6%E5%90%88%E5%B9%B6hdfs%E5%88%86%E5%8C%BA%E5%B0%8F%E6%96%87%E4%BB%B6/3.jpg"></p>
+<p>参考官网：</p>
+<p><a target="_blank" rel="noopener" href="https://ci.apache.org/projects/flink/flink-docs-release-1.13/docs/connectors/table/hive/overview/">https://ci.apache.org/projects/flink/flink-docs-release-1.13/docs/connectors/table/hive/overview/</a></p>
+<p><a target="_blank" rel="noopener" href="https://ci.apache.org/projects/flink/flink-docs-release-1.13/docs/connectors/table/filesystem/">https://ci.apache.org/projects/flink/flink-docs-release-1.13/docs/connectors/table/filesystem/</a></p>
+<p>参考文章：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/nazeniwaresakini/article/details/107811860">https://blog.csdn.net/nazeniwaresakini/article/details/107811860</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_37592814/article/details/108044830">https://blog.csdn.net/m0_37592814/article/details/108044830</a></p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ycfn97.xyz/2021/07/08/flink%E8%AF%BB%E5%8F%96mq%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%97%B6%E6%B5%81%E5%BC%8F%E5%86%99%E5%85%A5hive%E5%B9%B6%E5%90%88%E5%B9%B6hdfs%E5%88%86%E5%8C%BA%E5%B0%8F%E6%96%87%E4%BB%B6/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2021/05/30/spark-sql%E5%B8%B8%E7%94%A8%E8%BF%90%E8%A1%8C%E6%97%B6%E8%B0%83%E4%BC%98/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title"></div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "",
+    app_key: "",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2021
+        <i class="ri-heart-fill heart_icon"></i> ycfn97
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="the Atlantic"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">摄影</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+
+<script src="/js/clickBoom2.js"></script>
+
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+<script src="/js/dz.js"></script>
+
+
+
+    
+    <div id="music">
+    
+    
+    
+    <iframe frameborder="no" border="1" marginwidth="0" marginheight="0" width="200" height="86"
+        src="//music.163.com/outchain/player?type=2&id=507109202&auto=1&height=66"></iframe>
+</div>
+
+<style>
+    #music {
+        position: fixed;
+        right: 15px;
+        bottom: 0;
+        z-index: 998;
+    }
+</style>
+    
+  </div>
+</body>
+
+</html>

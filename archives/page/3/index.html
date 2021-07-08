@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    spark RDD原理 |  the Atlantic
+    Archives |  the Atlantic
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -51,222 +51,78 @@ var _hmt = _hmt || [];
       
     <main class="content on">
       <section class="outer">
-  <article
-  id="post-spark RDD原理"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
+  
+  
+  <article class="articles">
     
-    <header class="article-header">
+    
+    <h1 class="page-type-title">Archives</h1>
+    
+    
+  
+  
+  
+  
+  
+  
+  <div class="archives-wrap">
+    <div class="archive-year-wrap">
+      <a href="/archives/2020" class="archive-year">2020</a>
+    </div>
+    <div class="archives">
+      
+      <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      <a href="/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" class="archive-article-date">
+  <time datetime="2020-09-23T10:46:25.402Z" itemprop="datePublished">09/23</time>
+</a>
        
-<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  spark RDD原理
-</h1>
+<h2 itemprop="name">
+  <a class="archive-article-title" href="/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/"
+    >Hexo搭建个人博客</a> 
+</h2>
  
 
     </header>
-     
-    <div class="article-meta">
-      <a href="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/" class="article-date">
-  <time datetime="2020-09-26T12:50:40.763Z" itemprop="datePublished">2020-09-26</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/spark/">spark</a>
+    
+    
   </div>
-  
-<div class="word_count">
-    <span class="post-time">
-        <span class="post-meta-item-icon">
-            <i class="ri-quill-pen-line"></i>
-            <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">516</span>
-        </span>
-    </span>
-
-    <span class="post-time">
-        &nbsp; | &nbsp;
-        <span class="post-meta-item-icon">
-            <i class="ri-book-open-line"></i>
-            <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">1 min</span>
-        </span>
-    </span>
-</div>
- 
-    </div>
-      
-
-
-
-  
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p><img src="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/2.png"></p>
-<a id="more"></a>
-
-<p>​            首先我觉得原理性的东西，重要的在于了解整个业务的运行流程。虽然在面试中狠问底层这是区分面试者的重要手段，但在实际工作中，最重要的还是提高业务运行的效率。当然知道框架运行的原理越细说明面试者对底层运行接触的时间就越久。然而人的精力是有限的。深入源码固然能提升能力。这里只对原理做一个简单的阐述。</p>
-<p><img src="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/1.png"></p>
-<p>​            整个spark RDD运行在资源调度系统yarn上，运行代码由spark-submit提交到rm，rm将业务交给nm上的driver，driver会把业务交由executors具体去执行，executors上进行RDD弹性分布式计算，相较于MapReduce，shufflemapRDDs之间一般省去了shuffle落盘的过程，这也是spark速度比mr引擎快的原因。    </p>
-<p><img src="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/1.jpg"></p>
-<p><img src="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/2.jpg">    </p>
-<p>​        我们知道spark RDD算子包括transformation算子和action算子，运算过程主要发生map阶段，经过reduce聚合后action算子进行提交job任务，而transformation算子是懒加载的，也就是说，前面的运算过程并不会立即执行，application需要action算子进行触发，action算子的数量决定了job的个数，action算子中的DAGScheduler会对job任务进行切分，并寻找依赖关系，根据是否是宽依赖来确定stag个数。job的task个数由一个stage阶段最后一个RDD的partition个数决定。</p>
-<p>​        spark application的运行效率取决于数据是否均衡，可以通过合理的分区来确保各个分区数据的均衡，常用的分区方案有：hash分区，range分区，自定义分区，也可以在初始化sc时指定分区。</p>
-<p>​        数据均衡可以使transformation算子在各个分区完成时间相差减小以提高运行效率，常见的转换算子分为value型，双value交互，key-value型，在不同的业务场景下选择不同的运算组合以达到最佳的效率是设计者的初衷。</p>
-<p>​        未完待续。。。</p>
- 
-      <!-- reward -->
-      
-      <div id="reword-out">
-        <div id="reward-btn">
-          Donate
-        </div>
-      </div>
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <div class="declare">
-      <ul class="post-copyright">
-        <li>
-          <i class="ri-copyright-line"></i>
-          <strong>Copyright： </strong>
-          
-          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
-          
-        </li>
-      </ul>
-    </div>
-    
-    <footer class="article-footer">
-       
-<div class="share-btn">
-      <span class="share-sns share-outer">
-        <i class="ri-share-forward-line"></i>
-        分享
-      </span>
-      <div class="share-wrap">
-        <i class="arrow"></i>
-        <div class="share-icons">
-          
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="ri-weibo-fill"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="ri-wechat-fill"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="ri-qq-fill"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="ri-douban-line"></i>
-          </a>
-          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a> -->
-          
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="ri-facebook-circle-fill"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="ri-twitter-fill"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="ri-google-fill"></i>
-          </a>
-        </div>
-      </div>
-</div>
-
-<div class="wx-share-modal">
-    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ycfn97.xyz/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div id="share-mask"></div>  
-    </footer>
-  </div>
-
-   
-  <nav class="article-nav">
-    
-      <a href="/2020/09/28/spark-core-top10%E7%83%AD%E9%97%A8%E5%93%81%E7%B1%BB/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            spark core-top10热门品类
-          
-        </div>
-      </a>
-    
-    
-      <a href="/2020/09/24/spark-core-%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BBTop3/" class="article-nav-link">
-        <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">spark核心函数实例-广告点击Top3</div>
-      </a>
-    
-  </nav>
-
-   
-<!-- valine评论 -->
-<div id="vcomments-box">
-  <div id="vcomments"></div>
-</div>
-<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
-<script>
-  new Valine({
-    el: "#vcomments",
-    app_id: "",
-    app_key: "",
-    path: window.location.pathname,
-    avatar: "monsterid",
-    placeholder: "给我的文章加点评论吧~",
-    recordIP: true,
-  });
-  const infoEle = document.querySelector("#vcomments .info");
-  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
-    infoEle.childNodes.forEach(function (item) {
-      item.parentNode.removeChild(item);
-    });
-  }
-</script>
-<style>
-  #vcomments-box {
-    padding: 5px 30px;
-  }
-
-  @media screen and (max-width: 800px) {
-    #vcomments-box {
-      padding: 5px 0px;
-    }
-  }
-
-  #vcomments-box #vcomments {
-    background-color: #fff;
-  }
-
-  .v .vlist .vcard .vh {
-    padding-right: 20px;
-  }
-
-  .v .vlist .vcard {
-    padding-left: 10px;
-  }
-</style>
-
- 
-   
-     
 </article>
+      
+  
+  
+      <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      <a href="/2020/09/23/hello-world/" class="archive-article-date">
+  <time datetime="2020-09-23T01:30:10.787Z" itemprop="datePublished">09/23</time>
+</a>
+       
+<h2 itemprop="name">
+  <a class="archive-article-title" href="/2020/09/23/hello-world/"
+    >Hello World</a> 
+</h2>
+ 
 
+    </header>
+    
+    
+  </div>
+</article>
+      
+      
+    </div>
+  </div>
+  
+  
+
+  
+  <nav class="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/archives/page/2/">上一页</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
+  
 </section>
       <footer class="footer">
   <div class="outer">
@@ -428,23 +284,6 @@ var _hmt = _hmt || [];
 <script src="/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
-
-
-<script src="/js/tocbot.min.js"></script>
-
-<script>
-  tocbot.init({
-    tocSelector: '.tocbot',
-    contentSelector: '.article-entry',
-    headingSelector: 'h1, h2, h3, h4, h5, h6',
-    hasInnerContainers: true,
-    scrollSmooth: true,
-    scrollContainer: 'main',
-    positionFixedSelector: '.tocbot',
-    positionFixedClass: 'is-position-fixed',
-    fixedSidebarOffset: 'auto'
-  });
-</script>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">

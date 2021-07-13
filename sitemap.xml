@@ -188,14 +188,14 @@
 
   
   <url>
-    <loc>https://ycfn97.xyz/categories/OLAP/</loc>
+    <loc>https://ycfn97.xyz/categories/git/</loc>
     <lastmod>2021-07-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://ycfn97.xyz/categories/git/</loc>
+    <loc>https://ycfn97.xyz/categories/OLAP/</loc>
     <lastmod>2021-07-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -230,14 +230,14 @@
   </url>
   
   <url>
-    <loc>https://ycfn97.xyz/categories/sqoop/</loc>
+    <loc>https://ycfn97.xyz/categories/OLTP/</loc>
     <lastmod>2021-07-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://ycfn97.xyz/categories/OLTP/</loc>
+    <loc>https://ycfn97.xyz/categories/sqoop/</loc>
     <lastmod>2021-07-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

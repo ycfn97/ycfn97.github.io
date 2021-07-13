@@ -61,41 +61,26 @@
 
 <h4 id="git-工作原理"><a href="#git-工作原理" class="headerlink" title="git 工作原理"></a>git 工作原理</h4><p><img src="https://img0.baidu.com/it/u=613996794,3695167693&fm=26&fmt=auto&gp=0.jpg" alt="img"></p>
 <h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h4><p>Cloning from a remote repository to a local repository</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git clone http://git.skytech.cn/Digger/dolphinscheduler.git</span><br></pre></td></tr></table></figure>
-
-<p>Initialize the local repository</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git clone http://git.skytech.cn/Digger/dolphinscheduler.git</span><br><span class="line"></span><br><span class="line">git init</span><br></pre></td></tr></table></figure>
 
 
 
-<h4 id="分支操作"><a href="#分支操作" class="headerlink" title="分支操作"></a>分支操作</h4><p>Create a branch</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git branch test</span><br></pre></td></tr></table></figure>
-
-<p>查看分支</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git branch -v</span><br></pre></td></tr></table></figure>
-
-<p>切换分支</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git checkout test</span><br></pre></td></tr></table></figure>
+<h4 id="分支操作"><a href="#分支操作" class="headerlink" title="分支操作"></a>分支操作</h4><p>创建查看并切换分支</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git branch test</span><br><span class="line"></span><br><span class="line">git branch -v</span><br><span class="line"></span><br><span class="line">git checkout test</span><br></pre></td></tr></table></figure>
 
 <p>切换版本</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git reset --hard 版本号</span><br></pre></td></tr></table></figure>
 
-<p>拉取分支</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git fetch origin master</span><br></pre></td></tr></table></figure>
+<p>拉取合并分支到当前分支=拉取分支并合并</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git fetch origin master</span><br><span class="line">+</span><br><span class="line">git merge dolphinscheduler</span><br><span class="line">||</span><br><span class="line">git pull origin dolphinscheduler:dolphinscheduler</span><br></pre></td></tr></table></figure>
 
-<p>合并分支到当前分支</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git merge dolphinscheduler</span><br></pre></td></tr></table></figure>
-
-<p>拉取分支并合并</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git pull origin dolphinscheduler:dolphinscheduler</span><br></pre></td></tr></table></figure>
+<p>切换分支版本</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git reset --hard 版本号</span><br></pre></td></tr></table></figure>
 
 
 
-<h4 id="提交"><a href="#提交" class="headerlink" title="提交"></a>提交</h4><p>添加到暂存区</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git add 文件名</span><br></pre></td></tr></table></figure>
-
-<p>提交到 local repository</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git commit -am &quot;日志信息&quot; 文件名</span><br></pre></td></tr></table></figure>
+<h4 id="提交"><a href="#提交" class="headerlink" title="提交"></a>提交</h4><p>添加到暂存区-&gt;提交到 local repository-&gt;选择远程库并提交</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git add 文件名</span><br><span class="line"></span><br><span class="line">git commit -am &quot;日志信息&quot; 文件名</span><br><span class="line"></span><br><span class="line">git push 别名 分支</span><br></pre></td></tr></table></figure>
 
 <p>查看远程库</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
@@ -103,15 +88,12 @@
 <p>添加远程库</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git remote add 别名 远程地址</span><br></pre></td></tr></table></figure>
 
-<p>选择远程库并提交</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git push 别名 分支</span><br></pre></td></tr></table></figure>
-
 <p>强制push</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git push 别名 分支 -f</span><br></pre></td></tr></table></figure>
 
 
 
-<h4 id="特殊情况"><a href="#特殊情况" class="headerlink" title="特殊情况"></a>特殊情况</h4><p>多人项目，拉取代码后同事又修改代码上传，这时应先拉后推</p>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>多人项目，拉取代码后同事又修改代码上传，先拉后推</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git pull origin dolphinscheduler:dolphinscheduler</span><br><span class="line"></span><br><span class="line">git add ./*</span><br><span class="line"></span><br><span class="line">git push origin dolphinscheduler</span><br></pre></td></tr></table></figure>
 
 

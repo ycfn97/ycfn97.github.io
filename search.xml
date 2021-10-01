@@ -1,6 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Git操作</title>
+    <url>/2021/07/13/Git%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<p><img src="https://git-scm.com/images/logo@2x.png" alt="Git"></p>
+<a id="more"></a>
+
+<h4 id="git-工作原理"><a href="#git-工作原理" class="headerlink" title="git 工作原理"></a>git 工作原理</h4><p><img src="https://img0.baidu.com/it/u=613996794,3695167693&fm=26&fmt=auto&gp=0.jpg" alt="img"></p>
+<h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h4><p>Cloning from a remote repository to a local repository</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git clone http://git.skytech.cn/Digger/dolphinscheduler.git</span><br><span class="line"></span><br><span class="line">git init</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="分支操作"><a href="#分支操作" class="headerlink" title="分支操作"></a>分支操作</h4><p>创建查看并切换分支</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git branch test</span><br><span class="line"></span><br><span class="line">git branch -v</span><br><span class="line"></span><br><span class="line">git checkout test</span><br></pre></td></tr></table></figure>
+
+<p>切换版本</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git reset --hard 版本号</span><br></pre></td></tr></table></figure>
+
+<p>拉取合并分支到当前分支=拉取分支并合并</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git fetch origin master</span><br><span class="line">+</span><br><span class="line">git merge dolphinscheduler</span><br><span class="line">||</span><br><span class="line">git pull origin dolphinscheduler:dolphinscheduler</span><br></pre></td></tr></table></figure>
+
+<p>切换分支版本</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git reset --hard 版本号</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="提交"><a href="#提交" class="headerlink" title="提交"></a>提交</h4><p>添加到暂存区-&gt;提交到 local repository-&gt;选择远程库并提交</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git add 文件名</span><br><span class="line"></span><br><span class="line">git commit -am &quot;日志信息&quot; 文件名</span><br><span class="line"></span><br><span class="line">git push 别名 分支</span><br></pre></td></tr></table></figure>
+
+<p>查看远程库</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
+
+<p>添加远程库</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git remote add 别名 远程地址</span><br></pre></td></tr></table></figure>
+
+<p>强制push</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git push 别名 分支 -f</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>多人项目，拉取代码后同事又修改代码上传，先拉后推</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git pull origin dolphinscheduler:dolphinscheduler</span><br><span class="line"></span><br><span class="line">git add ./*</span><br><span class="line"></span><br><span class="line">git push origin dolphinscheduler</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="idea中操作git"><a href="#idea中操作git" class="headerlink" title="idea中操作git"></a>idea中操作git</h4><p><img src="/2021/07/13/Git%E6%93%8D%E4%BD%9C/git.jpg"></p>
+]]></content>
+      <categories>
+        <category>git</category>
+      </categories>
+  </entry>
+  <entry>
     <title>clickhouse作为实时和离线计算引擎从kafka消费数据</title>
     <url>/2020/12/04/clickhouse%E4%BD%9C%E4%B8%BA%E5%AE%9E%E6%97%B6%E5%92%8C%E7%A6%BB%E7%BA%BF%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E%E4%BB%8Ekafka%E6%B6%88%E8%B4%B9%E6%95%B0%E6%8D%AE/</url>
     <content><![CDATA[<p><img src="https://clickhouse.tech/images/index/intro.svg" alt="ClickHouse is capable of generating analytical data reports in real time, with sub-second latencies">    </p>
@@ -71,57 +122,6 @@
       </categories>
   </entry>
   <entry>
-    <title>Git操作</title>
-    <url>/2021/07/13/Git%E6%93%8D%E4%BD%9C/</url>
-    <content><![CDATA[<p><img src="https://git-scm.com/images/logo@2x.png" alt="Git"></p>
-<a id="more"></a>
-
-<h4 id="git-工作原理"><a href="#git-工作原理" class="headerlink" title="git 工作原理"></a>git 工作原理</h4><p><img src="https://img0.baidu.com/it/u=613996794,3695167693&fm=26&fmt=auto&gp=0.jpg" alt="img"></p>
-<h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h4><p>Cloning from a remote repository to a local repository</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git clone http://git.skytech.cn/Digger/dolphinscheduler.git</span><br><span class="line"></span><br><span class="line">git init</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="分支操作"><a href="#分支操作" class="headerlink" title="分支操作"></a>分支操作</h4><p>创建查看并切换分支</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git branch test</span><br><span class="line"></span><br><span class="line">git branch -v</span><br><span class="line"></span><br><span class="line">git checkout test</span><br></pre></td></tr></table></figure>
-
-<p>切换版本</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git reset --hard 版本号</span><br></pre></td></tr></table></figure>
-
-<p>拉取合并分支到当前分支=拉取分支并合并</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git fetch origin master</span><br><span class="line">+</span><br><span class="line">git merge dolphinscheduler</span><br><span class="line">||</span><br><span class="line">git pull origin dolphinscheduler:dolphinscheduler</span><br></pre></td></tr></table></figure>
-
-<p>切换分支版本</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git reset --hard 版本号</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="提交"><a href="#提交" class="headerlink" title="提交"></a>提交</h4><p>添加到暂存区-&gt;提交到 local repository-&gt;选择远程库并提交</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git add 文件名</span><br><span class="line"></span><br><span class="line">git commit -am &quot;日志信息&quot; 文件名</span><br><span class="line"></span><br><span class="line">git push 别名 分支</span><br></pre></td></tr></table></figure>
-
-<p>查看远程库</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
-
-<p>添加远程库</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git remote add 别名 远程地址</span><br></pre></td></tr></table></figure>
-
-<p>强制push</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git push 别名 分支 -f</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>多人项目，拉取代码后同事又修改代码上传，先拉后推</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git pull origin dolphinscheduler:dolphinscheduler</span><br><span class="line"></span><br><span class="line">git add ./*</span><br><span class="line"></span><br><span class="line">git push origin dolphinscheduler</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="idea中操作git"><a href="#idea中操作git" class="headerlink" title="idea中操作git"></a>idea中操作git</h4><p><img src="/2021/07/13/Git%E6%93%8D%E4%BD%9C/git.jpg"></p>
-]]></content>
-      <categories>
-        <category>git</category>
-      </categories>
-  </entry>
-  <entry>
     <title>clickhouse单机及集群快速部署</title>
     <url>/2020/11/10/clickhouse%E5%8D%95%E6%9C%BA%E5%8F%8A%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/</url>
     <content><![CDATA[<p><img src="/2020/11/10/clickhouse%E5%8D%95%E6%9C%BA%E5%8F%8A%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/clickhouse.png"></p>
@@ -173,6 +173,75 @@
       <categories>
         <category>OLAP</category>
       </categories>
+  </entry>
+  <entry>
+    <title>flink checkpoint机制及非barrier对齐</title>
+    <url>/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/</url>
+    <content><![CDATA[<p><img src="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/0.jpg"></p>
+<p>注：本文部分内容为转载总结</p>
+<a id="more"></a>
+
+<p>在flink的世界观里，一切事物都可以视为数据流中的一个个珠子，在算子间不断的流动着，之前的watermark就可以看做数据流中的一个数据珠子，同样checkpoint也不例外。</p>
+<p>在多个并行度的数据流经算子内联的barrier(检查点分界线)时，会将自己的位置保存进状态后端(state backend)，生产中一般将状态保存进hdfs，rocksdb中，如果数据源是kafka，那么稳定存储的就是kafka的offset，如下图所示，checkpoint流经keyby算子后保存了当前的位置，后面经过map算子时，保存了checkpoint流过算子时的数据状态，同样作为稳定存储进状态后端，当任务出现异常时，就可以从状态后端中将数据流还原到未出错前的样子：</p>
+<p><img src="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/1.jpg"></p>
+<p>但是，屏障对齐是阻塞式的，在作业出现反压时可能会成为不定时炸弹。我们知道，检查点屏障是从Source端产生并源源不断地向下游流动的。如果作业出现反压（哪怕整个DAG中的一条链路反压），数据流动的速度减慢，屏障到达下游算子的延迟就会变大，进而影响到检查点完成的延时（变大甚至超时失败）。如果反压长久不能得到解决，快照数据与实际数据之间的差距就越来越明显，一旦作业failover，势必丢失较多的处理进度。另一方面，作业恢复后需要重新处理的数据又会积压，加重反压，造成恶性循环。</p>
+<p>为了规避风险，Flink 1.11引入了非对齐检查点（unaligned checkpoint）的feature。</p>
+<p>非对齐检查点取消了屏障对齐操作：</p>
+<ol>
+<li>当算子的所有输入流中的第一个屏障到达算子的输入缓冲区时，立即将这个屏障发往下游（输出缓冲区）。</li>
+<li>由于第一个屏障没有被阻塞，它的步调会比较快，超过一部分缓冲区中的数据。算子会标记两部分数据：一是屏障首先到达的那条流中被超过的数据，二是其他流中位于当前检查点屏障之前的所有数据（当然也包括进入了输入缓冲区的数据），如下图中标黄的部分所示。</li>
+<li>将上述两部分数据连同算子的状态一起做异步快照。</li>
+</ol>
+<p><img src="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/2.png"></p>
+<p>不同检查点的数据都混在一起，非对齐检查点还是能保证exactly once。当任务从非对齐检查点恢复时，除了对齐检查点也会涉及到的Source端重放和算子的计算状态恢复之外，未对齐的流数据也会被恢复到各个链路，三者合并起来就是能够保证exactly once的完整现场了。</p>
+<p><img src="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/3.png"></p>
+<p>非对齐检查点主要缺点有二：</p>
+<ul>
+<li><p>需要额外保存数据流的现场，总的状态大小可能会有比较明显的膨胀（文档中说可能会达到a couple of GB per task），磁盘压力大。当集群本身就具有I/O bound的特点时，该缺点的影响更明显。</p>
+</li>
+<li><p>从状态恢复时也需要额外恢复数据流的现场，作业重新拉起的耗时可能会很长。特别地，如果第一次恢复失败，有可能触发death spiral（死亡螺旋）使得作业永远无法恢复。</p>
+</li>
+</ul>
+<p>官方当前推荐仅将它应用于那些容易产生反压且I/O压力较小（比如原始状态不太大）的作业中。随着后续版本的打磨，非对齐检查点肯定会更加好用。</p>
+]]></content>
+      <categories>
+        <category>flink</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>dolphinscheduler任务调度指南</title>
+    <url>/2021/04/08/dolphinscheduler%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<p><img src="https://dolphinscheduler.apache.org/img/hlogo_white.svg" alt="img"></p>
+<a id="more"></a>
+
+<p>GitHub地址：<a href="https://github.com/apache/incubator-dolphinscheduler">https://github.com/apache/incubator-dolphinscheduler</a></p>
+<p>dolphinscheduler的集群环境配置有几个要点：</p>
+<p>1、元数据库配置及初始化</p>
+<p>2、运行环境的配置</p>
+<p>3、集群安装参数、上传文件路径及告警配置</p>
+<p>其中环境的配置直接影响后面的任务调度。以阿里云E-Mapreduce为例，集群的环境变量及常见类路径部署在/etc/profile.d/*.sh中，如果在任务运行过程中出现命令丢失和jar包缺失，可以去$PATH中去找环境变量。</p>
+<p><img src="/2021/04/08/dolphinscheduler%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E6%8C%87%E5%8D%97/0.jpg"></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">export HADOOP_HOME=/usr/lib/hadoop-current</span><br><span class="line">export HADOOP_CONF_DIR=/etc/ecm/hadoop-conf</span><br><span class="line">export SPARK_HOME=/usr/lib/spark-current</span><br><span class="line">export HADOOP_CLASSPATH=/usr/lib/hadoop-current/lib/*:/usr/lib/tez-current/*:/usr/lib/tez-current/lib/*:/etc/ecm/tez-conf:/opt/apps/extra-jars/*:/usr/lib/spark-current/yarn/spark-2.4.5-yarn-shuffle.jar</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="built_in">export</span> SPARK_HOME2=/opt/soft/spark2</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="built_in">export</span> PYTHON_HOME=/opt/soft/python</span></span><br><span class="line">export JAVA_HOME=/usr/lib/jvm/java-1.8.0</span><br><span class="line">export HIVE_HOME=/usr/lib/hive-current</span><br><span class="line">export FLINK_HOME=/usr/lib/flink-current</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="built_in">export</span> DATAX_HOME=/opt/soft/datax/bin/datax.py</span></span><br><span class="line">export SQOOP_HOME=/usr/lib/sqoop-current</span><br><span class="line"></span><br><span class="line">export HIVE_CONF_DIR=/etc/ecm/hive-conf</span><br><span class="line">export HCAT_HOME=/usr/lib/hive-current/hcatalog</span><br><span class="line"></span><br><span class="line">export PATH=$SQOOP_HOME/bin:$HADOOP_HOME/bin:$HCAT_HOME/bin:$SPARK_HOME/bin:$JAVA_HOME/bin:$HIVE_HOME/bin:$PATH:$FLINK_HOME/bin:$DATAX_HOME:$PATH</span><br></pre></td></tr></table></figure>
+
+<p>如果这3点中有一点没有做好，将会影响dolphinscheduler的正常工作和任务调度。</p>
+<p>在部署好集群后，会在master和worker上共启动5种不同的进程：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">MasterServer         ----- master服务    </span><br><span class="line">WorkerServer         ----- worker服务    </span><br><span class="line">LoggerServer         ----- logger服务    </span><br><span class="line">ApiApplicationServer ----- api服务    </span><br><span class="line">AlertServer          ----- alert服务</span><br></pre></td></tr></table></figure>
+
+<p>进入web后首先要进行一些初始化工作，例如租户，用户的创建，数据源的配置等，然后我们可以进行任务调度：</p>
+<p><img src="/2021/04/08/dolphinscheduler%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E6%8C%87%E5%8D%97/1.jpg"></p>
+<p>工作台有几种常用的任务例如flink，spark、sql、shell脚本都可以通过托拉拽的方式确定任务调度流程。</p>
+<p>在完成任务流程设计后，可以通过定时调度，失败邮箱报警和企业微信报警来题型开发者任务过程出现的问题并及时解决。</p>
+<p>在进行任务调度过程中，可能会出现一些程序本身设计问题而导致的bug，</p>
+<p>出现任务调度异常，或者任务链卡死，首先去logs下跟踪master和worker的日志，一般出错都会在日志中找出原因，常见的bug如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">[ERROR] <span class="number">2021</span>-<span class="number">04</span>-<span class="number">08</span> <span class="number">14</span>:<span class="number">58</span>:<span class="number">51.045</span> org.apache.dolphinscheduler.server.master.processor.queue.TaskResponseService:[<span class="number">169</span>] - worker response master error</span><br><span class="line">org.springframework.dao.DataIntegrityViolationException: </span><br><span class="line">### Error updating database.  Cause: com.mysql.jdbc.MysqlDataTruncation: Data truncation: Data too long for column &#x27;app_link&#x27; at row 1</span><br><span class="line">### The error may exist in org/apache/dolphinscheduler/dao/mapper/TaskInstanceMapper.java (best guess)</span><br><span class="line">### The error may involve org.apache.dolphinscheduler.dao.mapper.TaskInstanceMapper.updateById-Inline</span><br><span class="line">### The error occurred while setting parameters</span><br><span class="line">### SQL: UPDATE t_ds_task_instance  SET flag=?, task_json=?, pid=?, app_link=?, task_type=?, task_instance_priority=?, log_path=?, host=?, start_time=?, worker_group=?, state=?, process_instance_id=?, process_definition_id=?, executor_id=?, alert_flag=?, execute_path=?, max_retry_times=?, retry_times=?, submit_time=?, name=?, retry_interval=?, end_time=?  WHERE id=?</span><br><span class="line">### Cause: com.mysql.jdbc.MysqlDataTruncation: Data truncation: Data too long for column &#x27;app_link&#x27; at row 1</span><br><span class="line">; Data truncation: Data too <span class="keyword">long</span> <span class="keyword">for</span> column <span class="string">&#x27;app_link&#x27;</span> at row <span class="number">1</span>; nested exception is com.mysql.jdbc.MysqlDataTruncation: Data truncation: Data too <span class="keyword">long</span> <span class="keyword">for</span> column <span class="string">&#x27;app_link&#x27;</span> at row <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>这种问题的原因在于dolphinscheduler元数据设计时的局限性，应该将t_ds_task_instance表中的app_link字段修改成text类型，即可解决问题。</p>
+<p>dolphinscheduler是一个apache正在孵化中的开源项目，社区建设还不是很成熟，开源社区有GitHub，slack，微信公众号交流群：</p>
+<p><a href="https://app.slack.com/client/T01L3LB96V7/C01L3LB9YMP/thread/C01L3LB9YMP-1617861424.034300">https://app.slack.com/client/T01L3LB96V7/C01L3LB9YMP/thread/C01L3LB9YMP-1617861424.034300</a></p>
+<p><a href="https://github.com/apache/incubator-dolphinscheduler/issues">https://github.com/apache/incubator-dolphinscheduler/issues</a></p>
+<p>微信公众号：dolphin-scheduler</p>
+<p>也可以通过我（微信：ycfnsq97）邀请大家加入apache dolphinscheduler社区微信交流群。</p>
+]]></content>
   </entry>
   <entry>
     <title>elasticsearch原理及常见面试点</title>
@@ -243,75 +312,6 @@
       </categories>
   </entry>
   <entry>
-    <title>dolphinscheduler任务调度指南</title>
-    <url>/2021/04/08/dolphinscheduler%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<p><img src="https://dolphinscheduler.apache.org/img/hlogo_white.svg" alt="img"></p>
-<a id="more"></a>
-
-<p>GitHub地址：<a href="https://github.com/apache/incubator-dolphinscheduler">https://github.com/apache/incubator-dolphinscheduler</a></p>
-<p>dolphinscheduler的集群环境配置有几个要点：</p>
-<p>1、元数据库配置及初始化</p>
-<p>2、运行环境的配置</p>
-<p>3、集群安装参数、上传文件路径及告警配置</p>
-<p>其中环境的配置直接影响后面的任务调度。以阿里云E-Mapreduce为例，集群的环境变量及常见类路径部署在/etc/profile.d/*.sh中，如果在任务运行过程中出现命令丢失和jar包缺失，可以去$PATH中去找环境变量。</p>
-<p><img src="/2021/04/08/dolphinscheduler%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E6%8C%87%E5%8D%97/0.jpg"></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">export HADOOP_HOME=/usr/lib/hadoop-current</span><br><span class="line">export HADOOP_CONF_DIR=/etc/ecm/hadoop-conf</span><br><span class="line">export SPARK_HOME=/usr/lib/spark-current</span><br><span class="line">export HADOOP_CLASSPATH=/usr/lib/hadoop-current/lib/*:/usr/lib/tez-current/*:/usr/lib/tez-current/lib/*:/etc/ecm/tez-conf:/opt/apps/extra-jars/*:/usr/lib/spark-current/yarn/spark-2.4.5-yarn-shuffle.jar</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="built_in">export</span> SPARK_HOME2=/opt/soft/spark2</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="built_in">export</span> PYTHON_HOME=/opt/soft/python</span></span><br><span class="line">export JAVA_HOME=/usr/lib/jvm/java-1.8.0</span><br><span class="line">export HIVE_HOME=/usr/lib/hive-current</span><br><span class="line">export FLINK_HOME=/usr/lib/flink-current</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="built_in">export</span> DATAX_HOME=/opt/soft/datax/bin/datax.py</span></span><br><span class="line">export SQOOP_HOME=/usr/lib/sqoop-current</span><br><span class="line"></span><br><span class="line">export HIVE_CONF_DIR=/etc/ecm/hive-conf</span><br><span class="line">export HCAT_HOME=/usr/lib/hive-current/hcatalog</span><br><span class="line"></span><br><span class="line">export PATH=$SQOOP_HOME/bin:$HADOOP_HOME/bin:$HCAT_HOME/bin:$SPARK_HOME/bin:$JAVA_HOME/bin:$HIVE_HOME/bin:$PATH:$FLINK_HOME/bin:$DATAX_HOME:$PATH</span><br></pre></td></tr></table></figure>
-
-<p>如果这3点中有一点没有做好，将会影响dolphinscheduler的正常工作和任务调度。</p>
-<p>在部署好集群后，会在master和worker上共启动5种不同的进程：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">MasterServer         ----- master服务    </span><br><span class="line">WorkerServer         ----- worker服务    </span><br><span class="line">LoggerServer         ----- logger服务    </span><br><span class="line">ApiApplicationServer ----- api服务    </span><br><span class="line">AlertServer          ----- alert服务</span><br></pre></td></tr></table></figure>
-
-<p>进入web后首先要进行一些初始化工作，例如租户，用户的创建，数据源的配置等，然后我们可以进行任务调度：</p>
-<p><img src="/2021/04/08/dolphinscheduler%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E6%8C%87%E5%8D%97/1.jpg"></p>
-<p>工作台有几种常用的任务例如flink，spark、sql、shell脚本都可以通过托拉拽的方式确定任务调度流程。</p>
-<p>在完成任务流程设计后，可以通过定时调度，失败邮箱报警和企业微信报警来题型开发者任务过程出现的问题并及时解决。</p>
-<p>在进行任务调度过程中，可能会出现一些程序本身设计问题而导致的bug，</p>
-<p>出现任务调度异常，或者任务链卡死，首先去logs下跟踪master和worker的日志，一般出错都会在日志中找出原因，常见的bug如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">[ERROR] <span class="number">2021</span>-<span class="number">04</span>-<span class="number">08</span> <span class="number">14</span>:<span class="number">58</span>:<span class="number">51.045</span> org.apache.dolphinscheduler.server.master.processor.queue.TaskResponseService:[<span class="number">169</span>] - worker response master error</span><br><span class="line">org.springframework.dao.DataIntegrityViolationException: </span><br><span class="line">### Error updating database.  Cause: com.mysql.jdbc.MysqlDataTruncation: Data truncation: Data too long for column &#x27;app_link&#x27; at row 1</span><br><span class="line">### The error may exist in org/apache/dolphinscheduler/dao/mapper/TaskInstanceMapper.java (best guess)</span><br><span class="line">### The error may involve org.apache.dolphinscheduler.dao.mapper.TaskInstanceMapper.updateById-Inline</span><br><span class="line">### The error occurred while setting parameters</span><br><span class="line">### SQL: UPDATE t_ds_task_instance  SET flag=?, task_json=?, pid=?, app_link=?, task_type=?, task_instance_priority=?, log_path=?, host=?, start_time=?, worker_group=?, state=?, process_instance_id=?, process_definition_id=?, executor_id=?, alert_flag=?, execute_path=?, max_retry_times=?, retry_times=?, submit_time=?, name=?, retry_interval=?, end_time=?  WHERE id=?</span><br><span class="line">### Cause: com.mysql.jdbc.MysqlDataTruncation: Data truncation: Data too long for column &#x27;app_link&#x27; at row 1</span><br><span class="line">; Data truncation: Data too <span class="keyword">long</span> <span class="keyword">for</span> column <span class="string">&#x27;app_link&#x27;</span> at row <span class="number">1</span>; nested exception is com.mysql.jdbc.MysqlDataTruncation: Data truncation: Data too <span class="keyword">long</span> <span class="keyword">for</span> column <span class="string">&#x27;app_link&#x27;</span> at row <span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-<p>这种问题的原因在于dolphinscheduler元数据设计时的局限性，应该将t_ds_task_instance表中的app_link字段修改成text类型，即可解决问题。</p>
-<p>dolphinscheduler是一个apache正在孵化中的开源项目，社区建设还不是很成熟，开源社区有GitHub，slack，微信公众号交流群：</p>
-<p><a href="https://app.slack.com/client/T01L3LB96V7/C01L3LB9YMP/thread/C01L3LB9YMP-1617861424.034300">https://app.slack.com/client/T01L3LB96V7/C01L3LB9YMP/thread/C01L3LB9YMP-1617861424.034300</a></p>
-<p><a href="https://github.com/apache/incubator-dolphinscheduler/issues">https://github.com/apache/incubator-dolphinscheduler/issues</a></p>
-<p>微信公众号：dolphin-scheduler</p>
-<p>也可以通过我（微信：ycfnsq97）邀请大家加入apache dolphinscheduler社区微信交流群。</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>flink checkpoint机制及非barrier对齐</title>
-    <url>/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/</url>
-    <content><![CDATA[<p><img src="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/0.jpg"></p>
-<p>注：本文部分内容为转载总结</p>
-<a id="more"></a>
-
-<p>在flink的世界观里，一切事物都可以视为数据流中的一个个珠子，在算子间不断的流动着，之前的watermark就可以看做数据流中的一个数据珠子，同样checkpoint也不例外。</p>
-<p>在多个并行度的数据流经算子内联的barrier(检查点分界线)时，会将自己的位置保存进状态后端(state backend)，生产中一般将状态保存进hdfs，rocksdb中，如果数据源是kafka，那么稳定存储的就是kafka的offset，如下图所示，checkpoint流经keyby算子后保存了当前的位置，后面经过map算子时，保存了checkpoint流过算子时的数据状态，同样作为稳定存储进状态后端，当任务出现异常时，就可以从状态后端中将数据流还原到未出错前的样子：</p>
-<p><img src="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/1.jpg"></p>
-<p>但是，屏障对齐是阻塞式的，在作业出现反压时可能会成为不定时炸弹。我们知道，检查点屏障是从Source端产生并源源不断地向下游流动的。如果作业出现反压（哪怕整个DAG中的一条链路反压），数据流动的速度减慢，屏障到达下游算子的延迟就会变大，进而影响到检查点完成的延时（变大甚至超时失败）。如果反压长久不能得到解决，快照数据与实际数据之间的差距就越来越明显，一旦作业failover，势必丢失较多的处理进度。另一方面，作业恢复后需要重新处理的数据又会积压，加重反压，造成恶性循环。</p>
-<p>为了规避风险，Flink 1.11引入了非对齐检查点（unaligned checkpoint）的feature。</p>
-<p>非对齐检查点取消了屏障对齐操作：</p>
-<ol>
-<li>当算子的所有输入流中的第一个屏障到达算子的输入缓冲区时，立即将这个屏障发往下游（输出缓冲区）。</li>
-<li>由于第一个屏障没有被阻塞，它的步调会比较快，超过一部分缓冲区中的数据。算子会标记两部分数据：一是屏障首先到达的那条流中被超过的数据，二是其他流中位于当前检查点屏障之前的所有数据（当然也包括进入了输入缓冲区的数据），如下图中标黄的部分所示。</li>
-<li>将上述两部分数据连同算子的状态一起做异步快照。</li>
-</ol>
-<p><img src="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/2.png"></p>
-<p>不同检查点的数据都混在一起，非对齐检查点还是能保证exactly once。当任务从非对齐检查点恢复时，除了对齐检查点也会涉及到的Source端重放和算子的计算状态恢复之外，未对齐的流数据也会被恢复到各个链路，三者合并起来就是能够保证exactly once的完整现场了。</p>
-<p><img src="/2021/02/16/flink%20checkpoint%E6%9C%BA%E5%88%B6%E5%8F%8A%E9%9D%9Ebarrier%E5%AF%B9%E9%BD%90/3.png"></p>
-<p>非对齐检查点主要缺点有二：</p>
-<ul>
-<li><p>需要额外保存数据流的现场，总的状态大小可能会有比较明显的膨胀（文档中说可能会达到a couple of GB per task），磁盘压力大。当集群本身就具有I/O bound的特点时，该缺点的影响更明显。</p>
-</li>
-<li><p>从状态恢复时也需要额外恢复数据流的现场，作业重新拉起的耗时可能会很长。特别地，如果第一次恢复失败，有可能触发death spiral（死亡螺旋）使得作业永远无法恢复。</p>
-</li>
-</ul>
-<p>官方当前推荐仅将它应用于那些容易产生反压且I/O压力较小（比如原始状态不太大）的作业中。随着后续版本的打磨，非对齐检查点肯定会更加好用。</p>
-]]></content>
-      <categories>
-        <category>flink</category>
-      </categories>
-  </entry>
-  <entry>
     <title></title>
     <url>/2021/05/04/flink-sql%20cdc%E5%88%9D%E6%8E%A2/</url>
     <content><![CDATA[<hr>
@@ -354,40 +354,6 @@
 <p><img src="/2021/05/04/flink-sql%20cdc%E5%88%9D%E6%8E%A2/3.jpg"></p>
 <p><img src="/2021/05/04/flink-sql%20cdc%E5%88%9D%E6%8E%A2/4.jpg"></p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>flink watermark传递机制</title>
-    <url>/2021/02/15/flink%20watermark%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/</url>
-    <content><![CDATA[<p><img src="https://ci.apache.org/projects/flink/flink-docs-release-1.12/fig/parallel_kafka_watermarks.svg" alt="Generating Watermarks with awareness for Kafka-partitions"></p>
-<a id="more"></a>
-
-<p>watermark是衡量eventtime进展机制的时间，经常用来处理乱序数据，常常结合window使用</p>
-<p>生产环境一般使用周期性生成watermark，系统默认的周期是200ms，可以在代码中自定义：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">env.getConfig.setAutoWatermarkInterval(<span class="number">5000</span>);</span><br></pre></td></tr></table></figure>
-
-
-
-<p>对于有eventtime的数据流，可以分为两大类：时间单调递增，乱序时间数据流，一般在生产环境中不能保证数据的准确性，所以使用BoundedOutOfOrdernessTimestampExtractor允许2s内的数据迟到：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">SingleOutputStreamOperator&lt;String&gt; input=env.socketTextStream(<span class="string">&quot;hadoop01&quot;</span>,<span class="number">7777</span>).assignTimestampsAndWatermarks(<span class="keyword">new</span> BoundedOutOfOrdernessTimestampExtractor&lt;String&gt;(Time.seconds(<span class="number">2</span>)) &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">extractTimestamp</span><span class="params">(String element)</span> </span>&#123;</span><br><span class="line">                String[] fields = element.split(<span class="string">&quot;,&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> Long.parseLong(fields[<span class="number">1</span>]) * <span class="number">1000L</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
-
-
-
-<p>在这之后要对数据进行开窗口计算，对于窗口时间和2s允许迟到的时间，以及allowedLateness内的时间也就是加起来4s的时间，会在主流输出。</p>
-<p>对于超出允许迟到4s的数据，则会被送往侧输出流sideOutputLateData每来一条就进行侧输出。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">WindowedStream&lt;Tuple2&lt;String, Integer&gt;, Tuple, TimeWindow&gt; windowedStream = keyedStream</span><br><span class="line">                .timeWindow(Time.seconds(<span class="number">5</span>))</span><br><span class="line">                .allowedLateness(Time.seconds(<span class="number">2</span>))</span><br><span class="line">                .sideOutputLateData(<span class="keyword">new</span> OutputTag&lt;Tuple2&lt;String, Integer&gt;&gt;(<span class="string">&quot;sideOutPut&quot;</span>) &#123;</span><br><span class="line">                &#125;);</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2021/02/15/flink%20watermark%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/4.jpg"></p>
-<p>在<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.12/zh/dev/event_timestamps_watermarks.html#%E5%8F%AF%E4%BB%A5%E5%BC%83%E7%94%A8-assignerwithperiodicwatermarks-%E5%92%8C-assignerwithpunctuatedwatermarks-%E4%BA%86">新发布的flink 1.12</a>中，官方对生成watermark的api进行了升级，旧版本的api预计在不久的未来会被淘汰，但是原理是通用的。</p>
-<p><img src="/2021/02/15/flink%20watermark%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/1.jpg"></p>
-<p>在多并行度时，算子向下游发送watermark是同时发送的，且同一个算子如果有多个watermark取最小。在生成watermark之前则是轮询发送。</p>
-<p>下图是在map算子之前生成watermark：</p>
-<p><img src="/2021/02/15/flink%20watermark%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/2.jpg"></p>
-<p>在map算子之后生成watermark：</p>
-<p><img src="/2021/02/15/flink%20watermark%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/3.jpg"></p>
-]]></content>
-      <categories>
-        <category>flink</category>
-      </categories>
   </entry>
   <entry>
     <title>flink yarn模式下的 HA 和 故障重启</title>
@@ -458,6 +424,31 @@
       </categories>
   </entry>
   <entry>
+    <title>flink实时数仓-dwd层维表关联</title>
+    <url>/2020/12/14/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dwd%E5%B1%82%E7%BB%B4%E8%A1%A8%E5%85%B3%E8%81%94/</url>
+    <content><![CDATA[<p><img src="https://flink.apache.org/img/flink-home-graphic.png" alt="img"></p>
+<a id="more"></a>
+
+<p>​        在实时业务场景中，mysql中的业务数据通过maxwell传到kafka后，我们可以将来自mysql的不同表传来的数据通过flink回传到不同的topic，然后再开启另外flink消费这些来自不同topic的数据并存储到hbase中，这样就可以方便维度表和事实表的关联。OLAP分析引擎往往不善于关联不同表的数据，即使是clickhouse的join也会损耗性能，所以在flink可以将表进行关联，也可以拓宽下游即席查询的广度。</p>
+<p><img src="/2020/12/14/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dwd%E5%B1%82%E7%BB%B4%E8%A1%A8%E5%85%B3%E8%81%94/2.jpg"></p>
+<p>​        在监控mysqlbinlog过程中，maxwell具有canal所没有的优势，那就是bootstrap功能，可以将mysql中的历史数据传输到kafka，在需要历史数据关联的时候就比canal有优势。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bin/maxwell-bootstrap --user root  --password 143382 --host hadoop01  --database gmall --table base_province --client_id maxwell_1</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/12/14/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dwd%E5%B1%82%E7%BB%B4%E8%A1%A8%E5%85%B3%E8%81%94/3.jpg"></p>
+<p>需求整体架构：</p>
+<p><img src="/2020/12/14/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dwd%E5%B1%82%E7%BB%B4%E8%A1%A8%E5%85%B3%E8%81%94/4.jpg"></p>
+<p>flink-java实现：<a href="https://github.com/ycfn97/flink-utils.git">GitHub</a></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> dwd;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> bean.OrderInfo01;</span><br><span class="line"><span class="keyword">import</span> bean.dim.ProvinceInfo;</span><br><span class="line"><span class="keyword">import</span> bean.dim.UserInfo;</span><br><span class="line"><span class="keyword">import</span> bean.dim.UserState;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSON;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSONObject;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.functions.FilterFunction;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.functions.MapFunction;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.functions.RichMapFunction;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.functions.RuntimeContext;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.configuration.ConfigConstants;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.configuration.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.configuration.RestOptions;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.runtime.state.memory.MemoryStateBackend;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.TimeCharacteristic;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.datastream.DataStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.datastream.DataStreamSource;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.connectors.elasticsearch.ElasticsearchSinkFunction;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.connectors.elasticsearch.RequestIndexer;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.connectors.elasticsearch.util.RetryRejectedExecutionFailureHandler;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.connectors.elasticsearch6.ElasticsearchSink;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.util.serialization.SimpleStringSchema;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.HttpHost;</span><br><span class="line"><span class="keyword">import</span> org.apache.jute.Index;</span><br><span class="line"><span class="keyword">import</span> org.elasticsearch.action.ActionRequest;</span><br><span class="line"><span class="keyword">import</span> org.elasticsearch.action.index.IndexRequest;</span><br><span class="line"><span class="keyword">import</span> org.elasticsearch.client.Requests;</span><br><span class="line"><span class="keyword">import</span> util.MyKafkaSink02;</span><br><span class="line"><span class="keyword">import</span> util.PhoenixUtil;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.text.SimpleDateFormat;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Copyright(c) 2020-2021 sparrow All Rights Reserved</span></span><br><span class="line"><span class="comment"> * Project: gmall2020-parent</span></span><br><span class="line"><span class="comment"> * Package: dwd</span></span><br><span class="line"><span class="comment"> * ClassName: OrderInfoApp01</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> 18729 created on date: 2020/12/10 12:22</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@version</span> 1.0</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> JDK 1.8</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OrderInfoApp01</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String kafkaBrokers = <span class="string">&quot;hadoop01:9092&quot;</span>;</span><br><span class="line">        String zkBrokers = <span class="string">&quot;hadoop01:2181,hadoop02:2181,hadoop03:2181&quot;</span>;</span><br><span class="line">        String topic = <span class="string">&quot;ODS_ORDER_INFO&quot;</span>;</span><br><span class="line">        String groupId = <span class="string">&quot;order_info_group&quot;</span>;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;===============》 flink任务开始  ==============》&quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Configuration conf = <span class="keyword">new</span> Configuration();</span><br><span class="line">        conf.setBoolean(ConfigConstants.LOCAL_START_WEBSERVER, <span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">//自定义端口</span></span><br><span class="line">        conf.setInteger(RestOptions.PORT, <span class="number">8060</span>);</span><br><span class="line">        <span class="comment">//本地env</span></span><br><span class="line">        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf);</span><br><span class="line">        env.setParallelism(<span class="number">4</span>);</span><br><span class="line">        <span class="comment">//生产env</span></span><br><span class="line">        <span class="comment">//val env = StreamExecutionEnvironment.getExecutionEnvironment</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();</span></span><br><span class="line">        <span class="comment">//设置kafka连接参数</span></span><br><span class="line">        Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">        properties.setProperty(<span class="string">&quot;bootstrap.servers&quot;</span>, kafkaBrokers);</span><br><span class="line">        properties.setProperty(<span class="string">&quot;zookeeper.connect&quot;</span>, zkBrokers);</span><br><span class="line">        properties.setProperty(<span class="string">&quot;group.id&quot;</span>, groupId);</span><br><span class="line">        <span class="comment">//设置时间类型</span></span><br><span class="line">        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);</span><br><span class="line">        <span class="comment">//设置检查点时间间隔</span></span><br><span class="line"><span class="comment">//        env.enableCheckpointing(5000);</span></span><br><span class="line"><span class="comment">//        env.setStateBackend( new MemoryStateBackend());</span></span><br><span class="line">        <span class="comment">//创建kafak消费者，获取kafak中的数据</span></span><br><span class="line">        FlinkKafkaConsumer&lt;String&gt; kafkaConsumer = <span class="keyword">new</span> FlinkKafkaConsumer&lt;&gt;(topic, <span class="keyword">new</span> SimpleStringSchema(), properties);</span><br><span class="line">        DataStreamSource&lt;String&gt; kafkaData = env.addSource(kafkaConsumer);</span><br><span class="line">        DataStream&lt;String&gt; userData = kafkaData.map(<span class="keyword">new</span> MapFunction&lt;String, String&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> String <span class="title">map</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line"><span class="comment">//                System.out.println(&quot;&gt;&gt;&gt;&gt;&gt;&gt;接收topic报文:&quot;+s+&quot;&lt;&lt;&lt;&lt;&lt;&quot;);</span></span><br><span class="line">                <span class="keyword">return</span> s;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        SingleOutputStreamOperator&lt;OrderInfo01&gt; map = userData.map(<span class="keyword">new</span> RichMapFunction&lt;String, OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> OrderInfo01 <span class="title">map</span><span class="params">(String value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                OrderInfo01 o = (OrderInfo01) JSON.parseObject(value, Class.forName(<span class="string">&quot;bean.OrderInfo01&quot;</span>));</span><br><span class="line">                String[] s = o.getCreate_time().split(<span class="string">&quot; &quot;</span>);</span><br><span class="line">                o.setCreate_date(s[<span class="number">0</span>]);</span><br><span class="line">                String[] split = s[<span class="number">1</span>].split(<span class="string">&quot;:&quot;</span>);</span><br><span class="line">                o.setCreate_hour(split[<span class="number">0</span>]);</span><br><span class="line">                <span class="keyword">return</span> o;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        SingleOutputStreamOperator&lt;OrderInfo01&gt; map1 = map.map(<span class="keyword">new</span> RichMapFunction&lt;OrderInfo01, OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> OrderInfo01 <span class="title">map</span><span class="params">(OrderInfo01 value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                value.setIf_first_order(<span class="string">&quot;1&quot;</span>);</span><br><span class="line">                Long user_id = value.getUser_id();</span><br><span class="line">                String s = <span class="string">&quot;select user_id,if_consumed from USER_STATE2020 where user_id = &#x27;&quot;</span>+user_id+<span class="string">&quot;&#x27;&quot;</span>;</span><br><span class="line">                List&lt;JSONObject&gt; jsonObjects = <span class="keyword">new</span> PhoenixUtil().queryList(s);</span><br><span class="line"><span class="comment">//                System.out.println(jsonObjects);</span></span><br><span class="line">                <span class="keyword">for</span> (JSONObject jsonObject:jsonObjects) &#123;</span><br><span class="line"><span class="comment">//                    System.out.println(jsonObject.getString(&quot;USER_ID&quot;));</span></span><br><span class="line"><span class="comment">//                    System.out.println(jsonObject.getString(&quot;IF_CONSUMED&quot;));</span></span><br><span class="line">                    <span class="keyword">if</span> (jsonObject.getString(<span class="string">&quot;USER_ID&quot;</span>).equals(value.getUser_id().toString())&amp;&amp;<span class="string">&quot;1&quot;</span>.equals(jsonObject.getString(<span class="string">&quot;IF_CONSUMED&quot;</span>)))&#123;</span><br><span class="line"><span class="comment">//                        System.out.println(111111111);</span></span><br><span class="line">                        value.setIf_first_order(<span class="string">&quot;0&quot;</span>);</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"><span class="comment">//                System.out.println(value);</span></span><br><span class="line">                <span class="keyword">return</span> value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        SingleOutputStreamOperator&lt;OrderInfo01&gt; map2 = map1.map(<span class="keyword">new</span> RichMapFunction&lt;OrderInfo01, OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> OrderInfo01 <span class="title">map</span><span class="params">(OrderInfo01 value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                String sql = <span class="string">&quot;select  id,name,region_id,area_code,iso_code,iso_3166_2 from GMALL2020_PROVINCE_INFO &quot;</span>;</span><br><span class="line">                List&lt;JSONObject&gt; jsonObjects = <span class="keyword">new</span> PhoenixUtil().queryList(sql);</span><br><span class="line">                HashMap&lt;String, ProvinceInfo&gt; provinceInfoHashMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">                <span class="keyword">for</span> (JSONObject object : jsonObjects) &#123;</span><br><span class="line">                    String id = object.getString(<span class="string">&quot;ID&quot;</span>);</span><br><span class="line">                    ProvinceInfo provinceInfo = <span class="keyword">new</span> ProvinceInfo(object.getString(<span class="string">&quot;ID&quot;</span>), object.getString(<span class="string">&quot;NAME&quot;</span>), object.getString(<span class="string">&quot;REGION_ID&quot;</span>), object.getString(<span class="string">&quot;AREA_CODE&quot;</span>), object.getString(<span class="string">&quot;ISO_CODE&quot;</span>), object.getString(<span class="string">&quot;ISO_3166_2&quot;</span>));</span><br><span class="line">                    provinceInfoHashMap.put(id, provinceInfo);</span><br><span class="line">                &#125;</span><br><span class="line"><span class="comment">//                System.out.println(provinceInfoHashMap.get(value.getProvince_id().toString()));</span></span><br><span class="line">                value.setProvince_name(provinceInfoHashMap.get(value.getProvince_id().toString()).getName());</span><br><span class="line">                value.setProvince_area_code(provinceInfoHashMap.get(value.getProvince_id().toString()).getArea_code());</span><br><span class="line">                value.setProvince_iso_code(provinceInfoHashMap.get(value.getProvince_id().toString()).getIso_code());</span><br><span class="line">                value.setProvince_iso_3166_2(provinceInfoHashMap.get(value.getProvince_id().toString()).getIso_3166_2());</span><br><span class="line">                <span class="keyword">return</span> value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        map2.filter(<span class="keyword">new</span> FilterFunction&lt;OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">filter</span><span class="params">(OrderInfo01 value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> value!=<span class="keyword">null</span>&amp;&amp;value.getUser_id()!=<span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        SingleOutputStreamOperator&lt;OrderInfo01&gt; map3 = map2.map(<span class="keyword">new</span> RichMapFunction&lt;OrderInfo01, OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> OrderInfo01 <span class="title">map</span><span class="params">(OrderInfo01 value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                String sql = <span class="string">&quot;select id,user_level,birthday,gender,age_group,gender_name from GMALL_USER_INFO &quot;</span>;</span><br><span class="line">                List&lt;JSONObject&gt; jsonObjects = <span class="keyword">new</span> PhoenixUtil().queryList(sql);</span><br><span class="line">                HashMap&lt;String, UserInfo&gt; userInfoHashMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">                <span class="keyword">for</span> (JSONObject object : jsonObjects) &#123;</span><br><span class="line">                    String id = object.getString(<span class="string">&quot;ID&quot;</span>);</span><br><span class="line">                    UserInfo userInfo = <span class="keyword">new</span> UserInfo(object.getString(<span class="string">&quot;ID&quot;</span>), object.getString(<span class="string">&quot;USER_LEVEL&quot;</span>), object.getString(<span class="string">&quot;BIRTHDAY&quot;</span>), object.getString(<span class="string">&quot;GENDER&quot;</span>), object.getString(<span class="string">&quot;AGE_GROUP&quot;</span>), object.getString(<span class="string">&quot;GENDER_NAME&quot;</span>));</span><br><span class="line">                    userInfoHashMap.put(id, userInfo);</span><br><span class="line">                &#125;</span><br><span class="line"><span class="comment">//                System.out.println(value.getUser_id());</span></span><br><span class="line"><span class="comment">//                System.out.println(userInfoHashMap.get(value.getUser_id().toString()));</span></span><br><span class="line"><span class="comment">//                System.out.println(userInfoHashMap.get(value.getUser_id().toString()).getAge_group());</span></span><br><span class="line">                value.setUser_age_group(userInfoHashMap.get(value.getUser_id().toString()).getAge_group());</span><br><span class="line">                value.setUser_gender(userInfoHashMap.get(value.getUser_id().toString()).getGender_name());</span><br><span class="line">                <span class="keyword">return</span> value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        map3.filter(<span class="keyword">new</span> FilterFunction&lt;OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">filter</span><span class="params">(OrderInfo01 value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> value.getIf_first_order()==<span class="string">&quot;1&quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).map(<span class="keyword">new</span> RichMapFunction&lt;OrderInfo01, OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> OrderInfo01 <span class="title">map</span><span class="params">(OrderInfo01 value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                <span class="keyword">new</span> PhoenixUtil().update(<span class="string">&quot;upsert into USER_STATE2020 values(&#x27;&quot;</span> +</span><br><span class="line">                        value.getUser_id()+<span class="string">&quot;&#x27;,&#x27;&quot;</span>+value.getIf_first_order()+<span class="string">&quot;&#x27;)&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        map3.addSink(EsUtils().build());</span><br><span class="line">        map3.addSink(<span class="keyword">new</span> MyKafkaSink02());</span><br><span class="line"></span><br><span class="line">        env.execute();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ElasticsearchSink.<span class="function">Builder&lt;OrderInfo01&gt; <span class="title">EsUtils</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        String format = <span class="keyword">new</span> SimpleDateFormat(<span class="string">&quot;yyyy-MM-dd&quot;</span>).format(<span class="keyword">new</span> Date());</span><br><span class="line">        List&lt;HttpHost&gt; httpHosts = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        httpHosts.add(<span class="keyword">new</span> HttpHost(<span class="string">&quot;hadoop01&quot;</span>, <span class="number">9200</span>, <span class="string">&quot;http&quot;</span>));</span><br><span class="line"></span><br><span class="line">        ElasticsearchSink.Builder&lt;OrderInfo01&gt; esBuilder = <span class="keyword">new</span> ElasticsearchSink.Builder&lt;&gt;(httpHosts, <span class="keyword">new</span> ElasticsearchSinkFunction&lt;OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(OrderInfo01 orderInfo01, RuntimeContext runtimeContext, RequestIndexer requestIndexer)</span> </span>&#123;</span><br><span class="line">                requestIndexer.add(createIndexRequest(orderInfo01));</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="function"><span class="keyword">private</span> IndexRequest <span class="title">createIndexRequest</span><span class="params">(OrderInfo01 orderInfo01)</span> </span>&#123;</span><br><span class="line">                HashMap&lt;String, Object&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">                map.put(<span class="string">&quot;id&quot;</span>, orderInfo01.getId());</span><br><span class="line">                map.put(<span class="string">&quot;province_id&quot;</span>, orderInfo01.getProvince_id());</span><br><span class="line">                map.put(<span class="string">&quot;order_status&quot;</span>, orderInfo01.getOrder_status());</span><br><span class="line">                map.put(<span class="string">&quot;user_id&quot;</span>, orderInfo01.getUser_id());</span><br><span class="line">                map.put(<span class="string">&quot;final_total_amount&quot;</span>, orderInfo01.getFinal_total_amount());</span><br><span class="line">                map.put(<span class="string">&quot;benefit_reduce_amount&quot;</span>, orderInfo01.getBenefit_reduce_amount());</span><br><span class="line">                map.put(<span class="string">&quot;original_total_amount&quot;</span>, orderInfo01.getOriginal_total_amount());</span><br><span class="line">                map.put(<span class="string">&quot;feight_fee&quot;</span>, orderInfo01.getFeight_fee());</span><br><span class="line">                map.put(<span class="string">&quot;expire_time&quot;</span>, orderInfo01.getExpire_time());</span><br><span class="line">                map.put(<span class="string">&quot;create_time&quot;</span>, orderInfo01.getCreate_time());</span><br><span class="line">                map.put(<span class="string">&quot;create_hour&quot;</span>, orderInfo01.getCreate_hour());</span><br><span class="line">                map.put(<span class="string">&quot;if_first_order&quot;</span>, orderInfo01.getIf_first_order());</span><br><span class="line">                map.put(<span class="string">&quot;province_name&quot;</span>, orderInfo01.getProvince_name());</span><br><span class="line">                map.put(<span class="string">&quot;province_area_code&quot;</span>, orderInfo01.getProvince_iso_3166_2());</span><br><span class="line">                map.put(<span class="string">&quot;user_age_group&quot;</span>, orderInfo01.getUser_age_group());</span><br><span class="line">                map.put(<span class="string">&quot;user_gender&quot;</span>, orderInfo01.getUser_gender());</span><br><span class="line">                System.out.println(<span class="string">&quot;data:&quot;</span> + orderInfo01);</span><br><span class="line">                <span class="keyword">return</span> Requests.indexRequest()</span><br><span class="line">                        .index(<span class="string">&quot;gmall2020_order_info_&quot;</span> + format)</span><br><span class="line">                        .type(<span class="string">&quot;_doc&quot;</span>)</span><br><span class="line">                        .id(orderInfo01.getUser_id().toString())</span><br><span class="line">                        .source(map);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        esBuilder.setBulkFlushMaxActions(<span class="number">1</span>);</span><br><span class="line">        esBuilder.setRestClientFactory(<span class="keyword">new</span> util.RestClientFactoryImpl());</span><br><span class="line">        esBuilder.setFailureHandler(<span class="keyword">new</span> RetryRejectedExecutionFailureHandler());</span><br><span class="line">        <span class="keyword">return</span> esBuilder;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>​        在sparkstreaming中，要保持精准一次性消费需要依靠redis来读取和保存kafka偏移量，而flink-kafka端到端exactly once的优势，不言自明。</p>
+]]></content>
+      <categories>
+        <category>实时数仓</category>
+      </categories>
+  </entry>
+  <entry>
     <title>flink实时数仓-dws层双流join</title>
     <url>/2020/12/15/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dws%E5%B1%82%E5%8F%8C%E6%B5%81join/</url>
     <content><![CDATA[<p><img src="/2020/12/15/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dws%E5%B1%82%E5%8F%8C%E6%B5%81join/0.jpg"></p>
@@ -479,6 +470,40 @@
 ]]></content>
       <categories>
         <category>实时数仓</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>flink watermark传递机制</title>
+    <url>/2021/02/15/flink%20watermark%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/</url>
+    <content><![CDATA[<p><img src="https://ci.apache.org/projects/flink/flink-docs-release-1.12/fig/parallel_kafka_watermarks.svg" alt="Generating Watermarks with awareness for Kafka-partitions"></p>
+<a id="more"></a>
+
+<p>watermark是衡量eventtime进展机制的时间，经常用来处理乱序数据，常常结合window使用</p>
+<p>生产环境一般使用周期性生成watermark，系统默认的周期是200ms，可以在代码中自定义：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">env.getConfig.setAutoWatermarkInterval(<span class="number">5000</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>对于有eventtime的数据流，可以分为两大类：时间单调递增，乱序时间数据流，一般在生产环境中不能保证数据的准确性，所以使用BoundedOutOfOrdernessTimestampExtractor允许2s内的数据迟到：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">SingleOutputStreamOperator&lt;String&gt; input=env.socketTextStream(<span class="string">&quot;hadoop01&quot;</span>,<span class="number">7777</span>).assignTimestampsAndWatermarks(<span class="keyword">new</span> BoundedOutOfOrdernessTimestampExtractor&lt;String&gt;(Time.seconds(<span class="number">2</span>)) &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">extractTimestamp</span><span class="params">(String element)</span> </span>&#123;</span><br><span class="line">                String[] fields = element.split(<span class="string">&quot;,&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> Long.parseLong(fields[<span class="number">1</span>]) * <span class="number">1000L</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在这之后要对数据进行开窗口计算，对于窗口时间和2s允许迟到的时间，以及allowedLateness内的时间也就是加起来4s的时间，会在主流输出。</p>
+<p>对于超出允许迟到4s的数据，则会被送往侧输出流sideOutputLateData每来一条就进行侧输出。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">WindowedStream&lt;Tuple2&lt;String, Integer&gt;, Tuple, TimeWindow&gt; windowedStream = keyedStream</span><br><span class="line">                .timeWindow(Time.seconds(<span class="number">5</span>))</span><br><span class="line">                .allowedLateness(Time.seconds(<span class="number">2</span>))</span><br><span class="line">                .sideOutputLateData(<span class="keyword">new</span> OutputTag&lt;Tuple2&lt;String, Integer&gt;&gt;(<span class="string">&quot;sideOutPut&quot;</span>) &#123;</span><br><span class="line">                &#125;);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/02/15/flink%20watermark%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/4.jpg"></p>
+<p>在<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.12/zh/dev/event_timestamps_watermarks.html#%E5%8F%AF%E4%BB%A5%E5%BC%83%E7%94%A8-assignerwithperiodicwatermarks-%E5%92%8C-assignerwithpunctuatedwatermarks-%E4%BA%86">新发布的flink 1.12</a>中，官方对生成watermark的api进行了升级，旧版本的api预计在不久的未来会被淘汰，但是原理是通用的。</p>
+<p><img src="/2021/02/15/flink%20watermark%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/1.jpg"></p>
+<p>在多并行度时，算子向下游发送watermark是同时发送的，且同一个算子如果有多个watermark取最小。在生成watermark之前则是轮询发送。</p>
+<p>下图是在map算子之前生成watermark：</p>
+<p><img src="/2021/02/15/flink%20watermark%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/2.jpg"></p>
+<p>在map算子之后生成watermark：</p>
+<p><img src="/2021/02/15/flink%20watermark%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/3.jpg"></p>
+]]></content>
+      <categories>
+        <category>flink</category>
       </categories>
   </entry>
   <entry>
@@ -543,31 +568,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>flink实时数仓-dwd层维表关联</title>
-    <url>/2020/12/14/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dwd%E5%B1%82%E7%BB%B4%E8%A1%A8%E5%85%B3%E8%81%94/</url>
-    <content><![CDATA[<p><img src="https://flink.apache.org/img/flink-home-graphic.png" alt="img"></p>
-<a id="more"></a>
-
-<p>​        在实时业务场景中，mysql中的业务数据通过maxwell传到kafka后，我们可以将来自mysql的不同表传来的数据通过flink回传到不同的topic，然后再开启另外flink消费这些来自不同topic的数据并存储到hbase中，这样就可以方便维度表和事实表的关联。OLAP分析引擎往往不善于关联不同表的数据，即使是clickhouse的join也会损耗性能，所以在flink可以将表进行关联，也可以拓宽下游即席查询的广度。</p>
-<p><img src="/2020/12/14/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dwd%E5%B1%82%E7%BB%B4%E8%A1%A8%E5%85%B3%E8%81%94/2.jpg"></p>
-<p>​        在监控mysqlbinlog过程中，maxwell具有canal所没有的优势，那就是bootstrap功能，可以将mysql中的历史数据传输到kafka，在需要历史数据关联的时候就比canal有优势。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bin/maxwell-bootstrap --user root  --password 143382 --host hadoop01  --database gmall --table base_province --client_id maxwell_1</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/12/14/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dwd%E5%B1%82%E7%BB%B4%E8%A1%A8%E5%85%B3%E8%81%94/3.jpg"></p>
-<p>需求整体架构：</p>
-<p><img src="/2020/12/14/flink%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93-dwd%E5%B1%82%E7%BB%B4%E8%A1%A8%E5%85%B3%E8%81%94/4.jpg"></p>
-<p>flink-java实现：<a href="https://github.com/ycfn97/flink-utils.git">GitHub</a></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> dwd;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> bean.OrderInfo01;</span><br><span class="line"><span class="keyword">import</span> bean.dim.ProvinceInfo;</span><br><span class="line"><span class="keyword">import</span> bean.dim.UserInfo;</span><br><span class="line"><span class="keyword">import</span> bean.dim.UserState;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSON;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSONObject;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.functions.FilterFunction;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.functions.MapFunction;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.functions.RichMapFunction;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.api.common.functions.RuntimeContext;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.configuration.ConfigConstants;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.configuration.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.configuration.RestOptions;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.runtime.state.memory.MemoryStateBackend;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.TimeCharacteristic;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.datastream.DataStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.datastream.DataStreamSource;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.connectors.elasticsearch.ElasticsearchSinkFunction;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.connectors.elasticsearch.RequestIndexer;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.connectors.elasticsearch.util.RetryRejectedExecutionFailureHandler;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.connectors.elasticsearch6.ElasticsearchSink;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;</span><br><span class="line"><span class="keyword">import</span> org.apache.flink.streaming.util.serialization.SimpleStringSchema;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.HttpHost;</span><br><span class="line"><span class="keyword">import</span> org.apache.jute.Index;</span><br><span class="line"><span class="keyword">import</span> org.elasticsearch.action.ActionRequest;</span><br><span class="line"><span class="keyword">import</span> org.elasticsearch.action.index.IndexRequest;</span><br><span class="line"><span class="keyword">import</span> org.elasticsearch.client.Requests;</span><br><span class="line"><span class="keyword">import</span> util.MyKafkaSink02;</span><br><span class="line"><span class="keyword">import</span> util.PhoenixUtil;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.text.SimpleDateFormat;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Copyright(c) 2020-2021 sparrow All Rights Reserved</span></span><br><span class="line"><span class="comment"> * Project: gmall2020-parent</span></span><br><span class="line"><span class="comment"> * Package: dwd</span></span><br><span class="line"><span class="comment"> * ClassName: OrderInfoApp01</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> 18729 created on date: 2020/12/10 12:22</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@version</span> 1.0</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> JDK 1.8</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OrderInfoApp01</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String kafkaBrokers = <span class="string">&quot;hadoop01:9092&quot;</span>;</span><br><span class="line">        String zkBrokers = <span class="string">&quot;hadoop01:2181,hadoop02:2181,hadoop03:2181&quot;</span>;</span><br><span class="line">        String topic = <span class="string">&quot;ODS_ORDER_INFO&quot;</span>;</span><br><span class="line">        String groupId = <span class="string">&quot;order_info_group&quot;</span>;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;===============》 flink任务开始  ==============》&quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Configuration conf = <span class="keyword">new</span> Configuration();</span><br><span class="line">        conf.setBoolean(ConfigConstants.LOCAL_START_WEBSERVER, <span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">//自定义端口</span></span><br><span class="line">        conf.setInteger(RestOptions.PORT, <span class="number">8060</span>);</span><br><span class="line">        <span class="comment">//本地env</span></span><br><span class="line">        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf);</span><br><span class="line">        env.setParallelism(<span class="number">4</span>);</span><br><span class="line">        <span class="comment">//生产env</span></span><br><span class="line">        <span class="comment">//val env = StreamExecutionEnvironment.getExecutionEnvironment</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();</span></span><br><span class="line">        <span class="comment">//设置kafka连接参数</span></span><br><span class="line">        Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">        properties.setProperty(<span class="string">&quot;bootstrap.servers&quot;</span>, kafkaBrokers);</span><br><span class="line">        properties.setProperty(<span class="string">&quot;zookeeper.connect&quot;</span>, zkBrokers);</span><br><span class="line">        properties.setProperty(<span class="string">&quot;group.id&quot;</span>, groupId);</span><br><span class="line">        <span class="comment">//设置时间类型</span></span><br><span class="line">        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);</span><br><span class="line">        <span class="comment">//设置检查点时间间隔</span></span><br><span class="line"><span class="comment">//        env.enableCheckpointing(5000);</span></span><br><span class="line"><span class="comment">//        env.setStateBackend( new MemoryStateBackend());</span></span><br><span class="line">        <span class="comment">//创建kafak消费者，获取kafak中的数据</span></span><br><span class="line">        FlinkKafkaConsumer&lt;String&gt; kafkaConsumer = <span class="keyword">new</span> FlinkKafkaConsumer&lt;&gt;(topic, <span class="keyword">new</span> SimpleStringSchema(), properties);</span><br><span class="line">        DataStreamSource&lt;String&gt; kafkaData = env.addSource(kafkaConsumer);</span><br><span class="line">        DataStream&lt;String&gt; userData = kafkaData.map(<span class="keyword">new</span> MapFunction&lt;String, String&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> String <span class="title">map</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line"><span class="comment">//                System.out.println(&quot;&gt;&gt;&gt;&gt;&gt;&gt;接收topic报文:&quot;+s+&quot;&lt;&lt;&lt;&lt;&lt;&quot;);</span></span><br><span class="line">                <span class="keyword">return</span> s;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        SingleOutputStreamOperator&lt;OrderInfo01&gt; map = userData.map(<span class="keyword">new</span> RichMapFunction&lt;String, OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> OrderInfo01 <span class="title">map</span><span class="params">(String value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                OrderInfo01 o = (OrderInfo01) JSON.parseObject(value, Class.forName(<span class="string">&quot;bean.OrderInfo01&quot;</span>));</span><br><span class="line">                String[] s = o.getCreate_time().split(<span class="string">&quot; &quot;</span>);</span><br><span class="line">                o.setCreate_date(s[<span class="number">0</span>]);</span><br><span class="line">                String[] split = s[<span class="number">1</span>].split(<span class="string">&quot;:&quot;</span>);</span><br><span class="line">                o.setCreate_hour(split[<span class="number">0</span>]);</span><br><span class="line">                <span class="keyword">return</span> o;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        SingleOutputStreamOperator&lt;OrderInfo01&gt; map1 = map.map(<span class="keyword">new</span> RichMapFunction&lt;OrderInfo01, OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> OrderInfo01 <span class="title">map</span><span class="params">(OrderInfo01 value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                value.setIf_first_order(<span class="string">&quot;1&quot;</span>);</span><br><span class="line">                Long user_id = value.getUser_id();</span><br><span class="line">                String s = <span class="string">&quot;select user_id,if_consumed from USER_STATE2020 where user_id = &#x27;&quot;</span>+user_id+<span class="string">&quot;&#x27;&quot;</span>;</span><br><span class="line">                List&lt;JSONObject&gt; jsonObjects = <span class="keyword">new</span> PhoenixUtil().queryList(s);</span><br><span class="line"><span class="comment">//                System.out.println(jsonObjects);</span></span><br><span class="line">                <span class="keyword">for</span> (JSONObject jsonObject:jsonObjects) &#123;</span><br><span class="line"><span class="comment">//                    System.out.println(jsonObject.getString(&quot;USER_ID&quot;));</span></span><br><span class="line"><span class="comment">//                    System.out.println(jsonObject.getString(&quot;IF_CONSUMED&quot;));</span></span><br><span class="line">                    <span class="keyword">if</span> (jsonObject.getString(<span class="string">&quot;USER_ID&quot;</span>).equals(value.getUser_id().toString())&amp;&amp;<span class="string">&quot;1&quot;</span>.equals(jsonObject.getString(<span class="string">&quot;IF_CONSUMED&quot;</span>)))&#123;</span><br><span class="line"><span class="comment">//                        System.out.println(111111111);</span></span><br><span class="line">                        value.setIf_first_order(<span class="string">&quot;0&quot;</span>);</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"><span class="comment">//                System.out.println(value);</span></span><br><span class="line">                <span class="keyword">return</span> value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        SingleOutputStreamOperator&lt;OrderInfo01&gt; map2 = map1.map(<span class="keyword">new</span> RichMapFunction&lt;OrderInfo01, OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> OrderInfo01 <span class="title">map</span><span class="params">(OrderInfo01 value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                String sql = <span class="string">&quot;select  id,name,region_id,area_code,iso_code,iso_3166_2 from GMALL2020_PROVINCE_INFO &quot;</span>;</span><br><span class="line">                List&lt;JSONObject&gt; jsonObjects = <span class="keyword">new</span> PhoenixUtil().queryList(sql);</span><br><span class="line">                HashMap&lt;String, ProvinceInfo&gt; provinceInfoHashMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">                <span class="keyword">for</span> (JSONObject object : jsonObjects) &#123;</span><br><span class="line">                    String id = object.getString(<span class="string">&quot;ID&quot;</span>);</span><br><span class="line">                    ProvinceInfo provinceInfo = <span class="keyword">new</span> ProvinceInfo(object.getString(<span class="string">&quot;ID&quot;</span>), object.getString(<span class="string">&quot;NAME&quot;</span>), object.getString(<span class="string">&quot;REGION_ID&quot;</span>), object.getString(<span class="string">&quot;AREA_CODE&quot;</span>), object.getString(<span class="string">&quot;ISO_CODE&quot;</span>), object.getString(<span class="string">&quot;ISO_3166_2&quot;</span>));</span><br><span class="line">                    provinceInfoHashMap.put(id, provinceInfo);</span><br><span class="line">                &#125;</span><br><span class="line"><span class="comment">//                System.out.println(provinceInfoHashMap.get(value.getProvince_id().toString()));</span></span><br><span class="line">                value.setProvince_name(provinceInfoHashMap.get(value.getProvince_id().toString()).getName());</span><br><span class="line">                value.setProvince_area_code(provinceInfoHashMap.get(value.getProvince_id().toString()).getArea_code());</span><br><span class="line">                value.setProvince_iso_code(provinceInfoHashMap.get(value.getProvince_id().toString()).getIso_code());</span><br><span class="line">                value.setProvince_iso_3166_2(provinceInfoHashMap.get(value.getProvince_id().toString()).getIso_3166_2());</span><br><span class="line">                <span class="keyword">return</span> value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        map2.filter(<span class="keyword">new</span> FilterFunction&lt;OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">filter</span><span class="params">(OrderInfo01 value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> value!=<span class="keyword">null</span>&amp;&amp;value.getUser_id()!=<span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        SingleOutputStreamOperator&lt;OrderInfo01&gt; map3 = map2.map(<span class="keyword">new</span> RichMapFunction&lt;OrderInfo01, OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> OrderInfo01 <span class="title">map</span><span class="params">(OrderInfo01 value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                String sql = <span class="string">&quot;select id,user_level,birthday,gender,age_group,gender_name from GMALL_USER_INFO &quot;</span>;</span><br><span class="line">                List&lt;JSONObject&gt; jsonObjects = <span class="keyword">new</span> PhoenixUtil().queryList(sql);</span><br><span class="line">                HashMap&lt;String, UserInfo&gt; userInfoHashMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">                <span class="keyword">for</span> (JSONObject object : jsonObjects) &#123;</span><br><span class="line">                    String id = object.getString(<span class="string">&quot;ID&quot;</span>);</span><br><span class="line">                    UserInfo userInfo = <span class="keyword">new</span> UserInfo(object.getString(<span class="string">&quot;ID&quot;</span>), object.getString(<span class="string">&quot;USER_LEVEL&quot;</span>), object.getString(<span class="string">&quot;BIRTHDAY&quot;</span>), object.getString(<span class="string">&quot;GENDER&quot;</span>), object.getString(<span class="string">&quot;AGE_GROUP&quot;</span>), object.getString(<span class="string">&quot;GENDER_NAME&quot;</span>));</span><br><span class="line">                    userInfoHashMap.put(id, userInfo);</span><br><span class="line">                &#125;</span><br><span class="line"><span class="comment">//                System.out.println(value.getUser_id());</span></span><br><span class="line"><span class="comment">//                System.out.println(userInfoHashMap.get(value.getUser_id().toString()));</span></span><br><span class="line"><span class="comment">//                System.out.println(userInfoHashMap.get(value.getUser_id().toString()).getAge_group());</span></span><br><span class="line">                value.setUser_age_group(userInfoHashMap.get(value.getUser_id().toString()).getAge_group());</span><br><span class="line">                value.setUser_gender(userInfoHashMap.get(value.getUser_id().toString()).getGender_name());</span><br><span class="line">                <span class="keyword">return</span> value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        map3.filter(<span class="keyword">new</span> FilterFunction&lt;OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">filter</span><span class="params">(OrderInfo01 value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> value.getIf_first_order()==<span class="string">&quot;1&quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).map(<span class="keyword">new</span> RichMapFunction&lt;OrderInfo01, OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> OrderInfo01 <span class="title">map</span><span class="params">(OrderInfo01 value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                <span class="keyword">new</span> PhoenixUtil().update(<span class="string">&quot;upsert into USER_STATE2020 values(&#x27;&quot;</span> +</span><br><span class="line">                        value.getUser_id()+<span class="string">&quot;&#x27;,&#x27;&quot;</span>+value.getIf_first_order()+<span class="string">&quot;&#x27;)&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        map3.addSink(EsUtils().build());</span><br><span class="line">        map3.addSink(<span class="keyword">new</span> MyKafkaSink02());</span><br><span class="line"></span><br><span class="line">        env.execute();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ElasticsearchSink.<span class="function">Builder&lt;OrderInfo01&gt; <span class="title">EsUtils</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        String format = <span class="keyword">new</span> SimpleDateFormat(<span class="string">&quot;yyyy-MM-dd&quot;</span>).format(<span class="keyword">new</span> Date());</span><br><span class="line">        List&lt;HttpHost&gt; httpHosts = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        httpHosts.add(<span class="keyword">new</span> HttpHost(<span class="string">&quot;hadoop01&quot;</span>, <span class="number">9200</span>, <span class="string">&quot;http&quot;</span>));</span><br><span class="line"></span><br><span class="line">        ElasticsearchSink.Builder&lt;OrderInfo01&gt; esBuilder = <span class="keyword">new</span> ElasticsearchSink.Builder&lt;&gt;(httpHosts, <span class="keyword">new</span> ElasticsearchSinkFunction&lt;OrderInfo01&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(OrderInfo01 orderInfo01, RuntimeContext runtimeContext, RequestIndexer requestIndexer)</span> </span>&#123;</span><br><span class="line">                requestIndexer.add(createIndexRequest(orderInfo01));</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="function"><span class="keyword">private</span> IndexRequest <span class="title">createIndexRequest</span><span class="params">(OrderInfo01 orderInfo01)</span> </span>&#123;</span><br><span class="line">                HashMap&lt;String, Object&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">                map.put(<span class="string">&quot;id&quot;</span>, orderInfo01.getId());</span><br><span class="line">                map.put(<span class="string">&quot;province_id&quot;</span>, orderInfo01.getProvince_id());</span><br><span class="line">                map.put(<span class="string">&quot;order_status&quot;</span>, orderInfo01.getOrder_status());</span><br><span class="line">                map.put(<span class="string">&quot;user_id&quot;</span>, orderInfo01.getUser_id());</span><br><span class="line">                map.put(<span class="string">&quot;final_total_amount&quot;</span>, orderInfo01.getFinal_total_amount());</span><br><span class="line">                map.put(<span class="string">&quot;benefit_reduce_amount&quot;</span>, orderInfo01.getBenefit_reduce_amount());</span><br><span class="line">                map.put(<span class="string">&quot;original_total_amount&quot;</span>, orderInfo01.getOriginal_total_amount());</span><br><span class="line">                map.put(<span class="string">&quot;feight_fee&quot;</span>, orderInfo01.getFeight_fee());</span><br><span class="line">                map.put(<span class="string">&quot;expire_time&quot;</span>, orderInfo01.getExpire_time());</span><br><span class="line">                map.put(<span class="string">&quot;create_time&quot;</span>, orderInfo01.getCreate_time());</span><br><span class="line">                map.put(<span class="string">&quot;create_hour&quot;</span>, orderInfo01.getCreate_hour());</span><br><span class="line">                map.put(<span class="string">&quot;if_first_order&quot;</span>, orderInfo01.getIf_first_order());</span><br><span class="line">                map.put(<span class="string">&quot;province_name&quot;</span>, orderInfo01.getProvince_name());</span><br><span class="line">                map.put(<span class="string">&quot;province_area_code&quot;</span>, orderInfo01.getProvince_iso_3166_2());</span><br><span class="line">                map.put(<span class="string">&quot;user_age_group&quot;</span>, orderInfo01.getUser_age_group());</span><br><span class="line">                map.put(<span class="string">&quot;user_gender&quot;</span>, orderInfo01.getUser_gender());</span><br><span class="line">                System.out.println(<span class="string">&quot;data:&quot;</span> + orderInfo01);</span><br><span class="line">                <span class="keyword">return</span> Requests.indexRequest()</span><br><span class="line">                        .index(<span class="string">&quot;gmall2020_order_info_&quot;</span> + format)</span><br><span class="line">                        .type(<span class="string">&quot;_doc&quot;</span>)</span><br><span class="line">                        .id(orderInfo01.getUser_id().toString())</span><br><span class="line">                        .source(map);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        esBuilder.setBulkFlushMaxActions(<span class="number">1</span>);</span><br><span class="line">        esBuilder.setRestClientFactory(<span class="keyword">new</span> util.RestClientFactoryImpl());</span><br><span class="line">        esBuilder.setFailureHandler(<span class="keyword">new</span> RetryRejectedExecutionFailureHandler());</span><br><span class="line">        <span class="keyword">return</span> esBuilder;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<p>​        在sparkstreaming中，要保持精准一次性消费需要依靠redis来读取和保存kafka偏移量，而flink-kafka端到端exactly once的优势，不言自明。</p>
-]]></content>
-      <categories>
-        <category>实时数仓</category>
-      </categories>
-  </entry>
-  <entry>
     <title>mysql炸裂函数实例</title>
     <url>/2021/03/20/mysql%E7%82%B8%E8%A3%82%E5%87%BD%E6%95%B0%E5%AE%9E%E4%BE%8B/</url>
     <content><![CDATA[<p><img src="/2021/03/20/mysql%E7%82%B8%E8%A3%82%E5%87%BD%E6%95%B0%E5%AE%9E%E4%BE%8B/1.jpg"></p>
@@ -611,26 +611,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>spark RDD原理</title>
-    <url>/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/</url>
-    <content><![CDATA[<p><img src="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/2.png"></p>
-<a id="more"></a>
-
-<p>​            首先我觉得原理性的东西，重要的在于了解整个业务的运行流程。虽然在面试中狠问底层这是区分面试者的重要手段，但在实际工作中，最重要的还是提高业务运行的效率。当然知道框架运行的原理越细说明面试者对底层运行接触的时间就越久。然而人的精力是有限的。深入源码固然能提升能力。这里只对原理做一个简单的阐述。</p>
-<p><img src="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/1.png"></p>
-<p>​            整个spark RDD运行在资源调度系统yarn上，运行代码由spark-submit提交到rm，rm将业务交给nm上的driver，driver会把业务交由executors具体去执行，executors上进行RDD弹性分布式计算，相较于MapReduce，shufflemapRDDs之间一般省去了shuffle落盘的过程，这也是spark速度比mr引擎快的原因。    </p>
-<p><img src="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/1.jpg"></p>
-<p><img src="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/2.jpg">    </p>
-<p>​        我们知道spark RDD算子包括transformation算子和action算子，运算过程主要发生map阶段，经过reduce聚合后action算子进行提交job任务，而transformation算子是懒加载的，也就是说，前面的运算过程并不会立即执行，application需要action算子进行触发，action算子的数量决定了job的个数，action算子中的DAGScheduler会对job任务进行切分，并寻找依赖关系，根据是否是宽依赖来确定stag个数。job的task个数由一个stage阶段最后一个RDD的partition个数决定。</p>
-<p>​        spark application的运行效率取决于数据是否均衡，可以通过合理的分区来确保各个分区数据的均衡，常用的分区方案有：hash分区，range分区，自定义分区，也可以在初始化sc时指定分区。</p>
-<p>​        数据均衡可以使transformation算子在各个分区完成时间相差减小以提高运行效率，常见的转换算子分为value型，双value交互，key-value型，在不同的业务场景下选择不同的运算组合以达到最佳的效率是设计者的初衷。</p>
-<p>​        未完待续。。。</p>
-]]></content>
-      <categories>
-        <category>spark</category>
-      </categories>
-  </entry>
-  <entry>
     <title>hdfs故障恢复及原理</title>
     <url>/2021/02/21/hdfs%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D%E5%8F%8A%E5%8E%9F%E7%90%86/</url>
     <content><![CDATA[<p><img src="http://hadoop.apache.org/docs/r1.0.4/cn/images/hadoop-logo.jpg" alt="Hadoop"></p>
@@ -671,6 +651,26 @@
 ]]></content>
       <categories>
         <category>hadoop</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>spark RDD原理</title>
+    <url>/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/</url>
+    <content><![CDATA[<p><img src="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/2.png"></p>
+<a id="more"></a>
+
+<p>​            首先我觉得原理性的东西，重要的在于了解整个业务的运行流程。虽然在面试中狠问底层这是区分面试者的重要手段，但在实际工作中，最重要的还是提高业务运行的效率。当然知道框架运行的原理越细说明面试者对底层运行接触的时间就越久。然而人的精力是有限的。深入源码固然能提升能力。这里只对原理做一个简单的阐述。</p>
+<p><img src="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/1.png"></p>
+<p>​            整个spark RDD运行在资源调度系统yarn上，运行代码由spark-submit提交到rm，rm将业务交给nm上的driver，driver会把业务交由executors具体去执行，executors上进行RDD弹性分布式计算，相较于MapReduce，shufflemapRDDs之间一般省去了shuffle落盘的过程，这也是spark速度比mr引擎快的原因。    </p>
+<p><img src="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/1.jpg"></p>
+<p><img src="/2020/09/26/spark%20RDD%E5%8E%9F%E7%90%86/2.jpg">    </p>
+<p>​        我们知道spark RDD算子包括transformation算子和action算子，运算过程主要发生map阶段，经过reduce聚合后action算子进行提交job任务，而transformation算子是懒加载的，也就是说，前面的运算过程并不会立即执行，application需要action算子进行触发，action算子的数量决定了job的个数，action算子中的DAGScheduler会对job任务进行切分，并寻找依赖关系，根据是否是宽依赖来确定stag个数。job的task个数由一个stage阶段最后一个RDD的partition个数决定。</p>
+<p>​        spark application的运行效率取决于数据是否均衡，可以通过合理的分区来确保各个分区数据的均衡，常用的分区方案有：hash分区，range分区，自定义分区，也可以在初始化sc时指定分区。</p>
+<p>​        数据均衡可以使transformation算子在各个分区完成时间相差减小以提高运行效率，常见的转换算子分为value型，双value交互，key-value型，在不同的业务场景下选择不同的运算组合以达到最佳的效率是设计者的初衷。</p>
+<p>​        未完待续。。。</p>
+]]></content>
+      <categories>
+        <category>spark</category>
       </categories>
   </entry>
   <entry>
@@ -738,68 +738,29 @@
       </categories>
   </entry>
   <entry>
-    <title>一次意外断电导致mysql数据库损坏的数据恢复过程</title>
-    <url>/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/</url>
-    <content><![CDATA[<p>​    <img src="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/1.jpg"></p>
-<p>​    mysql在企业开发中不仅存放着大量用户数据表，还存放着其他服务的元数据，这些数据一但无法访问，不仅影响其他业务的进行，同时用户也无法查询自己的数据信息，众所周知，数据是无价的，弄丢了数据的后果极其严重。</p>
-<a id="more"></a>
+    <title>Hexo搭建个人博客</title>
+    <url>/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
+    <content><![CDATA[<h2 id="主机配置"><a href="#主机配置" class="headerlink" title="主机配置"></a>主机配置</h2><a id="more"></a>
 
-<p>​    昨天就遇到了一次意外断电mysql索引损坏导致mysqld服务无法正常启动的麻烦，断电后重启hadoop集群，开启hiveservice2和matestore元数据服务时发现无法启动，打开hive.log发现是mysql连接失败：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure</span><br><span class="line">......</span><br><span class="line">Caused by: java.net.ConnectException: 拒绝连接 (Connection refused)</span><br></pre></td></tr></table></figure>
+<p>安装node.js  git，打开git终端</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd ~&#x2F;.ssh</span><br><span class="line">ssh-keygen -t rsa -C &quot;1872998728@qq.com&quot;</span><br></pre></td></tr></table></figure>
 
-<p>随即检查了一下mysql服务，发现mysql服务被意外关闭了，于是又重新启动mysql服务:</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl restart mysqld;</span><br></pre></td></tr></table></figure>
+<p>上传GitHub</p>
+<p>详细查看博客：<a href="https://www.cnblogs.com/liuxianan/p/build-blog-website-by-hexo-github.html">https://www.cnblogs.com/liuxianan/p/build-blog-website-by-hexo-github.html</a></p>
+<!--more-->
 
-<p>但是服务并没有顺利启动成功，而是卡住不动了，尝试了几次都是一样卡住，我有点不淡定了，平时mysql服务断开重新开启一下就可以了，于是进入<code>/etc/my.cnf</code>中找到mysql的错误日志并监控日志输出：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tail -f /var/log/mysql.log</span><br></pre></td></tr></table></figure>
+<h2 id="服务器配置"><a href="#服务器配置" class="headerlink" title="服务器配置"></a>服务器配置</h2><p>安装git  Nginx</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git init --bare hexo.git</span><br><span class="line">cd hexo.git&#x2F;hooks</span><br></pre></td></tr></table></figure>
 
-<p>在另外一个控制台又启动一次服务，发现了从来没有遇到过得报错：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">2020-11-15T09:08:52.532504Z 0 [ERROR] [MY-012712] [InnoDB] Dir slot does not point to right rec 99</span><br><span class="line"> len 16384; hex 64c7c9230000023b0000023affffffff00000000292dd74545bf00000000000000000000024400231a58808c000000001a2d00020089008a0000000000000000000000000000000004700000000000000000000000000000000000000000010002001a696e66696d756d0007000b000073757072656d756d000010003000000018338b000000100f1d81000000c601100000000000006f78dfafd5300000000000000000908580e7000018003000000018338c000000100f1d81000000c6011f0000000000005ad8dfafd530a0f0ba889e75d23f90cc9ff8000020003000000018338f000000100f1e820000013801100000000000005ad9dfafd53162475ed6e629e83f90dbc387040028</span><br><span class="line"> ......</span><br><span class="line">000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000064c7c923292dd745; asc d  #   ;   :        )- EE            D # X       -                       p                         infimum      supremum    0    3                    ox   0                0    3                    Z    0     u ?        0    3           8        Z    1bG^  ) ?      ( 0    3                    oz   2         B l  0 0    3                    Z    2         E    8 0    3           Y        Z    32 c &#123;  ? Q s  @ 0    3      !             \D   4 F     @ |    H 0    3      !             Z    4          PY  P 0    3      $             Z    8  v  ( ? *U   X 0    3      %             \I   9   m4e @ ?Pm  ` 0    3      %             Z    9         C    h 0    3      &amp;             Z    :         Sc,  p 0    3      &#x27;    ~        dC   ;   $yi ?   b  x 0    3   </span><br><span class="line">.....</span><br><span class="line">Most likely, you have hit a bug, but this error can also be caused by malfunctioning hardware.</span><br><span class="line">Thread pointer: 0x7fb3bc3d4280</span><br><span class="line">Attempting backtrace. You can use the following information to find out</span><br><span class="line">where mysqld died. If you see no messages after this, something went</span><br><span class="line">terribly wrong...</span><br><span class="line"></span><br><span class="line">2020-11-15T09:08:52.623420Z 0 [ERROR] [MY-011937] [InnoDB] [FATAL] Apparent corruption of an index page [page id: space=580, page number=571] to be written to data file. We intentionally crash the server to prevent corrupt data from ending up in data files.</span><br><span class="line"></span><br><span class="line">2020-11-15T09:08:54.724470Z 0 [ERROR] [MY-011906] [InnoDB] Database page corruption on disk or a failed file read of page [page id: space=580, page number=571]. You may have to recover from a backup.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>vim post-receive</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">git --work-tree=/home/wwwroot/3DCEList --git-dir=/home/wwwroot/hexo.git checkout -f</span><br></pre></td></tr></table></figure>
 
-<p>翻译过来意思是：</p>
-<p>​    最可能的情况是，您遇到了一个bug，但这个错误也可能是由硬件故障引起的。</p>
-<p>​    mysqld去世的地方。如果在此之后您没有看到任何消息，那么一定有问题，非常错误的……</p>
-<p>​    在磁盘上的数据库页损坏或失败的文件读取页[页id:空间=580，页号=571]。您可能需要从备份中进行恢复。</p>
-<p>要写入数据文件的索引页[页id:空格=580，页号=571]明显损坏。我们故意使服务器崩溃，以防止损坏的数据出现在数据文件中。</p>
-<p>​    百度了一阵之后，我意识到是数据库内部有表损坏导致mysql服务无法正常打开了，由于数据库中有上千张表，不可能知道到底是哪里出了问题。这就意味着我要将mysql中所有用户数据表和其他服务的元数据表全部导出到sql文件做备份，然后重新初始化mysql，在把表一个个建回来并重新导入。一想这工作量顿时头皮发麻，但是数据没法访问后果更严重。。。所以硬着头皮来了：</p>
-<p>​    使用强制InnoDB恢复:</p>
-<p>​    编辑<code>/etc/my.cnf</code>文件加入：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">innodb_force_recovery &#x3D; 6</span><br></pre></td></tr></table></figure>
-
-<p>​    <em>innodb_force_recovery影响整个InnoDB存储引擎的恢复状况。默认为0，表示当需要恢复时执行所有的恢复操作（即校验数据页/purge undo/insert buffer merge/rolling back&amp;forward），当不能进行有效的恢复操作时，mysql有可能无法启动，并记录错误日志；innodb_force_recovery可以设置为1-6,大的数字包含前面所有数字的影响。当设置参数值大于0后，可以对表进行select,create,drop操作,但insert,update或者delete这类操作是不允许的。</em></p>
-<ul>
-<li><p>1(SRV_FORCE_IGNORE_CORRUPT):忽略检查到的corrupt页。</p>
-</li>
-<li><p>2(SRV_FORCE_NO_BACKGROUND):阻止主线程的运行，如主线程需要执行full purge操作，会导致crash。</p>
-</li>
-<li><p>3(SRV_FORCE_NO_TRX_UNDO):不执行事务回滚操作。</p>
-</li>
-<li><p>4(SRV_FORCE_NO_IBUF_MERGE):不执行插入缓冲的合并操作。</p>
-</li>
-<li><p>5(SRV_FORCE_NO_UNDO_LOG_SCAN):不查看重做日志，InnoDB存储引擎会将未提交的事务视为已提交。</p>
-</li>
-<li><p>6(SRV_FORCE_NO_LOG_REDO):不执行前滚的操作。</p>
-<p>​    </p>
-<p>​    然后重启节点，发现mysql服务能启动了，但是无法执行插入更新和删除操作，但终于可以导出宝贵的数据做备份了，我使用了Navicat把mysql中所有数据进行了导出：</p>
-<p><img src="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/2.jpg"></p>
-<p>​    整个过程用了很久，但数据总算是保存下来了，接下来进入<code>/var/lib/mysql</code>备份整个目录，然后删除目录中所有内容<code>rm -rf  ./*</code>将mysql重新初始化。最后进入<code>/etc/my.cnf</code>将innodb重新置为0:</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">innodb_force_recovery = 0</span><br></pre></td></tr></table></figure>
-
-<p>成功启动mysql服务：</p>
-<p><img src="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/4.jpg"></p>
-<p>这时候数据库已经重新初始化，需要重新获取初始密码：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">grep &#x27;temporary password&#x27; /var/log/mysqld.log</span><br></pre></td></tr></table></figure>
+<p>配置免密登陆：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh-copy-id -i .ssh&#x2F;id_rsa.pub root@47.242.8.122</span><br></pre></td></tr></table></figure>
 
 
 
-</li>
-</ul>
-<p>  ​    然后进行设置mysql用户的操作，导入之前的数据，重新启动hadoop集群，成功启动hiveservice2和matestore服务。并进入datagrip查了一下，数据完美恢复！还好是测试环境，谢天谢地。</p>
-<p>  <img src="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/3.jpg"></p>
 ]]></content>
-      <categories>
-        <category>OLTP</category>
-      </categories>
   </entry>
   <entry>
     <title>sqoop在实际生产中的使用经验总结</title>
@@ -902,29 +863,68 @@
       </categories>
   </entry>
   <entry>
-    <title>Hexo搭建个人博客</title>
-    <url>/2020/09/23/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
-    <content><![CDATA[<h2 id="主机配置"><a href="#主机配置" class="headerlink" title="主机配置"></a>主机配置</h2><a id="more"></a>
+    <title>一次意外断电导致mysql数据库损坏的数据恢复过程</title>
+    <url>/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/</url>
+    <content><![CDATA[<p>​    <img src="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/1.jpg"></p>
+<p>​    mysql在企业开发中不仅存放着大量用户数据表，还存放着其他服务的元数据，这些数据一但无法访问，不仅影响其他业务的进行，同时用户也无法查询自己的数据信息，众所周知，数据是无价的，弄丢了数据的后果极其严重。</p>
+<a id="more"></a>
 
-<p>安装node.js  git，打开git终端</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd ~&#x2F;.ssh</span><br><span class="line">ssh-keygen -t rsa -C &quot;1872998728@qq.com&quot;</span><br></pre></td></tr></table></figure>
+<p>​    昨天就遇到了一次意外断电mysql索引损坏导致mysqld服务无法正常启动的麻烦，断电后重启hadoop集群，开启hiveservice2和matestore元数据服务时发现无法启动，打开hive.log发现是mysql连接失败：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure</span><br><span class="line">......</span><br><span class="line">Caused by: java.net.ConnectException: 拒绝连接 (Connection refused)</span><br></pre></td></tr></table></figure>
 
-<p>上传GitHub</p>
-<p>详细查看博客：<a href="https://www.cnblogs.com/liuxianan/p/build-blog-website-by-hexo-github.html">https://www.cnblogs.com/liuxianan/p/build-blog-website-by-hexo-github.html</a></p>
-<!--more-->
+<p>随即检查了一下mysql服务，发现mysql服务被意外关闭了，于是又重新启动mysql服务:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl restart mysqld;</span><br></pre></td></tr></table></figure>
 
-<h2 id="服务器配置"><a href="#服务器配置" class="headerlink" title="服务器配置"></a>服务器配置</h2><p>安装git  Nginx</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git init --bare hexo.git</span><br><span class="line">cd hexo.git&#x2F;hooks</span><br></pre></td></tr></table></figure>
+<p>但是服务并没有顺利启动成功，而是卡住不动了，尝试了几次都是一样卡住，我有点不淡定了，平时mysql服务断开重新开启一下就可以了，于是进入<code>/etc/my.cnf</code>中找到mysql的错误日志并监控日志输出：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tail -f /var/log/mysql.log</span><br></pre></td></tr></table></figure>
 
-<p>vim post-receive</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">git --work-tree=/home/wwwroot/3DCEList --git-dir=/home/wwwroot/hexo.git checkout -f</span><br></pre></td></tr></table></figure>
+<p>在另外一个控制台又启动一次服务，发现了从来没有遇到过得报错：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">2020-11-15T09:08:52.532504Z 0 [ERROR] [MY-012712] [InnoDB] Dir slot does not point to right rec 99</span><br><span class="line"> len 16384; hex 64c7c9230000023b0000023affffffff00000000292dd74545bf00000000000000000000024400231a58808c000000001a2d00020089008a0000000000000000000000000000000004700000000000000000000000000000000000000000010002001a696e66696d756d0007000b000073757072656d756d000010003000000018338b000000100f1d81000000c601100000000000006f78dfafd5300000000000000000908580e7000018003000000018338c000000100f1d81000000c6011f0000000000005ad8dfafd530a0f0ba889e75d23f90cc9ff8000020003000000018338f000000100f1e820000013801100000000000005ad9dfafd53162475ed6e629e83f90dbc387040028</span><br><span class="line"> ......</span><br><span class="line">000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000064c7c923292dd745; asc d  #   ;   :        )- EE            D # X       -                       p                         infimum      supremum    0    3                    ox   0                0    3                    Z    0     u ?        0    3           8        Z    1bG^  ) ?      ( 0    3                    oz   2         B l  0 0    3                    Z    2         E    8 0    3           Y        Z    32 c &#123;  ? Q s  @ 0    3      !             \D   4 F     @ |    H 0    3      !             Z    4          PY  P 0    3      $             Z    8  v  ( ? *U   X 0    3      %             \I   9   m4e @ ?Pm  ` 0    3      %             Z    9         C    h 0    3      &amp;             Z    :         Sc,  p 0    3      &#x27;    ~        dC   ;   $yi ?   b  x 0    3   </span><br><span class="line">.....</span><br><span class="line">Most likely, you have hit a bug, but this error can also be caused by malfunctioning hardware.</span><br><span class="line">Thread pointer: 0x7fb3bc3d4280</span><br><span class="line">Attempting backtrace. You can use the following information to find out</span><br><span class="line">where mysqld died. If you see no messages after this, something went</span><br><span class="line">terribly wrong...</span><br><span class="line"></span><br><span class="line">2020-11-15T09:08:52.623420Z 0 [ERROR] [MY-011937] [InnoDB] [FATAL] Apparent corruption of an index page [page id: space=580, page number=571] to be written to data file. We intentionally crash the server to prevent corrupt data from ending up in data files.</span><br><span class="line"></span><br><span class="line">2020-11-15T09:08:54.724470Z 0 [ERROR] [MY-011906] [InnoDB] Database page corruption on disk or a failed file read of page [page id: space=580, page number=571]. You may have to recover from a backup.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>配置免密登陆：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh-copy-id -i .ssh&#x2F;id_rsa.pub root@47.242.8.122</span><br></pre></td></tr></table></figure>
+<p>翻译过来意思是：</p>
+<p>​    最可能的情况是，您遇到了一个bug，但这个错误也可能是由硬件故障引起的。</p>
+<p>​    mysqld去世的地方。如果在此之后您没有看到任何消息，那么一定有问题，非常错误的……</p>
+<p>​    在磁盘上的数据库页损坏或失败的文件读取页[页id:空间=580，页号=571]。您可能需要从备份中进行恢复。</p>
+<p>要写入数据文件的索引页[页id:空格=580，页号=571]明显损坏。我们故意使服务器崩溃，以防止损坏的数据出现在数据文件中。</p>
+<p>​    百度了一阵之后，我意识到是数据库内部有表损坏导致mysql服务无法正常打开了，由于数据库中有上千张表，不可能知道到底是哪里出了问题。这就意味着我要将mysql中所有用户数据表和其他服务的元数据表全部导出到sql文件做备份，然后重新初始化mysql，在把表一个个建回来并重新导入。一想这工作量顿时头皮发麻，但是数据没法访问后果更严重。。。所以硬着头皮来了：</p>
+<p>​    使用强制InnoDB恢复:</p>
+<p>​    编辑<code>/etc/my.cnf</code>文件加入：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">innodb_force_recovery &#x3D; 6</span><br></pre></td></tr></table></figure>
+
+<p>​    <em>innodb_force_recovery影响整个InnoDB存储引擎的恢复状况。默认为0，表示当需要恢复时执行所有的恢复操作（即校验数据页/purge undo/insert buffer merge/rolling back&amp;forward），当不能进行有效的恢复操作时，mysql有可能无法启动，并记录错误日志；innodb_force_recovery可以设置为1-6,大的数字包含前面所有数字的影响。当设置参数值大于0后，可以对表进行select,create,drop操作,但insert,update或者delete这类操作是不允许的。</em></p>
+<ul>
+<li><p>1(SRV_FORCE_IGNORE_CORRUPT):忽略检查到的corrupt页。</p>
+</li>
+<li><p>2(SRV_FORCE_NO_BACKGROUND):阻止主线程的运行，如主线程需要执行full purge操作，会导致crash。</p>
+</li>
+<li><p>3(SRV_FORCE_NO_TRX_UNDO):不执行事务回滚操作。</p>
+</li>
+<li><p>4(SRV_FORCE_NO_IBUF_MERGE):不执行插入缓冲的合并操作。</p>
+</li>
+<li><p>5(SRV_FORCE_NO_UNDO_LOG_SCAN):不查看重做日志，InnoDB存储引擎会将未提交的事务视为已提交。</p>
+</li>
+<li><p>6(SRV_FORCE_NO_LOG_REDO):不执行前滚的操作。</p>
+<p>​    </p>
+<p>​    然后重启节点，发现mysql服务能启动了，但是无法执行插入更新和删除操作，但终于可以导出宝贵的数据做备份了，我使用了Navicat把mysql中所有数据进行了导出：</p>
+<p><img src="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/2.jpg"></p>
+<p>​    整个过程用了很久，但数据总算是保存下来了，接下来进入<code>/var/lib/mysql</code>备份整个目录，然后删除目录中所有内容<code>rm -rf  ./*</code>将mysql重新初始化。最后进入<code>/etc/my.cnf</code>将innodb重新置为0:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">innodb_force_recovery = 0</span><br></pre></td></tr></table></figure>
+
+<p>成功启动mysql服务：</p>
+<p><img src="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/4.jpg"></p>
+<p>这时候数据库已经重新初始化，需要重新获取初始密码：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">grep &#x27;temporary password&#x27; /var/log/mysqld.log</span><br></pre></td></tr></table></figure>
 
 
 
+</li>
+</ul>
+<p>  ​    然后进行设置mysql用户的操作，导入之前的数据，重新启动hadoop集群，成功启动hiveservice2和matestore服务。并进入datagrip查了一下，数据完美恢复！还好是测试环境，谢天谢地。</p>
+<p>  <img src="/2020/11/15/%E4%B8%80%E6%AC%A1%E6%84%8F%E5%A4%96%E6%96%AD%E7%94%B5%E5%AF%BC%E8%87%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8D%9F%E5%9D%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B/3.jpg"></p>
 ]]></content>
+      <categories>
+        <category>OLTP</category>
+      </categories>
   </entry>
   <entry>
     <title>日活需求(kafka精准一次性消费) 分别用sparkstreaming和flink实现</title>
